@@ -9,7 +9,7 @@ export default function Header() {
             国会発言分析
           </Link>
           <div>
-            <Link href="" className="font-bold text-lg">
+            <Link href="/about" className="font-bold text-lg">
               About
             </Link>
           </div>
