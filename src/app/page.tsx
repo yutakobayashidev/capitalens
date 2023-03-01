@@ -62,7 +62,7 @@ export default async function Page() {
           className="rounded-2xl mx-auto"
           height={230}
           width={230}
-          src="https://yt3.googleusercontent.com/PgVfEpsC9tWlSL1ZmwOOwcZsTT9oYrzAOFUmrt1YmV_IHwbj7UWpzt74Awt78fB5BqgKrtW7_g=s900-c-k-c0x00ffffff-no-rj"
+          src={people.image}
         ></img>
         <h1 className="mt-5 font-bold text-4xl mb-2 font-base">
           {people.name}
