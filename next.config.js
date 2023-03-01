@@ -2,7 +2,6 @@
 const nextConfig = {
   experimental: {
     appDir: true,
-    typedRoutes: true,
   },
   images: {
     disableStaticImages: true,
