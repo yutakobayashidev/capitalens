@@ -58,7 +58,7 @@ export default async function Page() {
     <div className="mx-auto max-w-screen-sm px-4 md:px-8 my-12">
       <section className="text-center">
         <img
-          alt="岸田文雄"
+          alt={people.name}
           className="rounded-2xl mx-auto"
           height={230}
           width={230}
