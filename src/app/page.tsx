@@ -25,16 +25,22 @@ export default async function Page() {
       {Object.entries(groupedPeoples).map(([party, members]) => (
         <section key={party} className="my-8">
           <h2 className="font-bold text-2xl">{party}</h2>
-          <div className="grid grid-cols-3 gap-3 md:grid-cols-6 md:gap-6 text-center my-5">
+          <div className="grid grid-cols-3 gap-3 md:grid-cols-6 md:gap-6 my-5">
             {members.map((member) => (
-              <Link href={`people/${member.id}`} key={member.id}>
+              <Link
+                className="flex items-center justify-content flex-wrap text-center "
+                href={`people/${member.id}`}
+                key={member.id}
+              >
                 <img
                   src={member.image}
                   className="rounded-2xl"
                   alt={member.name}
                 />
-                <div className="my-3 font-bold text-xl">{member.name}</div>
-                <span className="text-sm text-gray-500">{member.role}</span>
+                <div className="w-full overflow-hidden text-ellipsis whitespace-nowrap">
+                  <div className="my-3 font-bold text-xl">{member.name}</div>
+                  <span className="text-sm text-gray-500">{member.role}</span>
+                </div>
               </Link>
             ))}
           </div>
