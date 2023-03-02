@@ -6,6 +6,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { HiOutlineExternalLink } from "react-icons/hi";
 import { FaTwitter, FaFacebook, FaYoutube, FaWikipediaW } from "react-icons/fa";
 import Link from "next/link";
+import WordCloud from "@src/components/WordCloud";
 
 dayjs.locale("ja");
 dayjs.extend(relativeTime);
@@ -103,6 +104,10 @@ export default async function Page() {
             </Link>
           )}
         </div>
+      </section>
+      <section className="my-10">
+        <h2 className="text-center text-4xl font-bold">WordCloud</h2>
+        <WordCloud />
       </section>
       <section className="my-10">
         <h2 className="text-center text-4xl font-bold">Timeline</h2>
