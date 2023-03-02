@@ -1,6 +1,7 @@
 "use client";
 
-import Cloud from "react-d3-cloud";
+import { useEffect, useState } from "react";
+import D3Cloud from "react-d3-cloud";
 
 export default function WordCloud() {
   const data = [
@@ -11,17 +12,25 @@ export default function WordCloud() {
     { text: "duck", value: 10 },
   ];
 
+  const [domLoaded, setDomLoaded] = useState(false);
+
+  useEffect(() => {
+    setDomLoaded(true);
+  }, []);
+
   return (
     <>
-      <Cloud
-        width={200}
-        height={100}
-        data={data}
-        font="meiryo"
-        fontWeight={700}
-        rotate={0}
-        padding={5}
-      />
+      {domLoaded && (
+        <D3Cloud
+          width={200}
+          height={100}
+          data={data}
+          font="meiryo"
+          fontWeight={700}
+          rotate={0}
+          padding={5}
+        />
+      )}
     </>
   );
 }
