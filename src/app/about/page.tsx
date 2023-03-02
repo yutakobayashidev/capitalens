@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "このサイトについて",
-  description: "VP of Developer Experience at Vercel.",
 };
 
 export default async function Page() {
