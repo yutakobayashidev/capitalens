@@ -6,7 +6,16 @@ import type { Metadata } from "next";
 export const revalidate = 3600;
 
 async function getTopicViews() {
-  const data = prisma.views.findMany({});
+  const data = await prisma.views.findMany({
+    take: 100,
+    orderBy: {
+      count: "desc",
+    },
+    select: {
+      name: true,
+    },
+  });
+
   return data;
 }
 
