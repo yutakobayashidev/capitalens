@@ -3,6 +3,8 @@ import { FaHashtag } from "react-icons/fa";
 import Link from "next/link";
 import type { Metadata } from "next";
 
+export const revalidate = 3600;
+
 async function getTopicViews() {
   const data = prisma.views.findMany({});
   return data;
