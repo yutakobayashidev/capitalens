@@ -26,6 +26,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja" className={classNames(inter.variable, notoSansJP.variable)}>
+      <head>
+        <link
+          rel="icon"
+          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%%22 y=%2250%%22 style=%22dominant-baseline:central;text-anchor:middle;font-size:90px;%22>🏛️</text></svg>"
+        />
+        <link
+          rel="icon alternate"
+          type="image/png"
+          href="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f3db.png"
+        />
+      </head>
       <body>
         <Header />
         {children}
