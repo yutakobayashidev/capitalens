@@ -16,7 +16,7 @@ export default async function Page() {
       <p className="mb-3">
         注目のトピックは国会での発言数、本サイトでの各トピックのアクセス数で決定されています。
       </p>
-      <div className="grid grid-cols-4 gap-8 rounded-md">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8 rounded-md">
         {topics.map((view) => (
           <Link
             href={`/topics/${view.name}`}
