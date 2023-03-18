@@ -9,6 +9,7 @@ import { FaTwitter, FaFacebook, FaYoutube, FaWikipediaW } from "react-icons/fa";
 import Link from "next/link";
 import { getPeopleById } from "@src/helper/people";
 import WordCloud from "@src/components/WordCloud";
+import type { Metadata } from "next";
 
 dayjs.locale("ja");
 dayjs.extend(relativeTime);
@@ -32,8 +33,22 @@ async function getTimeline(id: string) {
   return data.meetingRecord as MeetingRecord[];
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata | undefined> {
+  const people = getPeopleById(params.id);
+
+  if (!people) {
+    notFound();
+  }
+
+  return { title: people.name };
+}
+
 export default async function Page({ params }: { params: { id: string } }) {
-  const timelinePromise = await getTimeline(params.id);
+  const timelinePromise = getTimeline(params.id);
   const peoplePromise = getPeopleById(params.id);
 
   const [timeline, people] = await Promise.all([
