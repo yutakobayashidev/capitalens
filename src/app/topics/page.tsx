@@ -1,11 +1,16 @@
 import prisma from "@src/lib/prisma";
 import { FaHashtag } from "react-icons/fa";
 import Link from "next/link";
+import type { Metadata } from "next";
 
 async function getTopicViews() {
   const data = prisma.views.findMany({});
   return data;
 }
+
+export const metadata: Metadata = {
+  title: "注目のトピック",
+};
 
 export default async function Page() {
   const topics = await getTopicViews();
@@ -16,7 +21,7 @@ export default async function Page() {
       <p className="mb-3">
         注目のトピックは国会での発言数、本サイトでの各トピックのアクセス数で決定されています。
       </p>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-8 rounded-md">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-8 rounded-md">
         {topics.map((view) => (
           <Link
             href={`/topics/${view.name}`}
