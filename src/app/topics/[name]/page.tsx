@@ -2,6 +2,7 @@ import BarChartComponent from "@src/components/Chart";
 import Link from "next/link";
 import { peoples } from "@peoples";
 import type { Metadata } from "next";
+import { AiOutlineInfoCircle } from "react-icons/ai";
 
 export async function generateMetadata({
   params,
@@ -38,10 +39,14 @@ export default async function Page({ params }: { params: { name: string } }) {
           {decodeURI(params.name)}に関する情報を収集して表示しています。
         </p>
         <BarChartComponent data={data} />
-        <h1 className="font-bold my-7 text-3xl">
+        <h1 className="font-bold my-5 text-3xl">
           このトピックをよく言及している人物
         </h1>
-        <div className="grid grid-cols-12">
+        <div className="flex items-center text-base mb-3 px-6 py-3 rounded-md bg-blue-50">
+          <AiOutlineInfoCircle className="mr-2 text-blue-500" />
+          このデータは議席数などに依存する可能性があります。
+        </div>
+        <div className="grid grid-cols-10">
           {peoples.map((people) => (
             <Link href={`/people/${people.id}`} key={people.id} className="p-3">
               <img
