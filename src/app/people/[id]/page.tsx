@@ -8,7 +8,7 @@ import { HiOutlineExternalLink } from "react-icons/hi";
 import { FaTwitter, FaFacebook, FaYoutube, FaWikipediaW } from "react-icons/fa";
 import Link from "next/link";
 import { getPeopleById } from "@src/helper/people";
-import WordCloud from "@src/components/WordCloud";
+import WordCloud from "@src/app/people/[id]/WordCloud";
 import type { Metadata } from "next";
 
 dayjs.locale("ja");
