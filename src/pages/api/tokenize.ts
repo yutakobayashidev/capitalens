@@ -16,7 +16,12 @@ async function getSpeechText(name: string): Promise<string> {
   const speeches = (await response.json()).speechRecord.map(
     (speech: any) => speech.speech
   );
-  return speeches.join("");
+
+  const cleanedSpeeches = speeches.map((speech: string) => {
+    return speech.replace(/○\S+\s/g, "");
+  });
+
+  return cleanedSpeeches.join("");
 }
 
 async function getNouns(text: string): Promise<string[]> {
@@ -29,10 +34,6 @@ async function getNouns(text: string): Promise<string[]> {
     if (
       pos === "名詞" &&
       ![
-        "内閣",
-        "岸田",
-        "総理",
-        "大臣",
         "これ",
         "それ",
         "あれ",
