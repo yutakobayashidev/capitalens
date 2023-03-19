@@ -5,23 +5,18 @@ type FrequencyMap = Record<string, number>;
 
 async function getSpeechText(name: string): Promise<string> {
   const endpoint = "https://kokkai.ndl.go.jp/api/1.0/speech";
-  const params = { speaker: name, recordPacking: "json" };
-
+  const params: Record<string, string> = {
+    speaker: name,
+    recordPacking: "json",
+  };
   const url = new URL(endpoint);
-  Object.entries(params).forEach(([key, value]) => {
-    url.searchParams.append(key, value);
-  });
-
-  const response = await fetch(url.toString());
-  const speeches = (await response.json()).speechRecord.map(
-    (speech: any) => speech.speech
+  Object.entries(params).forEach(([key, value]: [string, string]) =>
+    url.searchParams.append(key, value)
   );
-
-  const cleanedSpeeches = speeches.map((speech: string) => {
-    return speech.replace(/○\S+\s/g, "");
-  });
-
-  return cleanedSpeeches.join("");
+  const speeches = (
+    await (await fetch(url.toString())).json()
+  ).speechRecord.map((speech: { speech: string }) => speech.speech);
+  return speeches.map((s: string) => s.replace(/^○\S+\s/, "")).join("");
 }
 
 async function getNouns(text: string): Promise<string[]> {
