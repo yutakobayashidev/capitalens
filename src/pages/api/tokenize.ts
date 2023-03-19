@@ -47,6 +47,10 @@ async function getNouns(text: string): Promise<string[]> {
         "人",
         "〇",
         "％",
+        "よう",
+        "わけ",
+        "たち",
+        "フル",
       ].includes(surface_form)
     ) {
       return true;
