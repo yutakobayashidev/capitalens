@@ -11,7 +11,7 @@ interface WordCloudProps {
 export default function WordCloud({ name }: WordCloudProps) {
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-  const { data } = useSWR(`/api/kuromoji?name=${name}`, fetcher);
+  const { data } = useSWR(`/api/tokenize?name=${name}`, fetcher);
   const [domLoaded, setDomLoaded] = useState(false);
 
   useEffect(() => {
