@@ -112,7 +112,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       </section>
       <section className="my-10">
         <h2 className="text-center text-4xl font-bold">WordCloud</h2>
-        <WordCloud />
+        <WordCloud name={people.name} />
       </section>
       <section className="my-10">
         <h2 className="text-center text-4xl font-bold">Timeline</h2>
