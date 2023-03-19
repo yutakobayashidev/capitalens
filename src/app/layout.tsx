@@ -1,7 +1,8 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import classNames from "classnames";
+import cn from "classnames";
 import Header from "@src/components/Header";
+import Footer from "@src/components/Footer";
 import { Inter, Noto_Sans_JP } from "next/font/google";
 
 export const metadata: Metadata = {
@@ -25,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ja" className={classNames(inter.variable, notoSansJP.variable)}>
+    <html lang="ja" className={cn(inter.variable, notoSansJP.variable)}>
       <head>
         <link
           rel="icon"
@@ -40,6 +41,7 @@ export default function RootLayout({
       <body>
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );
