@@ -10,7 +10,7 @@ export default function Header() {
             className="font-bold font-base text-2xl md:text-3xl flex items-center"
           >
             国会発言分析
-            <span className="text-sm ml-3 text-gray-400 border py-0.5 px-1 font-medium">
+            <span className="text-sm ml-3 text-gray-400 border py-0.5 px-1 font-medium rounded-md">
               BETA
             </span>
           </Link>
