@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import D3Cloud from "react-d3-cloud";
 import useSWR from "swr";
 import { BsDownload } from "react-icons/bs";
+import { usePathname } from "next/navigation";
 
 interface Word {
   text: string;
@@ -15,6 +16,8 @@ interface WordCloudProps {
 }
 
 export default function WordCloud({ name }: WordCloudProps) {
+  const pathname = usePathname();
+
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
   const { data } = useSWR(`/api/tokenize?name=${name}`, fetcher);
@@ -34,7 +37,7 @@ export default function WordCloud({ name }: WordCloudProps) {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", "output.csv");
+    link.setAttribute("download", `${pathname}.csv`);
     document.body.appendChild(link);
     link.click();
 
