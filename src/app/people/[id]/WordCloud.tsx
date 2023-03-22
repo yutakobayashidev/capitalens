@@ -3,6 +3,12 @@
 import { useEffect, useState } from "react";
 import D3Cloud from "react-d3-cloud";
 import useSWR from "swr";
+import { BsDownload } from "react-icons/bs";
+
+interface Word {
+  text: string;
+  value: number;
+}
 
 interface WordCloudProps {
   name: string;
@@ -18,6 +24,25 @@ export default function WordCloud({ name }: WordCloudProps) {
     setDomLoaded(true);
   }, []);
 
+  async function downloadCSV(words: Word[]) {
+    const header = "Text,Value\n";
+    const csvContent = words
+      .map((word) => `${word.text},${word.value}`)
+      .join("\n");
+
+    const blob = new Blob([header + csvContent], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "output.csv");
+    document.body.appendChild(link);
+    link.click();
+
+    if (link.parentNode) {
+      link.parentNode.removeChild(link);
+    }
+  }
+
   return (
     <div className="py-4">
       {domLoaded && data ? (
@@ -29,6 +54,17 @@ export default function WordCloud({ name }: WordCloudProps) {
             rotate={(word) => word.value % 360}
             fontSize={(word) => Math.log2(word.value) * 10}
           />
+          <div className="flex justify-center">
+            <button
+              onClick={async () => {
+                downloadCSV(data);
+              }}
+              className="text-green-600 mt-5 text-lg flex items-center font-semibold"
+            >
+              <BsDownload className="mr-2" />
+              CSVデータをダウンロード
+            </button>
+          </div>
         </>
       ) : (
         <div className="w-full flex items-center justify-center">
