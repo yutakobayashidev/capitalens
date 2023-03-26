@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import * as faceapi from "face-api.js";
 
 type Props = {
-  onFaceDetect: (age: number, gender: string) => void;
+  onFaceDetect: (name: string) => void;
 };
 
 const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
@@ -15,6 +15,7 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
     await faceapi.nets.ssdMobilenetv1.loadFromUri("/models");
     await faceapi.nets.ageGenderNet.loadFromUri("/models");
     await faceapi.nets.faceLandmark68Net.loadFromUri("/models");
+    await faceapi.nets.faceRecognitionNet.loadFromUri("/models");
     setLoading(false);
   };
 
@@ -28,18 +29,36 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
     if (!imgFile) return;
 
     const img = await faceapi.bufferToImage(imgFile);
-    const detections = await faceapi
-      .detectSingleFace(img)
-      .withFaceLandmarks()
-      .withAgeAndGender();
 
-    if (!detections) {
+    // Load the face recognition model
+    const faceRecognitionModelRaw = await (
+      await fetch("/models/faceRecognitionModel.json")
+    ).json();
+    const faceRecognitionModel = faceRecognitionModelRaw.map(
+      (labeledDescriptor: any) => {
+        return new faceapi.LabeledFaceDescriptors(
+          labeledDescriptor.label,
+          labeledDescriptor.descriptors.map(
+            (descriptor: number[]) => new Float32Array(descriptor)
+          )
+        );
+      }
+    );
+    const faceMatcher = new faceapi.FaceMatcher(faceRecognitionModel, 0.6);
+
+    // Perform face recognition
+    const detections = await faceapi
+      .detectAllFaces(img)
+      .withFaceLandmarks()
+      .withFaceDescriptors();
+    if (detections.length === 0) {
       alert("顔の取得に失敗しました。");
       setLoading(false);
       return;
     }
 
-    onFaceDetect(detections.age, detections.gender);
+    const bestMatch = faceMatcher.findBestMatch(detections[0].descriptor);
+    onFaceDetect(bestMatch.label);
     setImgSrc(URL.createObjectURL(imgFile));
     setLoading(false);
   };
