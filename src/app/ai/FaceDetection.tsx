@@ -1,4 +1,6 @@
-import { useRef, useState, useEffect } from "react";
+// FaceDetection.tsx
+
+import React, { useRef, useState, useEffect } from "react";
 import * as faceapi from "face-api.js";
 
 type Props = {
@@ -8,6 +10,7 @@ type Props = {
 const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
   const [loading, setLoading] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const loadModels = async () => {
     setLoading(true);
@@ -32,63 +35,80 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
     startVideo();
   }, []);
 
-  const handleDetectFace = async () => {
-    setLoading(true);
-
-    if (!videoRef.current) {
-      setLoading(false);
-      return;
-    }
-
-    const faceRecognitionModelRaw = await (
-      await fetch("/models/faceRecognitionModel.json")
-    ).json();
-
-    const faceRecognitionModel = faceRecognitionModelRaw.map(
-      (labeledDescriptor: any) => {
-        return new faceapi.LabeledFaceDescriptors(
-          labeledDescriptor.label,
-          labeledDescriptor.descriptors.map(
-            (descriptor: number[]) => new Float32Array(descriptor)
-          )
-        );
+  useEffect(() => {
+    const detectFace = async () => {
+      if (!videoRef.current || !canvasRef.current) {
+        return;
       }
-    );
 
-    const faceMatcher = new faceapi.FaceMatcher(faceRecognitionModel, 0.6);
+      const faceRecognitionModelRaw = await (
+        await fetch("/models/faceRecognitionModel.json")
+      ).json();
 
-    const detections = await faceapi
-      .detectAllFaces(videoRef.current)
-      .withFaceLandmarks()
-      .withFaceDescriptors();
+      const faceRecognitionModel = faceRecognitionModelRaw.map(
+        (labeledDescriptor: any) => {
+          return new faceapi.LabeledFaceDescriptors(
+            labeledDescriptor.label,
+            labeledDescriptor.descriptors.map(
+              (descriptor: number[]) => new Float32Array(descriptor)
+            )
+          );
+        }
+      );
 
-    if (detections.length === 0) {
-      alert("顔の取得に失敗しました。");
-      setLoading(false);
-      return;
-    }
+      const faceMatcher = new faceapi.FaceMatcher(faceRecognitionModel, 0.6);
 
-    const bestMatch = faceMatcher.findBestMatch(detections[0].descriptor);
-    onFaceDetect(bestMatch.label);
+      const detections = await faceapi
+        .detectAllFaces(videoRef.current)
+        .withFaceLandmarks()
+        .withFaceDescriptors();
 
-    setLoading(false);
-  };
+      if (detections.length === 0) {
+        return;
+      }
+
+      const bestMatch = faceMatcher.findBestMatch(detections[0].descriptor);
+      onFaceDetect(bestMatch.label);
+
+      // Draw face detection results
+      if (videoRef.current && canvasRef.current) {
+        const displaySize = {
+          width: videoRef.current.clientWidth,
+          height: videoRef.current.clientHeight,
+        };
+        faceapi.matchDimensions(canvasRef.current, displaySize);
+        const resizedDetections = faceapi.resizeResults(
+          detections,
+          displaySize
+        );
+        const ctx = canvasRef.current.getContext("2d");
+        if (ctx) {
+          ctx.clearRect(0, 0, displaySize.width, displaySize.height);
+          faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
+        }
+      }
+    };
+
+    const intervalId = setInterval(detectFace, 100);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [onFaceDetect]);
 
   return (
     <div className="flex flex-col items-center space-y-4">
-      <video
-        ref={videoRef}
-        autoPlay
-        muted
-        className="border-solid border-2 border-gray-600 max-w-md max-h-md"
-      ></video>
-      <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={handleDetectFace}
-        disabled={loading}
-      >
-        顔を認識
-      </button>
+      <div className="relative">
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          className="border-solid border-2 border-gray-600 max-w-md max-h-md"
+        ></video>
+        <canvas
+          ref={canvasRef}
+          className="absolute top-0 left-0 border-solid border-2 border-gray-600 max-w-md max-h-md"
+        />
+      </div>
     </div>
   );
 };
