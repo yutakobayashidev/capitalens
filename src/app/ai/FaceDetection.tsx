@@ -1,6 +1,4 @@
-// FaceDetection.tsx
-
-import React, { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import * as faceapi from "face-api.js";
 
 type Props = {
@@ -8,55 +6,57 @@ type Props = {
 };
 
 const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
-  const [loading, setLoading] = useState(false);
+  const [isLoadingModels, setIsLoadingModels] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const faceRecognitionModelUrl = "/models/faceRecognitionModel.json";
+  const faceMatcherTolerance = 0.6;
+  const faceDetectionInterval = 100;
 
   const loadModels = async () => {
-    setLoading(true);
-    await faceapi.nets.ssdMobilenetv1.loadFromUri("/models");
-    await faceapi.nets.ageGenderNet.loadFromUri("/models");
-    await faceapi.nets.faceLandmark68Net.loadFromUri("/models");
-    await faceapi.nets.faceRecognitionNet.loadFromUri("/models");
-    setLoading(false);
+    await Promise.all([
+      faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
+      faceapi.nets.ageGenderNet.loadFromUri("/models"),
+      faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
+      faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
+    ]);
+    setIsLoadingModels(false);
   };
 
   useEffect(() => {
     loadModels();
   }, []);
 
-  const startVideo = async () => {
-    if (!videoRef.current) return;
+  const startVideo = useCallback(async () => {
+    if (!videoRef.current || isLoadingModels) return;
     const stream = await navigator.mediaDevices.getUserMedia({ video: true });
     videoRef.current.srcObject = stream;
-  };
+  }, [isLoadingModels]);
 
   useEffect(() => {
     startVideo();
-  }, []);
+  }, [startVideo]);
 
   useEffect(() => {
     const detectFace = async () => {
-      if (!videoRef.current || !canvasRef.current) {
+      if (!videoRef.current || !canvasRef.current || isLoadingModels) {
         return;
       }
 
-      const faceRecognitionModelRaw = await (
-        await fetch("/models/faceRecognitionModel.json")
+      const faceRecognitionModel = await (
+        await fetch(faceRecognitionModelUrl)
       ).json();
+      const labeledFaceDescriptors = faceRecognitionModel.map((item: any) => {
+        const descriptors = item.descriptors.map(
+          (descriptor: number[]) => new Float32Array(descriptor)
+        );
+        return new faceapi.LabeledFaceDescriptors(item.label, descriptors);
+      });
 
-      const faceRecognitionModel = faceRecognitionModelRaw.map(
-        (labeledDescriptor: any) => {
-          return new faceapi.LabeledFaceDescriptors(
-            labeledDescriptor.label,
-            labeledDescriptor.descriptors.map(
-              (descriptor: number[]) => new Float32Array(descriptor)
-            )
-          );
-        }
+      const faceMatcher = new faceapi.FaceMatcher(
+        labeledFaceDescriptors,
+        faceMatcherTolerance
       );
-
-      const faceMatcher = new faceapi.FaceMatcher(faceRecognitionModel, 0.6);
 
       const detections = await faceapi
         .detectAllFaces(videoRef.current)
@@ -70,8 +70,7 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
       const bestMatch = faceMatcher.findBestMatch(detections[0].descriptor);
       onFaceDetect(bestMatch.label);
 
-      // Draw face detection results
-      if (videoRef.current && canvasRef.current) {
+      if (canvasRef.current) {
         const displaySize = {
           width: videoRef.current.clientWidth,
           height: videoRef.current.clientHeight,
@@ -81,34 +80,40 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
           detections,
           displaySize
         );
-        const ctx = canvasRef.current.getContext("2d");
-        if (ctx) {
-          ctx.clearRect(0, 0, displaySize.width, displaySize.height);
+        const context = canvasRef.current.getContext(
+          "2d"
+        ) as CanvasRenderingContext2D; // Add explicit type casting
+        if (context) {
+          context.clearRect(0, 0, displaySize.width, displaySize.height);
           faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
         }
       }
     };
 
-    const intervalId = setInterval(detectFace, 100);
+    const intervalId = setInterval(detectFace, faceDetectionInterval);
     return () => {
       clearInterval(intervalId);
     };
-  }, [onFaceDetect]);
+  }, [onFaceDetect, isLoadingModels]);
 
   return (
     <div className="flex flex-col items-center space-y-4">
-      <div className="relative">
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          className="border-solid border-2 border-gray-600 max-w-md max-h-md"
-        ></video>
-        <canvas
-          ref={canvasRef}
-          className="absolute top-0 left-0 border-solid border-2 border-gray-600 max-w-md max-h-md"
-        />
-      </div>
+      {isLoadingModels ? (
+        <p>Loading models...</p>
+      ) : (
+        <div className="relative">
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            className="border-solid border-2 border-gray-600 max-w-md max-h-md"
+          ></video>
+          <canvas
+            ref={canvasRef}
+            className="absolute top-0 left-0 border-solid border-2 border-gray-max-w-md max-h-md"
+          />
+        </div>
+      )}
     </div>
   );
 };
