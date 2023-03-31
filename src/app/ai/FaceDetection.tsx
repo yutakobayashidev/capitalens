@@ -13,6 +13,7 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
   const faceRecognitionModelUrl = "/models/faceRecognitionModel.json";
   const faceMatcherTolerance = 0.6;
   const faceDetectionInterval = 100;
+  const intervalIdRef = useRef<NodeJS.Timeout>();
 
   const loadModels = async () => {
     await Promise.all([
@@ -32,10 +33,25 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
     if (!videoRef.current || isLoadingModels) return;
     const stream = await navigator.mediaDevices.getUserMedia({
       video: {
-        facingMode: isFrontCamera ? "user" : "environment",
+        facingMode: isFrontCamera ? "user" : "environment", // isFrontCameraがtrueの場合はインカメラを使用する
       },
     });
     videoRef.current.srcObject = stream;
+
+    // 顔の追跡をリセットする
+    if (canvasRef.current) {
+      const context = canvasRef.current.getContext(
+        "2d"
+      ) as CanvasRenderingContext2D;
+      if (context) {
+        context.clearRect(
+          0,
+          0,
+          canvasRef.current.width,
+          canvasRef.current.height
+        );
+      }
+    }
   }, [isLoadingModels, isFrontCamera]);
 
   useEffect(() => {
@@ -95,14 +111,15 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
       }
     };
 
-    const intervalId = setInterval(detectFace, faceDetectionInterval);
+    intervalIdRef.current = setInterval(detectFace, faceDetectionInterval);
     return () => {
-      clearInterval(intervalId);
+      clearInterval(intervalIdRef.current);
     };
   }, [onFaceDetect, isLoadingModels, isFrontCamera]);
 
   const handleCameraToggle = () => {
     setIsFrontCamera(!isFrontCamera);
+    clearInterval(intervalIdRef.current); // 顔の追跡を停止する
   };
 
   return (
