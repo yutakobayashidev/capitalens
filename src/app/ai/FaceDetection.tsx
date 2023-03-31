@@ -7,6 +7,7 @@ type Props = {
 
 const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
   const [isLoadingModels, setIsLoadingModels] = useState(true);
+  const [isFrontCamera, setIsFrontCamera] = useState(false); // デフォルトはバックカメラを使用する
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const faceRecognitionModelUrl = "/models/faceRecognitionModel.json";
@@ -29,9 +30,13 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
 
   const startVideo = useCallback(async () => {
     if (!videoRef.current || isLoadingModels) return;
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: isFrontCamera ? "user" : "environment",
+      },
+    });
     videoRef.current.srcObject = stream;
-  }, [isLoadingModels]);
+  }, [isLoadingModels, isFrontCamera]);
 
   useEffect(() => {
     startVideo();
@@ -94,7 +99,11 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [onFaceDetect, isLoadingModels]);
+  }, [onFaceDetect, isLoadingModels, isFrontCamera]);
+
+  const handleCameraToggle = () => {
+    setIsFrontCamera(!isFrontCamera);
+  };
 
   return (
     <div className="flex flex-col items-center space-y-4">
@@ -110,10 +119,16 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
           ></video>
           <canvas
             ref={canvasRef}
-            className="absolute top-0 left-0 border-solid border-2 border-gray-max-w-md max-h-md"
+            className="absolute top-0 left-0 border-solid border-2 border-gray-600 max-w-md max-h-md"
           />
         </div>
       )}
+      <button
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        onClick={handleCameraToggle}
+      >
+        {isFrontCamera ? "Back Camera" : "Front Camera"}
+      </button>
     </div>
   );
 };
