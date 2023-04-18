@@ -4,6 +4,7 @@ import { Meeting } from '@src/types/meeting';
 import { SiOpenai } from 'react-icons/si';
 import { useState } from 'react';
 import { SpeechRecord } from '@src/types/meeting';
+import { Fragment } from 'react';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 
 interface Props {
@@ -45,7 +46,7 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
             {
               role: 'system',
               content:
-                '入力された国会の議事録を要約してください。\n制約条件\n・文章は簡潔にわかりやすく。\n・重要なキーワードは取り逃がさない。',
+                '入力された国会の議事録を要約してください。\n制約条件\n-文章は簡潔にわかりやすく。\n- 箇条書きでで出力。\n-重要なキーワードは取り逃がさない',
             },
             { role: 'user', content: speeches.join('\n') },
           ],
@@ -134,11 +135,20 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
                 <SiOpenai className='mr-2' />
                 要約する
               </button>
-              <>
+              {translatedSummaries[meeting.issueID] && (
                 <div className='mb-3'>
-                  {translatedSummaries[meeting.issueID]}
+                  {translatedSummaries[meeting.issueID]
+                    .split(/\n/)
+                    .map((item, index) => {
+                      return (
+                        <Fragment key={index}>
+                          {item}
+                          <br />
+                        </Fragment>
+                      );
+                    })}
                 </div>
-              </>
+              )}
             </>
           )}
         </div>
