@@ -105,7 +105,7 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
                   meeting.nameOfHouse === '参議院'
                     ? 'bg-[#007ABB]'
                     : 'bg-[#EA5433]'
-                } text-white text-lg rounded-md font-bold mr-3 px-4 py-1`}
+                } text-white text-lg rounded-md font-bold mr-3 px-4 py-1.5`}
               >
                 {meeting.nameOfHouse}
               </span>
@@ -113,7 +113,7 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
             </a>
             <button
               onClick={() => SummallyId(meeting.issueID)}
-              className='text-lg flex items-center text-white bg-[#74aa9c] px-2 py-1 rounded-lg'
+              className='flex items-center text-white bg-[#74aa9c] px-2 py-1 rounded-lg text'
             >
               <SiOpenai className='mr-2' />
               要約
