@@ -25,5 +25,6 @@ export interface SpeechRecord {
   speechID: string;
   speechOrder: number;
   speaker: string;
+  speech: string;
   speechURL: string;
 }

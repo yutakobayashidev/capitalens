@@ -2,8 +2,8 @@ import { People } from '@src/types/people';
 import { peoples } from '@peoples';
 import Link from 'next/link';
 import Topics from '@src/components/Topics';
+import Meetings from '@src/components/Meetings';
 import prisma from '@src/lib/prisma';
-import { MeetingRecord } from '@src/types/meeting';
 
 type GroupedPeoples = {
   [key: string]: People[];
@@ -27,7 +27,7 @@ async function getTopicViews() {
 
 async function meeting_list() {
   const res = await fetch(
-    'https://kokkai.ndl.go.jp/api/meeting_list?from=2023-04-01&recordPacking=json',
+    'https://kokkai.ndl.go.jp/api/meeting?from=2023-04-01&recordPacking=json',
     {
       next: { revalidate: 3600 },
     }
@@ -97,18 +97,10 @@ export default async function Page() {
       <section className='py-8 bg-gray-50'>
         <div className='mx-auto max-w-screen-xl px-4 md:px-8'>
           <h2 className='font-bold text-2xl mb-5'>最新の議会</h2>
-          {meetings.meetingRecord.map((meeting: MeetingRecord) => (
-            <a
-              key={meeting.session}
-              href={meeting.meetingURL}
-              className='text-2xl font-semibold mb-5 flex items-center'
-            >
-              <span className='bg-[#007ABB] text-white text-lg rounded-md font-bold mr-3 px-4 py-1'>
-                {meeting.nameOfHouse}
-              </span>
-              {meeting.nameOfMeeting} {meeting.issue}
-            </a>
-          ))}
+          <p className='mb-3'>
+            OpenAIを使用して議会での議論を簡単に要約できます。必ずしも正確な情報を提供できるわけではありませんので、情報の確認と補完が必要です。この要約は、議論の概要を短時間で把握するための手助けとしてご活用いただけます。
+          </p>
+          <Meetings meetings={meetings} />
         </div>
       </section>
     </>
