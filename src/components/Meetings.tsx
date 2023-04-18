@@ -90,11 +90,22 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
 
   return (
     <>
+      <input
+        onChange={(e) => SetAPIkey(e.target.value)}
+        className='w-full mb-3 block resize-none rounded-md border-2 border-gray-200 bg-gray-100 px-4 py-2  '
+        placeholder='OpenAIのAPIキーを入力...'
+      ></input>
       {meetings.meetingRecord.map((meeting) => (
         <div key={meeting.issueID}>
           <div className='text-2xl font-semibold mb-5 flex items-center justify-between'>
             <a href={meeting.meetingURL} className='flex-1'>
-              <span className='bg-[#007ABB] text-white text-lg rounded-md font-bold mr-3 px-4 py-1'>
+              <span
+                className={`${
+                  meeting.nameOfHouse === '参議院'
+                    ? 'bg-[#007ABB]'
+                    : 'bg-[#EA5433]'
+                } text-white text-lg rounded-md font-bold mr-3 px-4 py-1`}
+              >
                 {meeting.nameOfHouse}
               </span>
               {meeting.nameOfMeeting} {meeting.issue}
@@ -113,11 +124,6 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
                 ※ OpenAI
                 APIに直接アクセスするため、APIトークンの保存などは行っていません。
               </p>
-              <input
-                onChange={(e) => SetAPIkey(e.target.value)}
-                className='w-full mb-3 block resize-none rounded-md border-2 border-gray-200 bg-gray-100 px-4 py-2  '
-                placeholder='OpenAIのAPIキーを入力...'
-              ></input>
               <button
                 disabled={!api || start}
                 onClick={() => {
