@@ -14,8 +14,8 @@ interface Props {
 class APIError extends Error {}
 
 const Meetings: React.FC<Props> = ({ meetings }) => {
-  const [summally, SummallyId] = useState('');
-  const [api, SetAPIkey] = useState('');
+  const [summally, setSummallyId] = useState<string | null>(null);
+  const [api, setAPIKey] = useState<string | null>(null);
   const [translatedSummaries, setTranslatedSummaries] = useState<{
     [issueID: string]: string;
   }>({});
@@ -92,7 +92,7 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
   return (
     <>
       <input
-        onChange={(e) => SetAPIkey(e.target.value)}
+        onChange={(e) => setAPIKey(e.target.value)}
         className='w-full mb-3 block resize-none rounded-md border-2 border-gray-200 bg-gray-100 px-4 py-2  '
         placeholder='OpenAIのAPIキーを入力...'
       ></input>
@@ -112,7 +112,7 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
               {meeting.nameOfMeeting} {meeting.issue}
             </a>
             <button
-              onClick={() => SummallyId(meeting.issueID)}
+              onClick={() => setSummallyId(meeting.issueID)}
               className='flex items-center text-white bg-[#74aa9c] px-2 py-1 rounded-lg text'
             >
               <SiOpenai className='mr-2' />
