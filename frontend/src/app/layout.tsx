@@ -4,8 +4,7 @@ import cn from 'classnames';
 import Header from '@src/components/Header';
 import Footer from '@src/components/Footer';
 import { Inter, Noto_Sans_JP } from 'next/font/google';
-import Link from 'next/link';
-import { FaHome, FaSearch, FaHashtag, FaRobot } from 'react-icons/fa';
+import MobileFooter from '@src/components/MobileFooter';
 
 export const metadata: Metadata = {
   title: {
@@ -44,34 +43,7 @@ export default function RootLayout({
         <Header />
         {children}
         <Footer />
-        <div className='mb-10 block md:hidden'>
-          <ul className='fixed table table-fixed w-full	bottom-0 left-0 z-99 m-0 bg-white'>
-            <li className='table-cell text-center'>
-              <Link href=''>
-                <FaHome size={30} className='block w-auto' />
-                ホーム
-              </Link>
-            </li>
-            <li className='table-cell text-center'>
-              <Link href=''>
-                <FaRobot size={30} className='block w-auto' />
-                AI
-              </Link>
-            </li>
-            <li className='table-cell text-center'>
-              <Link href=''>
-                <FaHashtag size={30} className='block w-auto' />
-                トピック
-              </Link>
-            </li>
-            <li className='table-cell text-center'>
-              <Link href=''>
-                <FaSearch size={30} className='block w-auto' />
-                検索
-              </Link>
-            </li>
-          </ul>
-        </div>
+        <MobileFooter />
       </body>
     </html>
   );
