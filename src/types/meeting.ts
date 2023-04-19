@@ -14,7 +14,7 @@ export interface MeetingRecord {
   nameOfHouse: string;
   nameOfMeeting: string;
   issue: string;
-  date: Date;
+  date: string;
   closing: null;
   speechRecord: SpeechRecord[];
   meetingURL: string;

@@ -6,6 +6,10 @@ import { useState } from 'react';
 import { SpeechRecord } from '@src/types/meeting';
 import { Fragment } from 'react';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ja';
+
+dayjs.locale('ja');
 
 interface Props {
   meetings: Meeting;
@@ -109,7 +113,8 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
               >
                 {meeting.nameOfHouse}
               </span>
-              {meeting.nameOfMeeting} {meeting.issue}
+              {meeting.nameOfMeeting} {meeting.issue}{' '}
+              {dayjs(meeting.date).format('YY/MM/DD')}
             </a>
             <button
               onClick={() => setSummallyId(meeting.issueID)}
