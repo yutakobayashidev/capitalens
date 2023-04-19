@@ -1,5 +1,5 @@
-import { useRef, useState, useEffect, useCallback } from "react";
-import * as faceapi from "face-api.js";
+import { useRef, useState, useEffect, useCallback } from 'react';
+import * as faceapi from 'face-api.js';
 
 type Props = {
   onFaceDetect: (name: string) => void;
@@ -10,17 +10,16 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
   const [isFrontCamera, setIsFrontCamera] = useState(false); // デフォルトはバックカメラを使用する
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const faceRecognitionModelUrl = "/models/faceRecognitionModel.json";
+  const faceRecognitionModelUrl = '/models/faceRecognitionModel.json';
   const faceMatcherTolerance = 0.6;
   const faceDetectionInterval = 100;
   const intervalIdRef = useRef<NodeJS.Timeout>();
 
   const loadModels = async () => {
     await Promise.all([
-      faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
-      faceapi.nets.ageGenderNet.loadFromUri("/models"),
-      faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
-      faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
+      faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
+      faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
+      faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
     ]);
     setIsLoadingModels(false);
   };
@@ -33,7 +32,7 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
     if (!videoRef.current || isLoadingModels) return;
     const stream = await navigator.mediaDevices.getUserMedia({
       video: {
-        facingMode: isFrontCamera ? "user" : "environment", // isFrontCameraがtrueの場合はインカメラを使用する
+        facingMode: isFrontCamera ? 'user' : 'environment', // isFrontCameraがtrueの場合はインカメラを使用する
       },
     });
     videoRef.current.srcObject = stream;
@@ -41,7 +40,7 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
     // 顔の追跡をリセットする
     if (canvasRef.current) {
       const context = canvasRef.current.getContext(
-        "2d"
+        '2d'
       ) as CanvasRenderingContext2D;
       if (context) {
         context.clearRect(
@@ -102,7 +101,7 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
           displaySize
         );
         const context = canvasRef.current.getContext(
-          "2d"
+          '2d'
         ) as CanvasRenderingContext2D; // Add explicit type casting
         if (context) {
           context.clearRect(0, 0, displaySize.width, displaySize.height);
@@ -123,28 +122,28 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
   };
 
   return (
-    <div className="flex flex-col items-center space-y-4">
+    <div className='flex flex-col items-center space-y-4'>
       {isLoadingModels ? (
         <p>Loading models...</p>
       ) : (
-        <div className="relative">
+        <div className='relative'>
           <video
             ref={videoRef}
             autoPlay
             muted
-            className="border-solid border-2 border-gray-600 max-w-md max-h-md"
+            className='border-solid border-2 border-gray-600 max-w-md max-h-md'
           ></video>
           <canvas
             ref={canvasRef}
-            className="absolute top-0 left-0 border-solid border-2 border-gray-600 max-w-md max-h-md"
+            className='absolute top-0 left-0 border-solid border-2 border-gray-600 max-w-md max-h-md'
           />
         </div>
       )}
       <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
         onClick={handleCameraToggle}
       >
-        {isFrontCamera ? "Back Camera" : "Front Camera"}
+        {isFrontCamera ? 'Back Camera' : 'Front Camera'}
       </button>
     </div>
   );
