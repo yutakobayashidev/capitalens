@@ -1,0 +1,24 @@
+{
+  "name": "politicians",
+  "version": "1.0.0",
+  "description": "顔認識用の画像データ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yutakobayashidev/politicians.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yutakobayashidev/politicians/issues"
+  },
+  "homepage": "https://github.com/yutakobayashidev/politicians#readme",
+  "dependencies": {
+    "canvas": "^2.11.0",
+    "face-api.js": "^0.22.2"
+  }
+}
