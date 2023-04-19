@@ -9,11 +9,11 @@ export default function MobileFooter() {
 
   return (
     <div className='block md:hidden'>
-      <ul className='fixed table table-fixed w-full bottom-0 left-0 z-99 m-0 bg-white'>
+      <ul className='fixed table table-fixed w-full bottom-0 border left-0 z-99 m-0 bg-white'>
         <li className='table-cell text-center'>
           <Link
             href='/'
-            className={`pb-3 flex flex-col pt-3 font-bold overflow-hidden whitespace-nowrap ${
+            className={`flex pb-1.5 pt-2 flex-col font-bold overflow-hidden whitespace-nowrap ${
               pathname === '/' ? 'text-blue-400' : 'text-gray-400'
             }`}
           >
@@ -24,7 +24,7 @@ export default function MobileFooter() {
         <li className='table-cell text-center'>
           <Link
             href='/ai'
-            className={`flex flex-col pb-3 pt-3 font-bold overflow-hidden whitespace-nowrap ${
+            className={`flex flex-col pb-1.5 pt-2  font-bold overflow-hidden whitespace-nowrap ${
               pathname === '/ai' ? 'text-blue-400' : 'text-gray-400'
             }`}
           >
@@ -35,7 +35,7 @@ export default function MobileFooter() {
         <li className='table-cell text-center'>
           <Link
             href='/topics'
-            className={`pb-3 flex flex-col pt-3 font-bold overflow-hidden whitespace-nowrap ${
+            className={`pb-1.5 pt-2 flex flex-col font-bold overflow-hidden whitespace-nowrap ${
               pathname === '/topics' ? 'text-blue-400' : 'text-gray-400'
             }`}
           >
@@ -46,7 +46,7 @@ export default function MobileFooter() {
         <li className='table-cell text-center'>
           <button
             onClick={() => alert('Coming soon!')}
-            className='pb-3 text-gray-400 inline-flex flex-col pt-3 font-bold overflow-hidden whitespace-nowrap'
+            className='pb-1.5 pt-2 text-gray-400 inline-flex flex-col font-bold overflow-hidden whitespace-nowrap'
           >
             <FaSearch size={25} className='inline-block w-auto' />
             <span className='mt-1'>検索</span>
