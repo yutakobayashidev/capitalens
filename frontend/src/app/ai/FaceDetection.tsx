@@ -64,21 +64,6 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
         return;
       }
 
-      const faceRecognitionModel = await (
-        await fetch(faceRecognitionModelUrl)
-      ).json();
-      const labeledFaceDescriptors = faceRecognitionModel.map((item: any) => {
-        const descriptors = item.descriptors.map(
-          (descriptor: number[]) => new Float32Array(descriptor)
-        );
-        return new faceapi.LabeledFaceDescriptors(item.label, descriptors);
-      });
-
-      const faceMatcher = new faceapi.FaceMatcher(
-        labeledFaceDescriptors,
-        faceMatcherTolerance
-      );
-
       const detections = await faceapi
         .detectAllFaces(videoRef.current)
         .withFaceLandmarks()
@@ -92,8 +77,8 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
 
       if (canvasRef.current) {
         const displaySize = {
-          width: window.innerWidth,
-          height: window.innerHeight,
+          width: videoRef.current.clientWidth,
+          height: videoRef.current.clientHeight,
         };
         faceapi.matchDimensions(canvasRef.current, displaySize);
         const resizedDetections = faceapi.resizeResults(
