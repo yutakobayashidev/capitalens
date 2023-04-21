@@ -14,6 +14,7 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
   const faceMatcherTolerance = 0.6;
   const faceDetectionInterval = 100;
   const intervalIdRef = useRef<NodeJS.Timeout>();
+  const [isFaceDetected, setIsFaceDetected] = useState(false);
 
   const loadModels = async () => {
     await Promise.all([
@@ -83,17 +84,16 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
         .withFaceLandmarks()
         .withFaceDescriptors();
 
-      if (detections.length === 0) {
-        return;
+      if (detections.length > 0) {
+        setIsFaceDetected(true);
+      } else {
+        setIsFaceDetected(false);
       }
-
-      const bestMatch = faceMatcher.findBestMatch(detections[0].descriptor);
-      onFaceDetect(bestMatch.label);
 
       if (canvasRef.current) {
         const displaySize = {
-          width: videoRef.current.clientWidth,
-          height: videoRef.current.clientHeight,
+          width: window.innerWidth,
+          height: window.innerHeight,
         };
         faceapi.matchDimensions(canvasRef.current, displaySize);
         const resizedDetections = faceapi.resizeResults(
@@ -121,6 +121,39 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
     clearInterval(intervalIdRef.current); // 顔の追跡を停止する
   };
 
+  const handleNameDetect = async () => {
+    if (!videoRef.current || !canvasRef.current || isLoadingModels) {
+      return;
+    }
+
+    const faceRecognitionModel = await (
+      await fetch(faceRecognitionModelUrl)
+    ).json();
+    const labeledFaceDescriptors = faceRecognitionModel.map((item: any) => {
+      const descriptors = item.descriptors.map(
+        (descriptor: number[]) => new Float32Array(descriptor)
+      );
+      return new faceapi.LabeledFaceDescriptors(item.label, descriptors);
+    });
+
+    const faceMatcher = new faceapi.FaceMatcher(
+      labeledFaceDescriptors,
+      faceMatcherTolerance
+    );
+
+    const detections = await faceapi
+      .detectAllFaces(videoRef.current)
+      .withFaceLandmarks()
+      .withFaceDescriptors();
+
+    if (detections.length === 0) {
+      return;
+    }
+
+    const bestMatch = faceMatcher.findBestMatch(detections[0].descriptor);
+    onFaceDetect(bestMatch.label);
+  };
+
   return (
     <div className='flex flex-col items-center space-y-4'>
       {isLoadingModels ? (
@@ -131,11 +164,11 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
             ref={videoRef}
             autoPlay
             muted
-            className='border-solid border-2 border-gray-600 max-w-md max-h-md'
+            className='w-full h-full'
           ></video>
           <canvas
             ref={canvasRef}
-            className='absolute top-0 left-0 border-solid border-2 border-gray-600 max-w-md max-h-md'
+            className='absolute top-0 left-0 w-full h-full'
           />
         </div>
       )}
@@ -144,6 +177,13 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
         onClick={handleCameraToggle}
       >
         {isFrontCamera ? 'Back Camera' : 'Front Camera'}
+      </button>
+      <button
+        className='bg-green-500 hover:bg-green-700 disabled:bg-gray-300 text-white font-bold py-2 px-4 rounded'
+        onClick={handleNameDetect}
+        disabled={!isFaceDetected} // isFaceDetectedがtrueでない場合はボタンを無効化
+      >
+        Detect Name
       </button>
     </div>
   );

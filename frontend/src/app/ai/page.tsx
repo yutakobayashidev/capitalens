@@ -11,11 +11,8 @@ const IndexPage = () => {
   };
 
   return (
-    <section className='py-8'>
-      <div className='mx-auto max-w-md px-4 md:px-8'>
-        <h1 className='text-4xl font-bold mb-6 text-center'>
-          Face API × Next.js
-        </h1>
+    <section>
+      <div>
         <FaceDetection onFaceDetect={handleFaceDetect} />
         {name !== null && (
           <div className='mt-10 text-center'>
