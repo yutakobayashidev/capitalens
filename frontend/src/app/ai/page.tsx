@@ -7,7 +7,7 @@ import { People } from '@src/types/people';
 import Link from 'next/link';
 
 const IndexPage = () => {
-  const [name, setName] = useState<People | null>(null);
+  const [people, setPeople] = useState<People | null>(null);
 
   const [error, setError] = useState(false);
 
@@ -15,7 +15,7 @@ const IndexPage = () => {
     if (name !== 'unknown') {
       const people = getPeopleByName(name);
       if (people) {
-        setName(people);
+        setPeople(people);
       } else {
         setError(true);
       }
@@ -33,22 +33,38 @@ const IndexPage = () => {
             <p className='text-4xl font-bold'>見つかりませんでした</p>
           ) : (
             <>
-              {name && name.name && (
+              {people && people.name && (
                 <div className='mx-auto max-w-screen-xl px-4 md:px-8'>
                   <div className='flex items-center'>
                     <img
                       className='rounded-full mr-3'
                       height={60}
                       width={60}
-                      src={name.image}
-                      alt={name.name}
+                      src={people.image}
+                      alt={people.name}
                     />
-                    <h1 className='text-2xl font-bold'>{name.name}</h1>
+                    <div>
+                      <h1 className='font-bold text-xl'>{people.name}</h1>
+                      <p className='text-gray-400 text-sm'>{people.role}</p>
+                    </div>
                   </div>
-                  <p className='my-3'>{name.bio}</p>
+                  <p className='my-3 text-gray-700'>{people.bio}</p>
+                  <h2 className='text-gray-400 font-bold mb-3'>データ</h2>
+                  <div className='flex items-center mb-3'>
+                    <div className='w-[55px] h-[55px] mr-2 flex justify-center items-center bg-blue-100 text-2xl rounded-full text-center'>
+                      <span>🏛️</span>
+                    </div>
+                    <div className='font-semibold'>自由民主党</div>
+                  </div>
+                  <div className='flex items-center mb-3'>
+                    <div className='w-[55px] h-[55px] mr-2 flex justify-center items-center bg-red-300 text-2xl rounded-full text-center'>
+                      <span>🎉</span>
+                    </div>
+                    <div className='font-semibold'>N回の当選</div>
+                  </div>
                   <Link
                     className='mb-5 block text-[#0f41af]'
-                    href={`/people/${name.id}`}
+                    href={`/people/${people.id}`}
                   >
                     情報を詳しく見る -&gt;
                   </Link>
