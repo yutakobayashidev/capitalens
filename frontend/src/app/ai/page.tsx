@@ -15,6 +15,7 @@ const IndexPage = () => {
     if (name !== 'unknown') {
       const people = getPeopleByName(name);
       if (people) {
+        setError(false);
         setPeople(people);
       } else {
         setError(true);
