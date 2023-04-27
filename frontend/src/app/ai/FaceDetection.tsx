@@ -182,7 +182,7 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
     } catch (err) {
       console.error("Error requesting camera access:", err);
       setErrorMessage(
-        "カメラへのアクセスが拒否されました。ブラウザの設定でカメラへのアクセスを許可してください。"
+        "カメラへのアクセスがブロックされています。ブラウザの設定でカメラへのアクセスを許可してください。"
       );
     }
   };
