@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { Meeting } from '@src/types/meeting';
-import { SiOpenai } from 'react-icons/si';
-import { useState } from 'react';
-import { SpeechRecord } from '@src/types/meeting';
-import { Fragment } from 'react';
-import { fetchEventSource } from '@microsoft/fetch-event-source';
-import dayjs from 'dayjs';
-import 'dayjs/locale/ja';
+import { Meeting } from "@src/types/meeting";
+import { SiOpenai } from "react-icons/si";
+import { useState } from "react";
+import { SpeechRecord } from "@src/types/meeting";
+import { Fragment } from "react";
+import { fetchEventSource } from "@microsoft/fetch-event-source";
+import dayjs from "dayjs";
+import "dayjs/locale/ja";
 
-dayjs.locale('ja');
+dayjs.locale("ja");
 
 interface Props {
   meetings: Meeting;
@@ -21,6 +21,7 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
   const [summally, setSummallyId] = useState<string | null>(null);
   const [api, setAPIKey] = useState<string | null>(null);
   const [copy, setCopy] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
   const [translatedSummaries, setTranslatedSummaries] = useState<{
     [issueID: string]: string;
   }>({});
@@ -32,7 +33,7 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
 
   const callAI = async (records: SpeechRecord[], issueID: string) => {
     if (!api) {
-      alert('No API Key');
+      alert("No API Key");
     }
 
     const speeches = records
@@ -42,21 +43,24 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
     Setstart(true);
 
     try {
-      await fetchEventSource('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
+      await fetchEventSource("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${api}`,
         },
         body: JSON.stringify({
-          model: 'gpt-3.5-turbo',
+          model: "gpt-3.5-turbo",
           messages: [
             {
-              role: 'system',
-              content:
-                '入力された国会の議事録を要約してください。\n制約条件\n- 文章は簡潔にわかりやすく。\n- 箇条書きでで出力。\n- 名前や日付など、その他重要なキーワードは取り逃がさない',
+              role: "system",
+              content: `入力された国会の議事録を要約してください。\n制約条件${
+                isChecked
+                  ? "\n- 小学生のために、国会議事録の議題の進行を、お話や物語に例えて説明してください。議員の名前などはそのまま、出来事を簡単な言葉で表現してみてください。"
+                  : "\n- 文章は簡潔にわかりやすく。\n- 箇条書きでで出力。\n- 名前や日付など、その他重要なキーワードは取り逃がさない"
+              }`,
             },
-            { role: 'user', content: speeches.join('\n') },
+            { role: "user", content: speeches.join("\n") },
           ],
           stream: true,
         }),
@@ -70,7 +74,7 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
           }
         },
         onmessage(ev) {
-          if (ev.data === '[DONE]') {
+          if (ev.data === "[DONE]") {
             Setstart(false);
             setIsSummaryReady((prevState) => ({
               ...prevState,
@@ -104,40 +108,49 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
   function copyTextToClipboard(text: string) {
     navigator.clipboard.writeText(text).then(
       function () {
-        console.log('Async: Copying to clipboard was successful!');
+        console.log("Async: Copying to clipboard was successful!");
       },
       function (err) {
-        console.error('Async: Could not copy text: ', err);
+        console.error("Async: Could not copy text: ", err);
       }
     );
   }
 
   return (
     <>
-      <p className='text-sm mb-3 text-gray-500'>
+      <p className="text-sm mb-3 text-gray-500">
         ※ OpenAI
         APIに直接アクセスするため、APIトークンの保存などは行っていません。
       </p>
+      <label className="flex items-center mb-3">
+        <input
+          type="checkbox"
+          className="mr-2"
+          checked={isChecked}
+          onChange={() => setIsChecked(!isChecked)}
+        />
+        子ども向けに説明
+      </label>
       <input
         onChange={(e) => setAPIKey(e.target.value)}
-        className='w-full mb-3 block resize-none rounded-md border-2 border-gray-200 bg-gray-100 px-4 py-2  '
-        placeholder='OpenAIのAPIキーを入力...'
+        className="w-full mb-3 block resize-none rounded-md border-2 border-gray-200 bg-gray-100 px-4 py-2  "
+        placeholder="OpenAIのAPIキーを入力..."
       ></input>
       {meetings.meetingRecord.map((meeting) => (
         <div key={meeting.issueID}>
-          <div className='text-2xl font-semibold mb-5 flex items-center justify-between'>
-            <a href={meeting.meetingURL} className='flex-1'>
+          <div className="text-2xl font-semibold mb-5 flex items-center justify-between">
+            <a href={meeting.meetingURL} className="flex-1">
               <span
                 className={`${
-                  meeting.nameOfHouse === '参議院'
-                    ? 'bg-[#007ABB]'
-                    : 'bg-[#EA5433]'
+                  meeting.nameOfHouse === "参議院"
+                    ? "bg-[#007ABB]"
+                    : "bg-[#EA5433]"
                 } text-white text-lg rounded-md font-bold mr-3 px-3 py-1.5`}
               >
                 {meeting.nameOfHouse}
               </span>
-              {meeting.nameOfMeeting} {meeting.issue}{' '}
-              {dayjs(meeting.date).format('YY/MM/DD')}
+              {meeting.nameOfMeeting} {meeting.issue}{" "}
+              {dayjs(meeting.date).format("YY/MM/DD")}
             </a>
             <button
               onClick={() => {
@@ -145,16 +158,16 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
                 callAI(meeting.speechRecord, meeting.issueID);
               }}
               disabled={!api || start}
-              className='disabled:bg-gray-200 flex rounded-md items-center text-white bg-[#74aa9c] px-2 py-1.5 text-lg'
+              className="disabled:bg-gray-200 flex rounded-md items-center text-white bg-[#74aa9c] px-2 py-1.5 text-lg"
             >
-              <SiOpenai className='mr-2' />
+              <SiOpenai className="mr-2" />
               要約する
             </button>
           </div>
           {meeting.issueID == summally && (
             <>
               {translatedSummaries[meeting.issueID] && (
-                <div className='bg-gray-50 leading-7 border mb-3 rounded-lg ext-base p-4'>
+                <div className="bg-gray-50 leading-7 border mb-3 rounded-lg ext-base p-4">
                   {translatedSummaries[meeting.issueID]
                     .split(/\n/)
                     .map((item, index) => {
@@ -173,9 +186,9 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
                         );
                         setCopy(true);
                       }}
-                      className='border mt-3 rounded-md px-4 py-2 font-semibold'
+                      className="border mt-3 rounded-md px-4 py-2 font-semibold"
                     >
-                      {copy ? '✨ コピーしました' : '📋 要約をコピーする'}
+                      {copy ? "✨ コピーしました" : "📋 要約をコピーする"}
                     </button>
                   )}
                 </div>
