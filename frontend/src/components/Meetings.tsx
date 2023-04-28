@@ -2,12 +2,16 @@
 
 import { Meeting } from "@src/types/meeting";
 import { SiOpenai } from "react-icons/si";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SpeechRecord } from "@src/types/meeting";
 import { Fragment } from "react";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import dayjs from "dayjs";
 import "dayjs/locale/ja";
+import { tokenize } from "kuromojin";
+import { getTokenizer } from "kuromojin";
+
+getTokenizer({ dicPath: "/dict" });
 
 dayjs.locale("ja");
 
@@ -30,6 +34,53 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
   }>({});
 
   const [start, Setstart] = useState(false);
+
+  const kanaToHira = (str: string) =>
+    str.replace(/[\u30a1-\u30f6]/g, (match) =>
+      String.fromCharCode(match.charCodeAt(0) - 0x60)
+    );
+
+  const isKanji = (ch: string): boolean => {
+    const unicode = ch.charCodeAt(0);
+    return unicode >= 0x4e00 && unicode <= 0x9faf;
+  };
+
+  const generateYomi = async (text: string) => {
+    const tokens = await tokenize(text);
+    const rubyArray = tokens.map((token) => {
+      const surface = token.surface_form;
+      const reading = token.reading;
+      if (!reading) {
+        return surface;
+      }
+      const hiraReading = kanaToHira(reading);
+      if (surface.split("").some(isKanji)) {
+        return `<ruby>${surface}<rt>${hiraReading}</rt></ruby>`;
+      } else {
+        return surface;
+      }
+    });
+    return rubyArray.join("");
+  };
+
+  const [rubySummaries, setRubySummaries] = useState<{
+    [issueID: string]: string;
+  }>({});
+
+  useEffect(() => {
+    if (isChecked) {
+      const applyRuby = async () => {
+        const newRubySummaries = { ...rubySummaries };
+        for (const issueID in translatedSummaries) {
+          newRubySummaries[issueID] = await generateYomi(
+            translatedSummaries[issueID]
+          );
+        }
+        setRubySummaries(newRubySummaries);
+      };
+      applyRuby();
+    }
+  }, [isChecked, translatedSummaries]);
 
   const callAI = async (records: SpeechRecord[], issueID: string) => {
     if (!api) {
@@ -171,9 +222,12 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
                   {translatedSummaries[meeting.issueID]
                     .split(/\n/)
                     .map((item, index) => {
+                      const text = isChecked
+                        ? rubySummaries[meeting.issueID]
+                        : item;
                       return (
                         <Fragment key={index}>
-                          {item}
+                          <span dangerouslySetInnerHTML={{ __html: text }} />
                           <br />
                         </Fragment>
                       );
