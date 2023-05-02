@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9",
+    "@types/gtag.js": "^0.0.12",
     "autoprefixer": "^10.4.13",
     "chart.js": "^4.2.1",
     "postcss": "^8.4.21",
