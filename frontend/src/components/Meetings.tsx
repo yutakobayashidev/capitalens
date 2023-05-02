@@ -8,12 +8,18 @@ import { Fragment } from "react";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import dayjs from "dayjs";
 import "dayjs/locale/ja";
-import { tokenize } from "kuromojin";
-import { getTokenizer } from "kuromojin";
-
-getTokenizer({ dicPath: "/dict" });
+import * as kuromoji from "kuromoji";
 
 dayjs.locale("ja");
+
+let tokenizerInstance: kuromoji.Tokenizer<kuromoji.IpadicFeatures> | undefined;
+kuromoji.builder({ dicPath: "/dict" }).build((err, tokenizer) => {
+  if (err) {
+    console.log(err);
+  } else {
+    tokenizerInstance = tokenizer;
+  }
+});
 
 interface Props {
   meetings: Meeting;
@@ -46,7 +52,12 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
   };
 
   const generateYomi = async (text: string) => {
-    const tokens = await tokenize(text);
+    if (!tokenizerInstance) {
+      console.error("Tokenizer not initialized");
+      return;
+    }
+
+    const tokens = tokenizerInstance.tokenize(text);
     const rubyArray = tokens.map((token) => {
       const surface = token.surface_form;
       const reading = token.reading;
@@ -72,9 +83,8 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
       const applyRuby = async () => {
         const newRubySummaries = { ...rubySummaries };
         for (const issueID in translatedSummaries) {
-          newRubySummaries[issueID] = await generateYomi(
-            translatedSummaries[issueID]
-          );
+          const yomi = await generateYomi(translatedSummaries[issueID]);
+          newRubySummaries[issueID] = yomi !== undefined ? yomi : "";
         }
         setRubySummaries(newRubySummaries);
       };
