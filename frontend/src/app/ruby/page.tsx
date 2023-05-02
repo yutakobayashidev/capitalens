@@ -5,7 +5,7 @@ import { useState } from "react";
 import { tokenize } from "kuromojin";
 import { getTokenizer } from "kuromojin";
 
-getTokenizer({ dicPath: "/dict" });
+getTokenizer({ dicPath: "https://cdn.jsdelivr.net/npm/kuromoji@0.1.2/dict" });
 
 const kanaToHira = (str: string) =>
   str.replace(/[\u30a1-\u30f6]/g, (match) =>
