@@ -2,7 +2,7 @@
 
 import { Meeting } from "@src/types/meeting";
 import { SiOpenai } from "react-icons/si";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { SpeechRecord } from "@src/types/meeting";
 import { Fragment } from "react";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
@@ -51,7 +51,7 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
     return unicode >= 0x4e00 && unicode <= 0x9faf;
   };
 
-  const generateYomi = async (text: string) => {
+  const generateYomi = useCallback(async (text: string) => {
     if (!tokenizerInstance) {
       console.error("Tokenizer not initialized");
       return;
@@ -72,25 +72,27 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
       }
     });
     return rubyArray.join("");
-  };
+  }, []);
 
   const [rubySummaries, setRubySummaries] = useState<{
     [issueID: string]: string;
   }>({});
 
+  const applyRuby = useCallback(async () => {
+    for (const issueID in translatedSummaries) {
+      const yomi = await generateYomi(translatedSummaries[issueID]);
+      setRubySummaries((prevState) => ({
+        ...prevState,
+        [issueID]: yomi !== undefined ? yomi : "",
+      }));
+    }
+  }, [translatedSummaries, generateYomi]);
+
   useEffect(() => {
     if (isChecked) {
-      const applyRuby = async () => {
-        const newRubySummaries = { ...rubySummaries };
-        for (const issueID in translatedSummaries) {
-          const yomi = await generateYomi(translatedSummaries[issueID]);
-          newRubySummaries[issueID] = yomi !== undefined ? yomi : "";
-        }
-        setRubySummaries(newRubySummaries);
-      };
       applyRuby();
     }
-  }, [isChecked, translatedSummaries]);
+  }, [isChecked, applyRuby]);
 
   const callAI = async (records: SpeechRecord[], issueID: string) => {
     if (!api) {
