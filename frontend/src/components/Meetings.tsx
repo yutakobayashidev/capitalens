@@ -2,7 +2,7 @@
 
 import { Meeting } from "@src/types/meeting";
 import { SiOpenai } from "react-icons/si";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { SpeechRecord } from "@src/types/meeting";
 import { Fragment } from "react";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
@@ -51,7 +51,7 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
     return unicode >= 0x4e00 && unicode <= 0x9faf;
   };
 
-  const generateYomi = async (text: string) => {
+  const generateYomi = useCallback(async (text: string) => {
     if (!tokenizerInstance) {
       console.error("Tokenizer not initialized");
       return;
@@ -72,7 +72,7 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
       }
     });
     return rubyArray.join("");
-  };
+  }, []);
 
   const [rubySummaries, setRubySummaries] = useState<{
     [issueID: string]: string;
@@ -90,7 +90,7 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
       };
       applyRuby();
     }
-  }, [isChecked, translatedSummaries]);
+  }, [isChecked, translatedSummaries, generateYomi, rubySummaries]);
 
   const callAI = async (records: SpeechRecord[], issueID: string) => {
     if (!api) {
