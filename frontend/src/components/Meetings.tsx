@@ -2,7 +2,7 @@
 
 import { Meeting } from "@src/types/meeting";
 import { SiOpenai } from "react-icons/si";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { SpeechRecord } from "@src/types/meeting";
 import { Fragment } from "react";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
@@ -51,46 +51,52 @@ const Meetings: React.FC<Props> = ({ meetings }) => {
     return unicode >= 0x4e00 && unicode <= 0x9faf;
   };
 
-  const generateYomi = useCallback(async (text: string) => {
-    if (!tokenizerInstance) {
-      console.error("Tokenizer not initialized");
-      return;
-    }
-
-    const tokens = tokenizerInstance.tokenize(text);
-    const rubyArray = tokens.map((token) => {
-      const surface = token.surface_form;
-      const reading = token.reading;
-      if (!reading) {
-        return surface;
-      }
-      const hiraReading = kanaToHira(reading);
-      if (surface.split("").some(isKanji)) {
-        return `<ruby>${surface}<rt>${hiraReading}</rt></ruby>`;
-      } else {
-        return surface;
-      }
-    });
-    return rubyArray.join("");
-  }, []);
-
   const [rubySummaries, setRubySummaries] = useState<{
     [issueID: string]: string;
   }>({});
 
   useEffect(() => {
-    if (isChecked) {
-      const applyRuby = async () => {
-        const newRubySummaries = { ...rubySummaries };
-        for (const issueID in translatedSummaries) {
-          const yomi = await generateYomi(translatedSummaries[issueID]);
-          newRubySummaries[issueID] = yomi !== undefined ? yomi : "";
-        }
-        setRubySummaries(newRubySummaries);
-      };
-      applyRuby();
+    if (!isChecked) {
+      return;
     }
-  }, [isChecked, translatedSummaries, generateYomi, rubySummaries]);
+
+    const generateYomi = async (text: string) => {
+      if (!tokenizerInstance) {
+        console.error("Tokenizer not initialized");
+        return;
+      }
+
+      const tokens = tokenizerInstance.tokenize(text);
+      const rubyArray = tokens.map((token) => {
+        const surface = token.surface_form;
+        const reading = token.reading;
+        if (!reading) {
+          return surface;
+        }
+        const hiraReading = kanaToHira(reading);
+        if (surface.split("").some(isKanji)) {
+          return `<ruby>${surface}<rt>${hiraReading}</rt></ruby>`;
+        } else {
+          return surface;
+        }
+      });
+      return rubyArray.join("");
+    };
+
+    const applyRuby = async () => {
+      if (!tokenizerInstance) {
+        console.error("Tokenizer not initialized");
+        return;
+      }
+      const newRubySummaries = { ...rubySummaries };
+      for (const issueID in translatedSummaries) {
+        const yomi = await generateYomi(translatedSummaries[issueID]);
+        newRubySummaries[issueID] = yomi !== undefined ? yomi : "";
+      }
+      setRubySummaries(newRubySummaries);
+    };
+    applyRuby();
+  }, [isChecked, translatedSummaries, rubySummaries]);
 
   const callAI = async (records: SpeechRecord[], issueID: string) => {
     if (!api) {
