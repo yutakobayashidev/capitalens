@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { FaGithub } from "react-icons/fa";
 
 export const metadata: Metadata = {
   title: "このサイトについて",
@@ -6,32 +8,51 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   return (
-    <div className="mx-auto max-w-screen-sm px-4 md:px-8 my-12">
-      <section>
-        <h1 className="font-bold mb-7 text-3xl md:text-5xl">
-          このサイトについて
-        </h1>
-        <div className="prose">
-          <p>
-            当サイトでは、国会や地方議会での議員の発言をまとめ、議論や議員ごとが取り組んでいる問題などを視覚的に表示することを目的としています。
+    <div>
+      <header className="my-8">
+        <div className="mx-auto max-w-screen-lg px-4 md:px-8">
+          <div className="block md:flex justify-between items-center">
+            <div className="xl:w-5/12 h-auto overflow-hidden rounded-lg">
+              <h1 className="font-bold text-center md:text-left mb-7 text-5xl md:text-4xl">
+                政治をもっとおもしろく
+              </h1>
+              <div className="prose">
+                <p>
+                  自分が住む国で、議会や議員がどのような問題について取り組んでいるのか・どのようなことが行われているかについての情報に詳しくアクセスできないのは問題ではないでしょうか？
+                </p>
+                <p>
+                  本サイトは、散らばった日本のあらゆるオープンデータを1つにまとめて、視覚的な情報提供を目指します。
+                </p>
+              </div>
+            </div>
+            <div className="xl:w-5/12 h-auto overflow-hidden rounded-lg">
+              <img
+                src="/undraw_Brainstorming_re_1lmw.png"
+                alt="undraw_Brainstorming_re_1lmw"
+              />
+            </div>
+          </div>
+        </div>
+      </header>
+      <section className="my-8">
+        <div className="mx-auto max-w-screen-lg px-4 md:px-8">
+          <h2 className="text-4xl text-center font-bold mb-5">
+            開発に貢献する
+          </h2>
+          <p className="text-center mb-4">
+            当サイトのオープンソース化を予定しています。もうしばらくお待ち下さい。
           </p>
-          <p>
-            テキストマイニング技術などを活用し、各議会の会議録や発言を自動的に解析し、重要なキーワードやトピックを抽出しています。また、ブログやSNSなどのオンライン情報も取り込み、より広範な視野から情報を収集しています。
-          </p>
-          <p>
-            当サイトは、公正かつ客観的な情報提供を目指し、市民やメディア、政治家など様々な人々が、正確かつ透明な情報を得ることができる場として、貢献することを目指しています。
-          </p>
-          <h2>データ</h2>
-          <p>
-            当サイトは国立国会図書館が運営する
-            <a
-              className="text-[#0f41af] hover:underline hover:text-[#222]"
-              href="https://kokkai.ndl.go.jp/api.html"
+          <div className="grid grid-cols-2 md:grid-cols-4">
+            <Link
+              href="https://github.com/yutakobayashidev/parliament-data"
+              className="rounded-lg hover:bg-gray-100 transition duration-500 border block text-center md:px-4 md:py-6 py-4 px-2"
             >
-              国会会議録検索システム　検索用API
-            </a>
-            からデータを参照している場合があります。また、当サイトで使用されているアルゴリズムはオープンソースで公開されています。
-          </p>
+              <div className="flex justify-center">
+                <FaGithub size={50} />
+              </div>
+              <div className="mt-5 text-gray-700 font-bold text-lg">GitHub</div>
+            </Link>
+          </div>
         </div>
       </section>
     </div>
