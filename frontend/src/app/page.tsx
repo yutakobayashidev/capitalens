@@ -74,12 +74,14 @@ export default async function Page() {
             <div className="grid grid-cols-3 gap-3 md:grid-cols-6 md:gap-6">
               {membersByGroup[group].map((member) => (
                 <Link href={`/people/${member.id}`} key={member.id}>
-                  <img
-                    src={member.image}
-                    className="rounded-2xl mx-auto h-56 w-56 object-cover object-center"
-                    alt={member.name}
-                  />
-                  <div className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-center ">
+                  <div className="relative w-28 h-28 md:w-44 md:h-44 mx-auto overflow-hidden rounded-2xl">
+                    <img
+                      src={member.image}
+                      className="absolute inset-0 h-full w-full object-cover object-center"
+                      alt={member.name}
+                    />
+                  </div>
+                  <div className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-center">
                     <div className="my-3 font-bold text-xl">{member.name}</div>
                     {member.house && (
                       <span className="text-sm text-gray-500">
