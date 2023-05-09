@@ -31,7 +31,7 @@ async function getTimeline(name: string) {
 
 async function People(id: string) {
   const people = await prisma.member.findUnique({
-    where: { id: id },
+    where: { id },
   });
 
   if (!people) {
@@ -106,8 +106,23 @@ export default async function Page({ params }: { params: { id: string } }) {
         <h2 className="text-center text-4xl font-bold">WordCloud</h2>
         <WordCloud name={people.name} />
       </section>
+      <section>
+        <h2 className="text-3xl mb-5 font-bold">詳細情報</h2>
+        <div className="flex items-center mb-3">
+          <div className="w-[70px] h-[70px] mr-2 flex justify-center items-center bg-blue-100 text-4xl rounded-full text-center">
+            <span>🏛️</span>
+          </div>
+          {people.win && <div className="font-semibold">{people.group}</div>}
+        </div>
+        <div className="flex items-center mb-3">
+          <div className="w-[70px] h-[70px] mr-2 flex justify-center items-center bg-red-300 text-4xl rounded-full text-center">
+            <span>🎉</span>
+          </div>
+          <div className="font-semibold">{people.win}回の当選</div>
+        </div>
+      </section>
       <section className="my-10">
-        <h2 className="text-center text-4xl font-bold">Timeline</h2>
+        <h2 className="text-4xl font-bold">Timeline</h2>
         <div className="border-l-2 mt-10 py-3">
           {timeline.map((item) => (
             <div key={item.issueID} className="relative mb-10 pl-[20px]">
