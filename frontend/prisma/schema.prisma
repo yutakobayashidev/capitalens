@@ -1,6 +1,7 @@
 generator client {
   provider = "prisma-client-js"
 }
+
 datasource db {
   provider = "mysql"
   url = env("DATABASE_URL")
@@ -10,4 +11,37 @@ datasource db {
 model Views {
   name  String @id
   count BigInt @default(1)
+}
+
+model Member {
+  id           String            @id @default(cuid())
+  name         String
+  nameHira     String?
+  firstName    String?
+  firstNameHira String?
+  lastName     String?
+  lastNameHira String?
+  house        House?
+  win          Int?
+  giin         String?
+  group        ParliamentaryGroup?
+  description  String? @db.Text()
+  image        String?
+  website      String?
+  twitter      String?
+  facebook     String?
+}
+
+enum House {
+  REPRESENTATIVES
+  COUNCILLORS
+}
+
+enum ParliamentaryGroup {
+  JIMIN
+  RIKKEN
+  KOMEI
+  KYOSAN
+  ISHIN
+  KOKUMIN
 }
