@@ -5,6 +5,7 @@ export type People = {
   role?: string;
   bio?: string;
   group?: string;
+  description?: string;
   win?: number;
   twitter?: string;
   facebook?: string;

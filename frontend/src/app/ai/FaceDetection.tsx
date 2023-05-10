@@ -211,6 +211,7 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
             className="mb-5"
             height={400}
             width={400}
+            alt="Vote"
           />
           <p className="text-center">
             選挙ポスターや議員の顔をスキャンして、議員の詳細な政策や、SNSをチェックしましょう。
@@ -227,7 +228,7 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
           {errorMessage && <p className="text-red-500">{errorMessage}</p>}
         </div>
       )}
-      <div className="flex flex-col items-center space-y-4 mt-5">
+      <div className="flex flex-col items-center space-y-4 my-5">
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           onClick={handleCameraToggle}
