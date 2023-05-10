@@ -1,6 +1,5 @@
 import BarChartComponent from "@src/app/topics/[name]/Chart";
 import Link from "next/link";
-import { peoples } from "@peoples";
 import type { Metadata } from "next";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import ViewCounter from "@src/app/topics/[name]/view-counter";
@@ -47,19 +46,6 @@ export default async function Page({ params }: { params: { name: string } }) {
           <div className="flex items-center text-base mb-5 px-6 py-3 rounded-md bg-blue-50">
             <AiOutlineInfoCircle className="mr-2 text-blue-500" />
             このデータは議席数などに依存する可能性があります。
-          </div>
-          <div className="grid grid-cols-4 md:grid-cols-10 gap-3 md:gap-8">
-            {peoples.map((people) => (
-              <Link href={`/people/${people.id}`} key={people.id}>
-                <img
-                  src={people.image}
-                  alt={people.name}
-                  className="rounded-full"
-                  width={100}
-                  height={100}
-                />
-              </Link>
-            ))}
           </div>
         </section>
       </div>

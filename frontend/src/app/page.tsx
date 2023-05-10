@@ -1,5 +1,3 @@
-import { People } from "@src/types/people";
-import { peoples } from "@peoples";
 import Link from "next/link";
 import Topics from "@src/components/Topics";
 import Meetings from "@src/components/Meetings";
