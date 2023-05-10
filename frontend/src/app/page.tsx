@@ -71,10 +71,10 @@ export default async function Page() {
         <section key={group} className="py-8">
           <div className="mx-auto max-w-screen-xl px-4 md:px-8">
             <h2 className="font-bold text-2xl mb-5">{group}</h2>
-            <div className="grid grid-cols-3 gap-3 md:grid-cols-6 md:gap-6">
+            <div className="flex flex-nowrap space-x-3 md:space-x-6 hidden-scrollbar overflow-x-auto">
               {membersByGroup[group].map((member) => (
                 <Link href={`/people/${member.id}`} key={member.id}>
-                  <div className="relative w-28 h-28 md:w-44 md:h-44 mx-auto overflow-hidden rounded-2xl">
+                  <div className="relative w-28 h-28 md:w-36 md:h-36 mx-auto overflow-hidden rounded-2xl">
                     <img
                       src={member.image}
                       className="absolute inset-0 h-full w-full object-cover object-center"
