@@ -52,7 +52,31 @@ export async function generateMetadata({
     notFound();
   }
 
-  return { title: people.name + "議員の情報" };
+  const ogImage =
+    people.image ?? `https://parliament-data.vercel.app/opengraph.jpg`;
+
+  return {
+    title: people.name,
+    description: people.description,
+    twitter: {
+      card: people.image ? "summary" : "summary_large_image",
+      title: people.name,
+      description:
+        people.description ?? people.name + "議員の情報をチェックしましょう",
+      images: [ogImage],
+    },
+    openGraph: {
+      title: people.name,
+      url: `https://parliament-data.vercel.app/people/${people.id}`,
+      description:
+        people.description ?? people.name + "議員の情報をチェックしましょう",
+      images: [
+        {
+          url: ogImage,
+        },
+      ],
+    },
+  };
 }
 
 export default async function Page({ params }: { params: { id: string } }) {
