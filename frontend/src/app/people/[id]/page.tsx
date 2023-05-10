@@ -67,9 +67,11 @@ export async function generateMetadata({
     },
     openGraph: {
       title: people.name,
+      siteName: "国会発言分析",
       url: `https://parliament-data.vercel.app/people/${people.id}`,
       description:
         people.description ?? people.name + "議員の情報をチェックしましょう",
+      locale: "ja-JP",
       images: [
         {
           url: ogImage,
