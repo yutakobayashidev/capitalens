@@ -4,7 +4,8 @@ export type People = {
   image: string;
   role?: string;
   bio?: string;
-  party?: string;
+  group?: string;
+  win?: number;
   twitter?: string;
   facebook?: string;
   youtube?: string;
