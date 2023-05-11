@@ -4,7 +4,6 @@ import cn from "classnames";
 import { Inter, Noto_Sans_JP } from "next/font/google";
 import MobileFooter from "@src/components/MobileFooter";
 import GoogleAnalytics from "@src/components/GoogleAnalytics";
-import { PropsWithChildren } from "react";
 
 export const metadata: Metadata = {
   title: {
@@ -21,11 +20,11 @@ const notoSansJP = Noto_Sans_JP({
   variable: "--font-noto-sans-jp",
 });
 
-type LayoutProps = PropsWithChildren & {
-  modal: React.ReactNode;
-};
-
-export default function Layout(props: LayoutProps) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="ja" className={cn(inter.variable, notoSansJP.variable)}>
       <head>
@@ -40,7 +39,7 @@ export default function Layout(props: LayoutProps) {
         />
       </head>
       <body>
-        {props.children}
+        {children}
         <MobileFooter />
         <GoogleAnalytics />
       </body>
