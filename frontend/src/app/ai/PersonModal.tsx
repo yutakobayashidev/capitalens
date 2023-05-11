@@ -42,6 +42,14 @@ const PersonModal: React.FC<PersonModalProps> = ({ people, onClose }) => {
               情報を詳しく見る -&gt;
             </Link>
             <h2 className="text-gray-400 font-bold mb-3">基本情報</h2>
+            <div className="flex items-center mb-3">
+              <div className="w-[55px] h-[55px] shadow mr-2 flex justify-center items-center bg-orange-100 text-2xl rounded-full text-center">
+                <span>📱</span>
+              </div>
+              <div className="font-semibold">
+                {people.scannedCount}回のスキャン
+              </div>
+            </div>
             {people.group && (
               <div className="flex items-center mb-3">
                 <div className="w-[55px] h-[55px] shadow mr-2 flex justify-center items-center bg-blue-100 text-2xl rounded-full text-center">
@@ -52,7 +60,7 @@ const PersonModal: React.FC<PersonModalProps> = ({ people, onClose }) => {
             )}
             {people.win && (
               <div className="flex items-center mb-3">
-                <div className="w-[55px] h-[55px] shadow mr-2 flex justify-center items-center bg-red-300 text-2xl rounded-full text-center">
+                <div className="w-[55px] h-[55px] shadow mr-2 flex justify-center items-center bg-red-200 text-2xl rounded-full text-center">
                   <span>🎉</span>
                 </div>
                 <div className="font-semibold">{people.win}回の当選</div>

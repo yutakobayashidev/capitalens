@@ -11,4 +11,5 @@ export type People = {
   facebook?: string;
   youtube?: string;
   wikipedia?: string;
+  scannedCount: number;
 };

@@ -19,6 +19,12 @@ export async function GET(
     });
 
     if (foundPeople) {
+      // Increment the scannedCount and update the member
+      await prisma.member.update({
+        where: { id: foundPeople.id },
+        data: { scannedCount: { increment: 1 } },
+      });
+
       return NextResponse.json(foundPeople);
     } else {
       return NextResponse.json({ error: "Not found" });

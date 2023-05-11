@@ -24,6 +24,7 @@ model Member {
   house        House?
   win          Int?
   giin         String?
+  scannedCount Int      @default(0)
   group        ParliamentaryGroup?
   description  String? @db.Text()
   image        String?
