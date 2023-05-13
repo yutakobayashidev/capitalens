@@ -9,20 +9,17 @@ export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
 
   if (!session)
-    return res.status(401).json({
-      error: { code: 401, message: "ログインしてください" },
+    return NextResponse.json({
+      error: "ログインしてください",
     });
 
   if (!session.user || !session.user.id)
-    return res.status(500).json({
-      error: {
-        code: 500,
-        message: "サーバーがセッションユーザーIDの取得に失敗しました",
-      },
+    return NextResponse.json({
+      error: "サーバーがセッションユーザーIDの取得に失敗しました",
     });
 
   if (typeof res.body !== "string") {
-    return NextResponse.json({ error: "" });
+    return NextResponse.json({ error: "必須項目が入力されていません" });
   }
 
   const req = await prisma.comment.create({
