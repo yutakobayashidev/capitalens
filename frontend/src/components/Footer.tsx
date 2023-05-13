@@ -6,8 +6,8 @@ export default function Footer() {
       <div className="mx-auto max-w-screen-xl px-4 md:px-8">
         <div>© 国会発言分析</div>
         <div>
-          <Link className="mt-2 underline inline-flex" href="/policy">
-            Website Policy
+          <Link className="mt-2 underline inline-flex" href="/privacy">
+            プライバシーポリシー
           </Link>
         </div>
       </div>

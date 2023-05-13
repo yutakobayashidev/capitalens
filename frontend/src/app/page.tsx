@@ -6,7 +6,15 @@ import prisma from "@src/lib/prisma";
 export const revalidate = 3600;
 
 async function fetchItemsByStatus() {
-  const groups = ["JIMIN", "RIKKEN", "KOMEI", "KYOSAN", "ISHIN", "KOKUMIN"];
+  const groups = [
+    "JIMIN",
+    "RIKKEN",
+    "KOMEI",
+    "KYOSAN",
+    "ISHIN",
+    "KOKUMIN",
+    "REIWA",
+  ];
 
   const queries = groups.map((group) =>
     prisma.member.findMany({
@@ -55,13 +63,50 @@ async function meeting_list() {
   return res.json();
 }
 
+async function getBillWithCommentCounts() {
+  const bills = await prisma.bill.findMany({
+    include: {
+      comments: {
+        select: {
+          type: true,
+        },
+      },
+    },
+  });
+
+  const billsWithCommentCounts = bills.map((bill) => {
+    const agreementCount = bill.comments.filter(
+      (comment) => comment.type === "AGREEMENT"
+    ).length;
+    const neutralCount = bill.comments.filter(
+      (comment) => comment.type === "NEUTRAL"
+    ).length;
+    const oppositionCount = bill.comments.filter(
+      (comment) => comment.type === "OPPOSITION"
+    ).length;
+
+    return {
+      ...bill,
+      agreementCount,
+      neutralCount,
+      oppositionCount,
+    };
+  });
+
+  return billsWithCommentCounts;
+}
+
 export default async function Page() {
   const topicsPromise = getTopicViews();
   const meetingPromise = meeting_list();
+  const billPromise = getBillWithCommentCounts();
 
   const membersByGroup = await fetchItemsByStatus();
-
-  const [topics, meetings] = await Promise.all([topicsPromise, meetingPromise]);
+  const [topics, meetings, bills] = await Promise.all([
+    topicsPromise,
+    meetingPromise,
+    billPromise,
+  ]);
 
   return (
     <>
@@ -109,14 +154,47 @@ export default async function Page() {
       </section>
       <section className="py-8 bg-blue-50">
         <div className="mx-auto max-w-screen-xl px-4 md:px-8">
-          <h2 className="font-bold text-2xl mb-5">国会中継</h2>
+          <h2 className="font-bold text-2xl mb-5">法案を議論する</h2>
+          <div className="grid md:grid-cols-3 grid-cols-2 gap-5">
+            {bills.map((bill, i) => (
+              <Link
+                key={i}
+                href={`/bill/${bill.id}`}
+                className="block bg-white px-6 py-4 border border-gray-200"
+              >
+                <div className="text-5xl mb-4">⚖️</div>
+                <h2 className="text-xl font-semibold line-clamp-3 mb-5">
+                  {bill.name}
+                </h2>
+                <p className="text-gray-400 line-clamp-3">{bill.reason}</p>
+                <div className="mt-3">
+                  <span className="bg-blue-400 text-white p-1 mr-2 rounded text-sm">
+                    賛成
+                    <span className="ml-2 font-bold">
+                      {bill.agreementCount}
+                    </span>
+                  </span>
+                  <span className="bg-yellow-400 text-white p-1 mr-2 rounded text-sm">
+                    どちらもでない
+                    <span className="ml-2 font-bold">{bill.neutralCount}</span>
+                  </span>
+                  <span className="bg-red-400 text-white py-1 px-2 mr-2 rounded text-sm">
+                    反対
+                    <span className="ml-2 font-bold">
+                      {bill.oppositionCount}
+                    </span>
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
       <section className="py-8 bg-gray-50">
         <div className="mx-auto max-w-screen-xl px-4 md:px-8">
           <h2 className="font-bold text-2xl mb-5">最新の議会</h2>
           <p className="mb-3">
-            ChatGPTを使用して、議会での議論を簡単に要約できます。ただし、必ずしも正確な情報を提供できない可能性があるため、情報の確認や補完が必要です。短時間で議論の概要を把握するのに役立ちます。
+            ChatGPTのAPIを使用して、議会での議論を簡単に要約できます。ただし、必ずしも正確な情報を提供できない可能性があるため、情報の確認や補完が必要です。短時間で議論の概要を把握するのに役立ちます。
           </p>
           <Meetings meetings={meetings} />
         </div>

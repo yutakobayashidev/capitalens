@@ -11,6 +11,9 @@ export default {
       borderRadius: {
         "4xl": "1.8rem",
       },
+      colors: {
+        primary: "#1E50B5",
+      },
       fontFamily: {
         inter: ["var(--font-inter)"],
         notojp: ["var(--font-noto-sans-jp)"],

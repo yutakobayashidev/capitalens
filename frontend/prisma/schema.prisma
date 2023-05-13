@@ -13,6 +13,8 @@ model Views {
   count BigInt @default(1)
 }
 
+
+
 model Member {
   id           String            @id @default(cuid())
   name         String
@@ -31,12 +33,68 @@ model Member {
   website      String?
   twitter      String?
   facebook     String?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+}
+
+model Bill {
+    id           String            @id @default(cuid())
+    reason       String @db.Text()
+    name         String
+    bill_number  String
+    category     BillCategory
+    comments     Comment[]
+    createdAt    DateTime          @default(now())
+    updatedAt    DateTime          @updatedAt
+}
+
+model Comment {
+  comment      String @db.Text
+  id           String            @id @default(cuid())
+  type         CommentType
+  bill         Bill              @relation(fields: [billId], references: [id])
+  billId       String
+  user         User              @relation(fields: [userId], references: [id])
+  userId       String
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  votes        Vote[]
+
+  @@index([billId])
+  @@index([userId])
+}
+
+model Vote {
+  id            String     @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  comment       Comment @relation(references: [id], fields:[commentId])
+  commentId     String
+
+  @@unique([userId, commentId])
+  @@index([userId])
+  @@index([commentId])
+}
+
+enum CommentType {
+    AGREEMENT  
+    NEUTRAL
+    OPPOSITION
+}
+
+enum BillCategory {
+    KAKUHOU
+    SHUHOU
+    SANHOU
 }
 
 enum House {
   REPRESENTATIVES
   COUNCILLORS
 }
+
 
 enum ParliamentaryGroup {
   JIMIN
@@ -45,4 +103,56 @@ enum ParliamentaryGroup {
   KYOSAN
   ISHIN
   KOKUMIN
+  REIWA
+}
+
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  comments      Comment[]
+  votes         Vote[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }
