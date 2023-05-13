@@ -6,7 +6,6 @@ import Footer from "@src/components/Footer";
 import { Inter, Noto_Sans_JP } from "next/font/google";
 import MobileFooter from "@src/components/MobileFooter";
 import GoogleAnalytics from "@src/components/GoogleAnalytics";
-import { PropsWithChildren } from "react";
 import SessionProvider from "@src/components/SessionProvider";
 
 export const metadata: Metadata = {
@@ -24,12 +23,11 @@ const notoSansJP = Noto_Sans_JP({
   variable: "--font-noto-sans-jp",
 });
 
-type LayoutProps = PropsWithChildren & {
-  modal: React.ReactNode;
-};
-
-export default function Layout(props: LayoutProps) {
-  return (
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
     <SessionProvider>
       <html lang="ja" className={cn(inter.variable, notoSansJP.variable)}>
         <head>
@@ -46,8 +44,7 @@ export default function Layout(props: LayoutProps) {
         <body>
           {/* @ts-expect-error Server Component */}
           <Header />
-          {props.children}
-          {props.modal}
+          {children}
           <Footer />
           <MobileFooter />
           <GoogleAnalytics />
