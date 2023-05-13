@@ -43,6 +43,8 @@ export default function RootLayout({
           />
         </head>
         <body>
+          {/* @ts-expect-error Server Component */}
+          <Header />
           {children}
           <Footer />
           <MobileFooter />
