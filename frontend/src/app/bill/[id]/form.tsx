@@ -26,7 +26,7 @@ dayjs.extend(relativeTime, {
 import "dayjs/locale/ja";
 dayjs.locale("ja");
 
-type Discussion = {
+type Comment = {
   id: string;
   comment: string;
   type: string;
@@ -42,10 +42,10 @@ type Discussion = {
 
 type Bill = {
   id: string;
+  comments: Comment[];
 };
 
 type Props = {
-  discussion: Discussion[];
   bill: Bill;
   count: ObjectDefinition;
 };
@@ -56,7 +56,7 @@ type ObjectDefinition = {
   OPPOSITION: number;
 };
 
-const Form = ({ discussion, bill, count }: Props) => {
+const Form = ({ bill, count }: Props) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [isFetching, setIsFetching] = useState(false);
@@ -64,7 +64,7 @@ const Form = ({ discussion, bill, count }: Props) => {
   const [selectedGroup, setSelectedGroup] = useState("AGREEMENT");
   const session = useSession();
 
-  const filteredDiscussion = discussion.filter(
+  const filteredDiscussion = bill.comments.filter(
     (item) => item.type === selectedGroup
   );
 

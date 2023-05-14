@@ -13,8 +13,6 @@ model Views {
   count BigInt @default(1)
 }
 
-
-
 model Member {
   id           String            @id @default(cuid())
   name         String
@@ -35,6 +33,7 @@ model Member {
   facebook     String?
   createdAt    DateTime          @default(now())
   updatedAt    DateTime          @updatedAt
+  supporters   BillSupport[]
 }
 
 model Bill {
@@ -44,8 +43,23 @@ model Bill {
     bill_number  String
     category     BillCategory
     comments     Comment[]
+    supportedBills BillSupport[]
     createdAt    DateTime          @default(now())
     updatedAt    DateTime          @updatedAt
+}
+
+model BillSupport {
+    id        String  @id @default(cuid())
+    bill      Bill    @relation(fields: [billId], references: [id])
+    billId    String
+    member    Member  @relation(fields: [memberId], references: [id])
+    memberId  String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([billId])
+    @@index([memberId])
+    @@unique([billId, memberId])
 }
 
 model Comment {

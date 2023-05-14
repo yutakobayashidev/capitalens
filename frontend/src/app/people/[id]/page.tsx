@@ -29,9 +29,16 @@ async function getTimeline(name: string) {
   return data.meetingRecord as MeetingRecord[];
 }
 
-async function People(id: string) {
+async function getPeople(id: string) {
   const people = await prisma.member.findUnique({
     where: { id },
+    include: {
+      supporters: {
+        include: {
+          bill: true,
+        },
+      },
+    },
   });
 
   if (!people) {
@@ -46,7 +53,7 @@ export async function generateMetadata({
 }: {
   params: { id: string };
 }): Promise<Metadata | undefined> {
-  const people = await People(params.id);
+  const people = await getPeople(params.id);
 
   if (!people) {
     notFound();
@@ -82,7 +89,9 @@ export async function generateMetadata({
 }
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const people = await People(params.id);
+  const people = await getPeople(params.id);
+
+  console.log(people);
 
   const timeline = await getTimeline(people.name);
 
@@ -143,13 +152,31 @@ export default async function Page({ params }: { params: { id: string } }) {
           </div>
         )}
         {people.win && (
-          <div className="flex items-center mb-3">
+          <div className="flex items-center mb-5">
             <div className="w-[70px] h-[70px] mr-2 flex justify-center items-center bg-red-300 text-4xl rounded-full text-center">
               <span>🎉</span>
             </div>
             <div className="font-semibold">{people.win}回の当選</div>
           </div>
         )}
+      </section>
+      <section>
+        <h2 className="text-3xl mb-5 font-bold">賛成している法案</h2>
+        <div className="grid grid-cols-2 gap-5">
+          {people.supporters.map((bill, i) => (
+            <Link
+              key={i}
+              href={`/bill/${bill.billId}`}
+              className="block bg-white px-6 py-4 border border-gray-200"
+            >
+              <div className="text-5xl mb-4">⚖️</div>
+              <h2 className="text-xl font-semibold line-clamp-3 mb-5">
+                {bill.bill.name}
+              </h2>
+              <p className="text-gray-400 line-clamp-3">{bill.bill.reason}</p>
+            </Link>
+          ))}
+        </div>
       </section>
       <section className="my-10">
         <h2 className="text-4xl font-bold">Timeline</h2>

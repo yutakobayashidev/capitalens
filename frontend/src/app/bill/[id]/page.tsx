@@ -5,17 +5,38 @@ import { Clipboard } from "@src/app/bill/[id]/actions";
 import prisma from "@src/lib/prisma";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 
 async function getBill(id: string) {
   const bill = await prisma.bill.findUnique({
     where: { id },
+    include: {
+      comments: {
+        include: {
+          _count: { select: { votes: true } },
+          user: {
+            select: {
+              name: true,
+              image: true,
+            },
+          },
+        },
+      },
+      supportedBills: {
+        include: {
+          member: true,
+        },
+      },
+    },
   });
 
   if (!bill) {
     notFound();
   }
 
-  return bill;
+  const json = JSON.parse(JSON.stringify(bill));
+
+  return json;
 }
 
 type CommentType = "AGREEMENT" | "NEUTRAL" | "OPPOSITION";
@@ -23,25 +44,6 @@ type CommentType = "AGREEMENT" | "NEUTRAL" | "OPPOSITION";
 type CountObject = {
   [key in CommentType]: number;
 };
-
-async function getDiscussion(id: string) {
-  const data = await prisma.comment.findMany({
-    where: { bill: { id } },
-    include: {
-      _count: { select: { votes: true } },
-      user: {
-        select: {
-          name: true,
-          image: true,
-        },
-      },
-    },
-  });
-
-  const json = JSON.parse(JSON.stringify(data));
-
-  return json;
-}
 
 type Bill = {
   id: string;
@@ -154,22 +156,49 @@ export async function generateMetadata({
   };
 }
 
+type supportedBill = {
+  id: string;
+  member: {
+    image: string;
+    id: string;
+    name: string;
+  };
+};
+
 export default async function Page({ params }: { params: { id: string } }) {
   const bill = await getBill(params.id);
-  const discussion = await getDiscussion(params.id);
+
+  console.log(bill);
   const count = await getCount(params.id);
 
   return (
     <>
-      <section className="my-8">
+      <section className="my-5">
         <div className="mx-auto max-w-screen-xl px-4 md:px-8">
+          <h1 className="text-3xl font-bold mb-5">{bill.name}</h1>
           <div className="md:flex">
             <div className="flex-1 md:mr-6">
-              <Form discussion={discussion} bill={bill} count={count} />
+              <Form bill={bill} count={count} />
             </div>
             <div className="flex-1 mt-5 md:mt-0">
-              <h1 className="text-3xl font-bold mb-3">{bill.name}</h1>
-              <p className="leading-7">{bill.reason}</p>
+              <h2 className="text-2xl font-bold mb-3">提出理由</h2>
+              <p className="leading-7 mb-5">{bill.reason}</p>
+              <h2 className="text-2xl font-bold mb-3">賛同している議員</h2>
+              <div className="grid grid-cols-6">
+                {bill.supportedBills.map((item: supportedBill) => (
+                  <Link
+                    href={"/people/" + item.member.id}
+                    className="mb-3"
+                    key={item.id}
+                  >
+                    <img
+                      src={item.member.image}
+                      className="rounded-full border border-gray-200 h-20 w-20 object-cover object-center"
+                      alt={item.member.name}
+                    />
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
         </div>
