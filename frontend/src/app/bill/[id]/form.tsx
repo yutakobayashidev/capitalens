@@ -193,8 +193,10 @@ const Form = ({ bill, count }: Props) => {
     <>
       <nav className="flex justify-between mb-4 border-b mx-auto max-w-screen-md px-4 md:px-8">
         <button
-          className={`text-center flex items-center py-3 ${
-            selectedGroup === "AGREEMENT" ? "text-blue-500" : "text-gray-500"
+          className={`justify-center flex items-center py-3 w-[33%] ${
+            selectedGroup === "AGREEMENT"
+              ? "text-blue-500 border-b pointer-events-none border-gray-500"
+              : "text-gray-500"
           }`}
           onClick={() => handleGroupChange("AGREEMENT")}
         >
@@ -204,8 +206,10 @@ const Form = ({ bill, count }: Props) => {
           </span>
         </button>
         <button
-          className={`text-center flex items-center py-3 ${
-            selectedGroup === "NEUTRAL" ? "text-yellow-500" : "text-gray-500"
+          className={`flex justify-center items-center py-3 ${
+            selectedGroup === "NEUTRAL"
+              ? "text-yellow-500 border-b pointer-events-none border-gray-500"
+              : "text-gray-500"
           }`}
           onClick={() => handleGroupChange("NEUTRAL")}
         >
@@ -215,8 +219,10 @@ const Form = ({ bill, count }: Props) => {
           </span>
         </button>
         <button
-          className={`text-center flex items-center py-3 ${
-            selectedGroup === "OPPOSITION" ? "text-red-500" : "text-gray-500"
+          className={`flex justify-center items-center py-3 ${
+            selectedGroup === "OPPOSITION"
+              ? "text-red-500 border-b pointer-events-none border-gray-500"
+              : "text-gray-500"
           }`}
           onClick={() => handleGroupChange("OPPOSITION")}
         >
