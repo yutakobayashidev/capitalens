@@ -183,7 +183,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             <div className="flex-1 mt-5 md:mt-0">
               <h2 className="text-2xl font-bold mb-3">提出理由</h2>
               <p className="leading-7 mb-5">{bill.reason}</p>
-              <h2 className="text-2xl font-bold mb-3">賛同している議員</h2>
+              <h2 className="text-2xl font-bold mb-3">賛成している議員</h2>
               <div className="grid grid-cols-6">
                 {bill.supportedBills.map((item: supportedBill) => (
                   <Link
