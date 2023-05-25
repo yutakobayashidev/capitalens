@@ -83,7 +83,7 @@ async function getCount(id: string) {
 function ShareSection({ bill }: ShareSectionProps) {
   const tweet = `https://twitter.com/share?url=https://parliament-data.vercel.app/bill/${
     bill.id
-  }&text=${"📑" + bill.name + "について議論しましょう"}&hashtags=国会発言分析`;
+  }&text=${"📑" + bill.name + "について議論しましょう"}&hashtags=CapitaLens`;
 
   const line = `https://social-plugins.line.me/lineit/share?url=https://parliament-data.vercel.app/bill/${bill.id}`;
 
@@ -143,7 +143,7 @@ export async function generateMetadata({
     },
     openGraph: {
       title: bill.name,
-      siteName: "国会発言分析",
+      siteName: "CapitaLens",
       url: `https://parliament-data.vercel.app/bill/${bill.id}`,
       description: bill.reason,
       locale: "ja-JP",

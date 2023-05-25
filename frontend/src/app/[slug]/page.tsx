@@ -26,7 +26,7 @@ export async function generateMetadata({
     },
     openGraph: {
       title: page.title,
-      siteName: "国会発言分析",
+      siteName: "CapitaLens",
       url: `https://parliament-data.vercel.app/${page._raw.sourceFileName.replace(
         ".md",
         ""

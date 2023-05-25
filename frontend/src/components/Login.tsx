@@ -42,7 +42,7 @@ export default function LoginModal({ isOpen, setIsOpen }: LoginModalProps) {
               leaveTo="opacity-0 scale-95"
             >
               <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-10 text-center align-middle shadow-xl transition-all">
-                <div className="text-4xl mb-2 font-bold">国会分析</div>
+                <div className="text-4xl mb-2 font-bold">CapitaLens</div>
                 <div className="mt-6">
                   <p className="text-gray-600 leading-7">
                     ログインすると、法案に対するコメントや、AI機能の利用、新機能のテストなどが行なえます。
