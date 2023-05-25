@@ -55,7 +55,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
       <section>
         <h1 className="font-bold mb-7 text-4xl text-center">{page.title}</h1>
         <div
-          className="prose"
+          className="prose prose-a:text-primary prose-neutral max-w-none"
           dangerouslySetInnerHTML={{ __html: page.body.html }}
         />
       </section>
