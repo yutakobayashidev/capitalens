@@ -13,6 +13,19 @@ model Views {
   count BigInt @default(1)
 }
 
+model Timeline {
+  title String @db.Text()
+  link String @db.Text()
+  isoDate String?
+  contentSnippet String? @db.Text()
+  dateMiliSeconds BigInt @id
+  ogImageURL String? @db.Text()
+  member Member @relation(fields: [memberId], references: [id])
+  memberId String
+
+  @@index([memberId])
+}
+
 model Member {
   id           String            @id @default(cuid())
   name         String
@@ -40,6 +53,7 @@ model Member {
   createdAt    DateTime          @default(now())
   updatedAt    DateTime          @updatedAt
   supporters   BillSupport[]
+  timelines    Timeline[]
 }
 
 model Bill {

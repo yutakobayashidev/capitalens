@@ -12,10 +12,27 @@ import type { Metadata } from "next";
 import { AiOutlineLink } from "react-icons/ai";
 import prisma from "@src/lib/prisma";
 
+export function formatDate(dateText: string, format = "YYYY-MM-DD") {
+  const date = dayjs(dateText);
+  // conditionally return relative date
+  const isRecent = Math.abs(date.diff(Date.now(), "month")) < 6;
+
+  return isRecent ? date.fromNow() : date.format(format);
+}
+
 dayjs.locale("ja");
 dayjs.extend(relativeTime);
 
 export const revalidate = 3600;
+
+export function getFaviconSrcFromHostname(hostname: string) {
+  return `https://www.google.com/s2/favicons?sz=128&domain=${hostname}`;
+}
+
+export function getHostFromURL(url: string) {
+  const urlObj = new URL(url);
+  return urlObj.hostname;
+}
 
 async function getTimeline(name: string) {
   const res = await fetch(
@@ -49,6 +66,12 @@ async function getPeople(id: string) {
   return people;
 }
 
+type Timeline = {
+  itemType: "feed" | "kokkai";
+  date: dayjs.Dayjs;
+  data: any;
+};
+
 export async function generateMetadata({
   params,
 }: {
@@ -78,7 +101,9 @@ export async function generateMetadata({
       siteName: "CapitaLens",
       url: `https://parliament-data.vercel.app/people/${people.id}`,
       description:
-        people.description ?? people.name + "議員の情報をチェックしましょう",
+        people.abstract ??
+        people.description ??
+        people.name + "議員の情報をチェックしましょう",
       locale: "ja-JP",
       images: [
         {
@@ -91,10 +116,28 @@ export async function generateMetadata({
 
 export default async function Page({ params }: { params: { id: string } }) {
   const people = await getPeople(params.id);
+  const kokkai = await getTimeline(people.name);
+  const feed = await prisma.timeline.findMany({
+    where: {
+      memberId: params.id,
+    },
+  });
 
-  console.log(people);
+  let combinedData: Timeline[] = [
+    ...feed.map((item) => ({
+      itemType: "feed" as const,
+      date: dayjs(item.isoDate),
+      data: item,
+    })),
+    ...kokkai.map((item) => ({
+      itemType: "kokkai" as const,
+      date: dayjs(item.date),
+      data: item,
+    })),
+  ];
 
-  const timeline = await getTimeline(people.name);
+  // Sort by date
+  combinedData.sort((a, b) => b.date.diff(a.date));
 
   return (
     <div className="mx-auto max-w-screen-sm px-4 md:px-8 my-12">
@@ -117,9 +160,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           </div>
         )}
         {people.abstract ? (
-          <p className="text-gray-500">
-            {people.abstract ? people.abstract : people.description}
-          </p>
+          <p className="text-gray-500">{people.abstract}</p>
         ) : (
           people.description && (
             <p className="text-gray-500">{people.description}</p>
@@ -167,7 +208,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               className="bg-[#F1F5F9] rounded-md m-2 inline-flex items-center justify-center h-10 w-10"
               href={people.website}
             >
-              <AiOutlineLink className="text-xl text-gray-400" />
+              <AiOutlineLink className="text-xl text-gray-500" />
             </Link>
           )}
         </div>
@@ -222,32 +263,80 @@ export default async function Page({ params }: { params: { id: string } }) {
         </div>
       </section>
       <section className="my-10">
-        <h2 className="text-4xl font-bold">Timeline</h2>
-        <div className="border-l-2 mt-10 py-3">
-          {timeline.map((item) => (
-            <div key={item.issueID} className="relative mb-10 pl-[20px]">
-              <div className="absolute inline-flex w-[10px] h-[10px] left-[-6px] top-[7px] border-2 rounded-full bg-white"></div>
-              <div>{dayjs(item.date).fromNow()}</div>
-              <div className="flex items-center mt-4 text-xl md:text-2xl">
-                <a
-                  href={item.meetingURL}
-                  className="font-bold flex items-center"
-                >
-                  <span
-                    className={`${
-                      item.nameOfHouse === "参議院"
-                        ? "bg-[#007ABB]"
-                        : "bg-[#EA5433]"
-                    } text-white rounded-md font-bold mr-3 px-2`}
+        <h2 className="text-4xl font-bold mb-3">Timeline</h2>
+        <p className="mb-5">
+          ここでは、発言した議会や、ブログの投稿などが収集され表示されています。活動を確認してみましょう。
+        </p>
+        <div className="border-l-2 py-3">
+          {combinedData.map((item, i) => {
+            switch (item.itemType) {
+              case "feed":
+                return (
+                  <div key={i} className="relative mb-10 pl-[20px]">
+                    <div className="absolute inline-flex w-[10px] h-[10px] left-[-6px] top-[5px] border-2 rounded-full bg-white" />
+                    <div className="flex items-center">
+                      <img
+                        alt={getHostFromURL(item.data.link)}
+                        src={getFaviconSrcFromHostname(
+                          getHostFromURL(item.data.link)
+                        )}
+                        className="rounded mr-2"
+                        width={20}
+                        height={20}
+                      />
+                      <div className="text-gray-500 text-xs">
+                        <span>Posted on {getHostFromURL(item.data.link)}</span>
+                        {item.data.isoDate && (
+                          <time className="ml-2">
+                            {formatDate(item.data.isoDate)}
+                          </time>
+                        )}
+                      </div>
+                    </div>
+                    <a
+                      href={item.data.link}
+                      className="block leading-10 text-xl md:text-2xl font-bold mt-3 mb-2"
+                    >
+                      {item.data.title}
+                    </a>
+                    <p className="line-clamp-2 text-gray-600 text-sm">
+                      {item.data.contentSnippet}
+                    </p>
+                  </div>
+                );
+              case "kokkai":
+                return (
+                  <div
+                    key={item.data.issueID}
+                    className="relative mb-10 pl-[20px]"
                   >
-                    {item.nameOfHouse}
-                  </span>
-                  (国会) {item.nameOfMeeting} {item.issue}
-                  <HiOutlineExternalLink className="text-gray-400 ml-2" />
-                </a>
-              </div>
-            </div>
-          ))}
+                    <div className="absolute inline-flex w-[10px] h-[10px] left-[-6px] top-[5px] border-2 rounded-full bg-white"></div>
+                    <div className="text-gray-500 text-xs">
+                      <span>国会での発言</span>
+                      <time className="ml-2">{formatDate(item.data.date)}</time>
+                    </div>
+
+                    <div className="flex items-center mt-4 text-xl md:text-2xl">
+                      <a
+                        href={item.data.meetingURL}
+                        className="font-bold leading-10"
+                      >
+                        <span
+                          className={`${
+                            item.data.nameOfHouse === "参議院"
+                              ? "bg-[#007ABB]"
+                              : "bg-[#EA5433]"
+                          } text-white text-lg rounded-md font-bold mr-3 px-3 py-1.5`}
+                        >
+                          {item.data.nameOfHouse}
+                        </span>
+                        (国会) {item.data.nameOfMeeting} {item.data.issue}
+                      </a>
+                    </div>
+                  </div>
+                );
+            }
+          })}
         </div>
       </section>
     </div>
