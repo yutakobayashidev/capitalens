@@ -16,6 +16,7 @@ export interface MeetingRecord {
   issue: string;
   date: string;
   closing: null;
+  speechCount: number;
   speechRecord: SpeechRecord[];
   meetingURL: string;
   pdfURL: null | string;
