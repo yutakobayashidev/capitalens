@@ -310,9 +310,11 @@ export default async function Page({ params }: { params: { id: string } }) {
                     >
                       {item.data.title}
                     </a>
-                    <p className="line-clamp-2 text-gray-600 text-sm">
-                      {item.data.contentSnippet}
-                    </p>
+                    {item.data.contentSnippet && (
+                      <p className="line-clamp-2 text-gray-600 text-sm">
+                        {item.data.contentSnippet}
+                      </p>
+                    )}
                   </div>
                 );
               case "kokkai":
