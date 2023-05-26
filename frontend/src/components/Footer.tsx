@@ -15,10 +15,10 @@ export default function Footer() {
           <Link className="hover:underline text-gray-500" href="/data">
             使用データ
           </Link>
-          <Link className="hover:underline text-gray-500" href="/privacy">
+          <Link className="hover:underline text-gray-500" href="/guideline">
             ガイドライン
           </Link>
-          <Link className="hover:underline text-gray-500" href="/guideline">
+          <Link className="hover:underline text-gray-500" href="/privacy">
             プライバシーポリシー
           </Link>
         </nav>
