@@ -13,3 +13,10 @@ title: 当サイトの使用データに関して
 
 - URL: [kokkai.ndl.go.jp/api.html](https://kokkai.ndl.go.jp/api.html)
 - 目的: AI による議事録の要約、議員の発言の可視化
+
+## DBpedia Japanese
+
+- URL: [ja.dbpedia.org](https://ja.dbpedia.org/)
+- 目的: 議員情報の取得
+
+その他、各議員のウェブサイトをクローリングし、SNS のハンドルなどを収集しています。
