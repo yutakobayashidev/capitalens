@@ -29,8 +29,14 @@ model Member {
   description  String? @db.Text()
   image        String?
   website      String?
+  wikipedia    String?
+  abstract     String?  @db.Text()
   twitter      String?
   facebook     String?
+  youtube      String?
+  instagram    String?
+  feed         String?
+  birthplace   String?
   createdAt    DateTime          @default(now())
   updatedAt    DateTime          @updatedAt
   supporters   BillSupport[]

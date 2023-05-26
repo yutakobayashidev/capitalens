@@ -9,6 +9,7 @@ import { FaTwitter, FaFacebook, FaYoutube, FaWikipediaW } from "react-icons/fa";
 import Link from "next/link";
 import WordCloud from "@src/app/people/[id]/WordCloud";
 import type { Metadata } from "next";
+import { AiOutlineLink } from "react-icons/ai";
 import prisma from "@src/lib/prisma";
 
 dayjs.locale("ja");
@@ -115,14 +116,20 @@ export default async function Page({ params }: { params: { id: string } }) {
               : "参議院議員"}
           </div>
         )}
-        {people.description && (
-          <p className="text-gray-500">{people.description}</p>
+        {people.abstract ? (
+          <p className="text-gray-500">
+            {people.abstract ? people.abstract : people.description}
+          </p>
+        ) : (
+          people.description && (
+            <p className="text-gray-500">{people.description}</p>
+          )
         )}
         <div className="mt-3">
           {people.twitter && (
             <Link
               className="bg-[#F1F5F9] rounded-md m-2 inline-flex items-center justify-center h-10 w-10"
-              href={people.twitter}
+              href={"https://twitter.com/" + people.twitter}
             >
               <FaTwitter className="text-[#1da1f2] text-xl" />
             </Link>
@@ -130,9 +137,37 @@ export default async function Page({ params }: { params: { id: string } }) {
           {people.facebook && (
             <Link
               className="bg-[#F1F5F9] rounded-md m-2 inline-flex items-center justify-center h-10 w-10"
-              href={people.facebook}
+              href={"https://www.facebook.com/" + people.facebook}
             >
               <FaFacebook className="text-[#1877f2] text-xl" />
+            </Link>
+          )}
+          {people.youtube && (
+            <Link
+              className="bg-[#F1F5F9] rounded-md m-2 inline-flex items-center justify-center h-10 w-10"
+              href={
+                people.youtube.startsWith("UC")
+                  ? `https://www.youtube.com/channel/${people.youtube}`
+                  : `https://www.youtube.com/@${people.youtube}`
+              }
+            >
+              <FaYoutube className="text-[#FF0000] text-xl" />
+            </Link>
+          )}
+          {people.wikipedia && (
+            <Link
+              className="bg-[#F1F5F9] rounded-md m-2 inline-flex items-center justify-center h-10 w-10"
+              href={people.wikipedia}
+            >
+              <FaWikipediaW className="text-black text-xl" />
+            </Link>
+          )}
+          {people.website && (
+            <Link
+              className="bg-[#F1F5F9] rounded-md m-2 inline-flex items-center justify-center h-10 w-10"
+              href={people.website}
+            >
+              <AiOutlineLink className="text-xl text-gray-400" />
             </Link>
           )}
         </div>
@@ -149,6 +184,14 @@ export default async function Page({ params }: { params: { id: string } }) {
               <span>🏛️</span>
             </div>
             <div className="font-semibold">{people.group}</div>
+          </div>
+        )}
+        {people.birthplace && (
+          <div className="flex items-center mb-3">
+            <div className="w-[70px] h-[70px] mr-2 flex justify-center items-center bg-green-200 text-4xl rounded-full text-center">
+              <span>🌏</span>
+            </div>
+            <div className="font-semibold">{people.birthplace}出身</div>
           </div>
         )}
         {people.win && (
@@ -173,7 +216,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               <h2 className="text-xl font-semibold line-clamp-3 mb-5">
                 {bill.bill.name}
               </h2>
-              <p className="text-gray-400 line-clamp-3">{bill.bill.reason}</p>
+              <p className="text-gray-500 line-clamp-3">{bill.bill.reason}</p>
             </Link>
           ))}
         </div>
