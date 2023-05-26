@@ -33,7 +33,7 @@ function formatDate(dateText: string, format = "YYYY-MM-DD") {
   return isRecent ? date.fromNow() : date.format(format);
 }
 
-async function getTimeline(name: string) {
+async function getKokkai(name: string) {
   const res = await fetch(
     `https://kokkai.ndl.go.jp/api/meeting_list?speaker=${name}&recordPacking=json`
   );
@@ -43,6 +43,18 @@ async function getTimeline(name: string) {
   }
 
   const data = await res.json();
+
+  // Modify each meeting record to include a speech count for the specified name
+  data.meetingRecord.forEach((record: MeetingRecord) => {
+    let speechCount = 0;
+    record.speechRecord.forEach((speech) => {
+      if (speech.speaker === name) {
+        speechCount++;
+      }
+    });
+    record.speechCount = speechCount; // Add a new field to hold the speech count
+  });
+
   return data.meetingRecord as MeetingRecord[];
 }
 
@@ -115,7 +127,7 @@ export async function generateMetadata({
 
 export default async function Page({ params }: { params: { id: string } }) {
   const people = await getPeople(params.id);
-  const kokkai = await getTimeline(people.name);
+  const kokkai = await getKokkai(people.name);
   const feed = await prisma.timeline.findMany({
     where: {
       memberId: params.id,
@@ -314,8 +326,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                       <span>国会での発言</span>
                       <time className="ml-2">{formatDate(item.data.date)}</time>
                     </div>
-
-                    <div className="flex items-center mt-4 text-xl md:text-2xl">
+                    <div className="flex items-center mt-3 mb-2 text-xl md:text-2xl">
                       <a
                         href={item.data.meetingURL}
                         className="font-bold leading-10"
@@ -332,6 +343,9 @@ export default async function Page({ params }: { params: { id: string } }) {
                         (国会) {item.data.nameOfMeeting} {item.data.issue}
                       </a>
                     </div>
+                    <p className="line-clamp-2 text-gray-600 text-sm">
+                      {people.name}さんは{item.data.speechCount}回発言しました
+                    </p>
                   </div>
                 );
             }
