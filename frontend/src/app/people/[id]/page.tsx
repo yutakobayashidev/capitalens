@@ -340,7 +340,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                         >
                           {item.data.nameOfHouse}
                         </span>
-                        (国会) {item.data.nameOfMeeting} {item.data.issue}
+                        {item.data.nameOfMeeting} {item.data.issue}
                       </a>
                     </div>
                     <p className="line-clamp-2 text-gray-600 text-sm">
