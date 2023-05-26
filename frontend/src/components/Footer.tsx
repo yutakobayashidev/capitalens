@@ -16,6 +16,9 @@ export default function Footer() {
             使用データ
           </Link>
           <Link className="hover:underline text-gray-500" href="/privacy">
+            ガイドライン
+          </Link>
+          <Link className="hover:underline text-gray-500" href="/guideline">
             プライバシーポリシー
           </Link>
         </nav>
