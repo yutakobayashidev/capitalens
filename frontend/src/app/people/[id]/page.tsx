@@ -4,7 +4,6 @@ import { MeetingRecord } from "@src/types/meeting";
 import dayjs from "dayjs";
 import { notFound } from "next/navigation";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { HiOutlineExternalLink } from "react-icons/hi";
 import { FaTwitter, FaFacebook, FaYoutube, FaWikipediaW } from "react-icons/fa";
 import Link from "next/link";
 import WordCloud from "@src/app/people/[id]/WordCloud";
@@ -12,26 +11,26 @@ import type { Metadata } from "next";
 import { AiOutlineLink } from "react-icons/ai";
 import prisma from "@src/lib/prisma";
 
-export function formatDate(dateText: string, format = "YYYY-MM-DD") {
-  const date = dayjs(dateText);
-  // conditionally return relative date
-  const isRecent = Math.abs(date.diff(Date.now(), "month")) < 6;
-
-  return isRecent ? date.fromNow() : date.format(format);
-}
-
 dayjs.locale("ja");
 dayjs.extend(relativeTime);
 
 export const revalidate = 3600;
 
-export function getFaviconSrcFromHostname(hostname: string) {
+function getFaviconSrcFromHostname(hostname: string) {
   return `https://www.google.com/s2/favicons?sz=128&domain=${hostname}`;
 }
 
-export function getHostFromURL(url: string) {
+function getHostFromURL(url: string) {
   const urlObj = new URL(url);
   return urlObj.hostname;
+}
+
+function formatDate(dateText: string, format = "YYYY-MM-DD") {
+  const date = dayjs(dateText);
+  // conditionally return relative date
+  const isRecent = Math.abs(date.diff(Date.now(), "month")) < 6;
+
+  return isRecent ? date.fromNow() : date.format(format);
 }
 
 async function getTimeline(name: string) {
