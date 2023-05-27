@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
@@ -14,98 +14,99 @@ model Views {
 }
 
 model Timeline {
-  title String @db.Text()
-  link String @db.Text()
-  isoDate String?
-  contentSnippet String? @db.Text()
-  dateMiliSeconds BigInt @id
-  ogImageURL String? @db.Text()
-  member Member @relation(fields: [memberId], references: [id])
-  memberId String
+  id              String  @id @default(cuid())
+  title           String  @db.Text()
+  link            String  @db.Text()
+  isoDate         String?
+  contentSnippet  String? @db.Text()
+  dateMiliSeconds BigInt
+  ogImageURL      String? @db.Text()
+  member          Member  @relation(fields: [memberId], references: [id])
+  memberId        String
 
   @@index([memberId])
 }
 
 model Member {
-  id           String            @id @default(cuid())
-  name         String
-  nameHira     String?
-  firstName    String?
+  id            String              @id @default(cuid())
+  name          String
+  nameHira      String?
+  firstName     String?
   firstNameHira String?
-  lastName     String?
-  lastNameHira String?
-  house        House?
-  win          Int?
-  giin         String?
-  scannedCount Int      @default(0)
-  group        ParliamentaryGroup?
-  description  String? @db.Text()
-  image        String?
-  website      String?
-  wikipedia    String?
-  abstract     String?  @db.Text()
-  twitter      String?
-  facebook     String?
-  youtube      String?
-  instagram    String?
-  feed         String?
-  birthplace   String?
-  createdAt    DateTime          @default(now())
-  updatedAt    DateTime          @updatedAt
-  supporters   BillSupport[]
-  timelines    Timeline[]
+  lastName      String?
+  lastNameHira  String?
+  house         House?
+  win           Int?
+  giin          String?
+  scannedCount  Int                 @default(0)
+  group         ParliamentaryGroup?
+  description   String?             @db.Text()
+  image         String?
+  website       String?
+  wikipedia     String?
+  abstract      String?             @db.Text()
+  twitter       String?
+  facebook      String?
+  youtube       String?
+  instagram     String?
+  feed          String?
+  birthplace    String?
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  supporters    BillSupport[]
+  timelines     Timeline[]
 }
 
 model Bill {
-    id           String            @id @default(cuid())
-    reason       String @db.Text()
-    name         String
-    bill_number  String
-    category     BillCategory
-    comments     Comment[]
-    supportedBills BillSupport[]
-    createdAt    DateTime          @default(now())
-    updatedAt    DateTime          @updatedAt
+  id             String        @id @default(cuid())
+  reason         String        @db.Text()
+  name           String
+  bill_number    String
+  category       BillCategory
+  comments       Comment[]
+  supportedBills BillSupport[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 }
 
 model BillSupport {
-    id        String  @id @default(cuid())
-    bill      Bill    @relation(fields: [billId], references: [id])
-    billId    String
-    member    Member  @relation(fields: [memberId], references: [id])
-    memberId  String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        String   @id @default(cuid())
+  bill      Bill     @relation(fields: [billId], references: [id])
+  billId    String
+  member    Member   @relation(fields: [memberId], references: [id])
+  memberId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    @@index([billId])
-    @@index([memberId])
-    @@unique([billId, memberId])
+  @@unique([billId, memberId])
+  @@index([billId])
+  @@index([memberId])
 }
 
 model Comment {
-  comment      String @db.Text
-  id           String            @id @default(cuid())
-  type         CommentType
-  bill         Bill              @relation(fields: [billId], references: [id])
-  billId       String
-  user         User              @relation(fields: [userId], references: [id])
-  userId       String
-  createdAt    DateTime          @default(now())
-  updatedAt    DateTime          @updatedAt
-  votes        Vote[]
+  comment   String      @db.Text
+  id        String      @id @default(cuid())
+  type      CommentType
+  bill      Bill        @relation(fields: [billId], references: [id])
+  billId    String
+  user      User        @relation(fields: [userId], references: [id])
+  userId    String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  votes     Vote[]
 
   @@index([billId])
   @@index([userId])
 }
 
 model Vote {
-  id            String     @id @default(cuid())
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  userId        String
-  user          User     @relation(fields: [userId], references: [id])
-  comment       Comment @relation(references: [id], fields:[commentId])
-  commentId     String
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  comment   Comment  @relation(references: [id], fields: [commentId])
+  commentId String
 
   @@unique([userId, commentId])
   @@index([userId])
@@ -113,22 +114,21 @@ model Vote {
 }
 
 enum CommentType {
-    AGREEMENT  
-    NEUTRAL
-    OPPOSITION
+  AGREEMENT
+  NEUTRAL
+  OPPOSITION
 }
 
 enum BillCategory {
-    KAKUHOU
-    SHUHOU
-    SANHOU
+  KAKUHOU
+  SHUHOU
+  SANHOU
 }
 
 enum House {
   REPRESENTATIVES
   COUNCILLORS
 }
-
 
 enum ParliamentaryGroup {
   JIMIN
@@ -140,25 +140,24 @@ enum ParliamentaryGroup {
   REIWA
 }
 
-
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userId])
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {

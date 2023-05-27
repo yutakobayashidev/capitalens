@@ -7,7 +7,8 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "build:timeline": "ts-node --project tsconfig.builder.json ./src/builder/feed.ts"
+    "build:timeline": "ts-node --project tsconfig.builder.json ./src/builder/feed.ts",
+    "build:youtube": "ts-node --project tsconfig.builder.json ./src/builder/youtube.ts"
   },
   "dependencies": {
     "@apollo/server": "^4.7.1",
@@ -21,6 +22,7 @@
     "classnames": "^2.3.2",
     "contentlayer": "^0.3.2",
     "dayjs": "^1.11.7",
+    "dotenv": "^16.0.3",
     "eslint": "8.35.0",
     "eslint-config-next": "13.4.1",
     "face-api.js": "^0.22.2",
@@ -32,6 +34,7 @@
     "next": "13.4.1",
     "next-auth": "^4.22.1",
     "next-contentlayer": "^0.3.2",
+    "node-fetch": "2.6.6",
     "open-graph-scraper": "^6.0.1",
     "react": "18.2.0",
     "react-d3-cloud": "^1.0.6",
@@ -49,6 +52,7 @@
     "@tailwindcss/typography": "^0.5.9",
     "@types/gtag.js": "^0.0.12",
     "@types/kuromoji": "^0.1.1",
+    "@types/node-fetch": "2.x",
     "autoprefixer": "^10.4.14",
     "chart.js": "^4.3.0",
     "postcss": "^8.4.23",
