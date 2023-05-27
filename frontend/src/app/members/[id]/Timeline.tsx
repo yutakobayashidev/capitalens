@@ -26,6 +26,24 @@ function BulletPoint() {
   );
 }
 
+function Linkify({ content }: { content: string }) {
+  const urlPattern = /(https?:\/\/[^\s]+)/g;
+
+  return (
+    <p className="line-clamp-2 text-gray-600 text-sm">
+      {content.split(urlPattern).map((part, i) =>
+        urlPattern.test(part) ? (
+          <a className="text-primary hover:underline" key={i} href={part}>
+            {part}
+          </a>
+        ) : (
+          part
+        )
+      )}
+    </p>
+  );
+}
+
 function Feed({ data }: { data: Feed }) {
   const { link, isoDate, title, contentSnippet } = data;
   const host = getHostFromURL(link);
@@ -52,9 +70,7 @@ function Feed({ data }: { data: Feed }) {
       >
         {title}
       </a>
-      {contentSnippet && (
-        <p className="line-clamp-2 text-gray-600 text-sm">{contentSnippet}</p>
-      )}
+      {contentSnippet && <Linkify content={contentSnippet} />}
     </div>
   );
 }
