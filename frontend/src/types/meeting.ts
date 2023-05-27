@@ -1,12 +1,12 @@
-export interface Meeting {
+export type Meeting = {
   numberOfRecords: number;
   numberOfReturn: number;
   startRecord: number;
   nextRecordPosition: number;
   meetingRecord: MeetingRecord[];
-}
+};
 
-export interface MeetingRecord {
+export type MeetingRecord = {
   issueID: string;
   imageKind: string;
   searchObject: number;
@@ -20,12 +20,12 @@ export interface MeetingRecord {
   speechRecord: SpeechRecord[];
   meetingURL: string;
   pdfURL: null | string;
-}
+};
 
-export interface SpeechRecord {
+export type SpeechRecord = {
   speechID: string;
   speechOrder: number;
   speaker: string;
   speech: string;
   speechURL: string;
-}
+};

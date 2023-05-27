@@ -8,7 +8,7 @@ import { Fragment } from "react";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import dayjs from "dayjs";
 import "dayjs/locale/ja";
-import { getCommitteeUrl } from "@src/helper/people";
+import { getCommitteeUrl } from "@src/helper/member";
 import * as kuromoji from "kuromoji";
 
 dayjs.locale("ja");

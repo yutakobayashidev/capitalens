@@ -12,20 +12,20 @@ export async function GET(
   const name = params.name;
 
   try {
-    const foundPeople = await prisma.member.findFirst({
+    const foundMember = await prisma.member.findFirst({
       where: {
         name: name,
       },
     });
 
-    if (foundPeople) {
+    if (foundMember) {
       // Increment the scannedCount and update the member
       await prisma.member.update({
-        where: { id: foundPeople.id },
+        where: { id: foundMember.id },
         data: { scannedCount: { increment: 1 } },
       });
 
-      return NextResponse.json(foundPeople);
+      return NextResponse.json(foundMember);
     } else {
       return NextResponse.json({ error: "Not found" });
     }

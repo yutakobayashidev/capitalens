@@ -2,20 +2,20 @@
 
 import { useState } from "react";
 import FaceDetection from "@src/app/ai/FaceDetection";
-import { People } from "@src/types/people";
+import { Member } from "@src/types/member";
 import toast, { Toaster } from "react-hot-toast";
 import PersonModal from "./PersonModal";
 
 // カスタムフックを定義
-const usePeople = () => {
-  const [people, setPeople] = useState<People | null>(null);
+const useMember = () => {
+  const [member, setMember] = useState<Member | null>(null);
 
-  const fetchPeople = async (name: string) => {
+  const fetchMember = async (name: string) => {
     try {
-      const response = await fetch(`/api/people/${name}`);
+      const response = await fetch(`/api/member/${name}`);
       if (response.ok) {
-        const foundPeople = await response.json();
-        setPeople(foundPeople as People);
+        const foundMember = await response.json();
+        setMember(foundMember as Member);
       } else {
         toast.error("問題が発生しました");
       }
@@ -25,17 +25,17 @@ const usePeople = () => {
     }
   };
 
-  const clearPeople = () => setPeople(null);
+  const clearMember = () => setMember(null);
 
-  return { people, fetchPeople, clearPeople };
+  return { member, fetchMember, clearMember };
 };
 
 export default function Page() {
-  const { people, fetchPeople, clearPeople } = usePeople();
+  const { member, fetchMember, clearMember } = useMember();
 
   const handleFaceDetect = async (name: string) => {
     if (name !== "unknown") {
-      await fetchPeople(name);
+      await fetchMember(name);
     } else {
       toast.error("人物を検出できませんでした");
     }
@@ -46,7 +46,7 @@ export default function Page() {
       <section>
         <div>
           <FaceDetection onFaceDetect={handleFaceDetect} />
-          {people && <PersonModal people={people} onClose={clearPeople} />}
+          {member && <PersonModal member={member} onClose={clearMember} />}
         </div>
       </section>
       <Toaster position="bottom-center" />

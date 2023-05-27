@@ -115,7 +115,7 @@ function ShareButton({ href, icon, label }: ShareButtonProps) {
   return (
     <a
       href={href}
-      className="rounded-lg bg-white hover:shadow-md transition duration-500 border block text-center md:px-4 md:py-6 py-4 px-2"
+      className="rounded-lg bg-white hover:shadow-md transition duration-500 border block text-center md:px-2 md:py-6 py-4 px-2"
     >
       <div className="flex justify-center">{icon}</div>
       <span className="font-bold">{label}</span>
@@ -167,8 +167,6 @@ type supportedBill = {
 
 export default async function Page({ params }: { params: { id: string } }) {
   const bill = await getBill(params.id);
-
-  console.log(bill);
   const count = await getCount(params.id);
 
   return (
@@ -187,7 +185,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               <div className="grid grid-cols-6">
                 {bill.supportedBills.map((item: supportedBill) => (
                   <Link
-                    href={"/people/" + item.member.id}
+                    href={"/members/" + item.member.id}
                     className="mb-3"
                     key={item.id}
                   >

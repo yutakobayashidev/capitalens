@@ -1,12 +1,12 @@
-import { People } from "@src/types/people";
+import { Member } from "@src/types/member";
 import Link from "next/link";
 
 interface PersonModalProps {
-  people: People;
+  member: Member;
   onClose: () => void;
 }
 
-const PersonModal: React.FC<PersonModalProps> = ({ people, onClose }) => {
+const PersonModal: React.FC<PersonModalProps> = ({ member, onClose }) => {
   return (
     <div>
       <div
@@ -19,25 +19,24 @@ const PersonModal: React.FC<PersonModalProps> = ({ people, onClose }) => {
         <div className="pointer-events-auto relative mx-auto mt-auto mb-0 max-h-[calc(100dvh-54px)] w-full overflow-y-auto rounded-t-4xl bg-white pb-4 shadow-2xl transition-all duration-500 xs:p-0 sm:mb-auto sm:w-[560px] sm:rounded-3xl">
           <div className="px-5 py-7 xs:p-8">
             <h2 className="text-center font-bold text-2xl mb-5">
-              <span className="mr-1">{people.name}</span>議員の情報
+              <span className="mr-1">{member.name}</span>議員の情報
             </h2>
             <div className="flex items-center mb-3">
               <img
                 className="rounded-full border border-gray-300 w-16 h-16 mr-3 object-cover object-center"
-                src={people.image}
-                alt={people.name}
+                src={member.image ?? "/noimage.png"}
+                alt={member.name}
               />
               <div>
-                <h1 className="font-bold text-xl">{people.name}</h1>
-                <p className="text-gray-400 text-sm">{people.role}</p>
+                <h1 className="font-bold text-xl">{member.name}</h1>
               </div>
             </div>
             <p className="text-gray-500 text-sm leading-normal line-clamp-4 mb-3">
-              {people.description}
+              {member.description}
             </p>
             <Link
               className="mb-5 block text-[#0f41af] text-sm"
-              href={`/people/${people.id}`}
+              href={`/members/${member.id}`}
             >
               情報を詳しく見る -&gt;
             </Link>
@@ -47,23 +46,23 @@ const PersonModal: React.FC<PersonModalProps> = ({ people, onClose }) => {
                 <span>📱</span>
               </div>
               <div className="font-semibold">
-                {people.scannedCount}回のスキャン
+                {member.scannedCount}回のスキャン
               </div>
             </div>
-            {people.group && (
+            {member.group && (
               <div className="flex items-center mb-3">
                 <div className="w-[55px] h-[55px] shadow mr-2 flex justify-center items-center bg-blue-100 text-2xl rounded-full text-center">
                   <span>🏛️</span>
                 </div>
-                <div className="font-semibold">{people.group}</div>
+                <div className="font-semibold">{member.group}</div>
               </div>
             )}
-            {people.win && (
+            {member.win && (
               <div className="flex items-center mb-3">
                 <div className="w-[55px] h-[55px] shadow mr-2 flex justify-center items-center bg-red-200 text-2xl rounded-full text-center">
                   <span>🎉</span>
                 </div>
-                <div className="font-semibold">{people.win}回の当選</div>
+                <div className="font-semibold">{member.win}回の当選</div>
               </div>
             )}
           </div>
