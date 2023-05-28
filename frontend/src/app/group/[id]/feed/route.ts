@@ -63,7 +63,7 @@ export async function GET(
         <entry>
             <id>${post.link}</id>
             <title>${post.title}</title>
-            <link href=${post.link}/>
+            <link href="${post.link}"/>
             <updated>${post.isoDate}</updated>
         </entry>`;
           })
