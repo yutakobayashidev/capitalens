@@ -14,6 +14,11 @@ export function getHostFromURL(url: string) {
   return urlObj.hostname;
 }
 
+export function getHostFromURLProtocol(url: string) {
+  const urlObj = new URL(url);
+  return urlObj.protocol + "//" + urlObj.hostname;
+}
+
 export function formatDate(dateText: string, format = "YYYY-MM-DD") {
   const date = dayjs(dateText);
   // conditionally return relative date

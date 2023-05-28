@@ -6,4 +6,5 @@ export type Member = {
   scannedCount: number;
   group: string | null;
   win: number | null;
+  youtube: string | null;
 };

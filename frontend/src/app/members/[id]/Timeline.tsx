@@ -3,6 +3,7 @@ import {
   getHostFromURL,
   getFaviconSrcFromHostname,
   formatDate,
+  getHostFromURLProtocol,
 } from "@src/helper/utils";
 import { MeetingRecord } from "@src/types/meeting";
 import { Member } from "@src/types/member";
@@ -44,7 +45,7 @@ function Linkify({ content }: { content: string }) {
   );
 }
 
-function Feed({ data }: { data: Feed }) {
+function Feed({ data, member }: { data: Feed; member: Member }) {
   const { link, isoDate, title, contentSnippet } = data;
   const host = getHostFromURL(link);
 
@@ -60,7 +61,21 @@ function Feed({ data }: { data: Feed }) {
           height={20}
         />
         <div className="text-gray-500 text-xs">
-          <span>Posted on {host}</span>
+          <span>
+            Posted on{" "}
+            <a
+              className="font-semibold text-gray-600 hover:underline underline-offset-4"
+              href={
+                host === "www.youtube.com" && member.youtube
+                  ? member.youtube.startsWith("UC")
+                    ? `https://www.youtube.com/channel/${member.youtube}`
+                    : `https://www.youtube.com/@${member.youtube}`
+                  : getHostFromURLProtocol(link)
+              }
+            >
+              {host}
+            </a>
+          </span>
           {isoDate && <time className="ml-2">{formatDate(isoDate)}</time>}
         </div>
       </div>
@@ -118,7 +133,7 @@ export default function Timeline({
       {combinedData.map((item, i) => {
         switch (item.itemType) {
           case "feed":
-            return <Feed key={i} data={item.data as Feed} />;
+            return <Feed member={member} key={i} data={item.data as Feed} />;
           case "kokkai":
             return (
               <Kokkai
@@ -127,8 +142,6 @@ export default function Timeline({
                 member={member}
               />
             );
-          default:
-            return null;
         }
       })}
     </div>

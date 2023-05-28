@@ -4,6 +4,7 @@ import {
   getFaviconSrcFromHostname,
   formatDate,
 } from "@src/helper/utils";
+import { Member } from "@src/types/member";
 
 function Article({
   item,
@@ -14,11 +15,7 @@ function Article({
     title: string;
     ogImageURL: string | null;
     isoDate: string | null;
-    member: {
-      image: string | null;
-      name: string;
-      id: string;
-    };
+    member: Member;
   };
 }) {
   return (
