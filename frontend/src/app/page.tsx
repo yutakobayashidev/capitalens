@@ -2,6 +2,7 @@ import Link from "next/link";
 import Topics from "@src/components/Topics";
 import Meetings from "@src/components/Meetings";
 import prisma from "@src/lib/prisma";
+import { FaGithub } from "react-icons/fa";
 
 export const revalidate = 3600;
 
@@ -112,6 +113,32 @@ export default async function Page() {
 
   return (
     <>
+      <section className="bg-[#f9eaeb] py-12">
+        <div className="mx-auto max-w-screen-xl px-4 md:px-8">
+          <h1 className="text-3xl font-bold mb-5">国のデータを整理する</h1>
+          <p className="text-lg text-gray-500 mb-3">
+            本プロジェクトは、国会での議論、提出された法案、国会議員の情報などを整理し、視覚的に表示することを目的としています。
+          </p>
+          <div>
+            <Link
+              className="bg-white rounded-full font-semibold px-4 py-2 mr-4 inline-flex items-center text-base transition-all duration-500 ease-in-out hover:shadow"
+              href="https://github.com/yutakobayashidev/capitalens"
+            >
+              <FaGithub className="text-xl mr-3 align-middle" />
+              開発に貢献する
+            </Link>
+            <Link
+              className="bg-white font-semibold rounded-full px-4 py-2 inline-flex items-center text-base transition-all duration-500 ease-in-out hover:shadow"
+              href="https://github.com/users/yutakobayashidev/projects/2"
+            >
+              <span className="text-xl mr-3 align-middle inline-flex items-center w-6 h-6 justify-center">
+                🚀
+              </span>
+              ロードマップ
+            </Link>
+          </div>
+        </div>
+      </section>
       <section className="py-8 bg-gray-100">
         <div className="mx-auto max-w-screen-xl px-4 md:px-8">
           <h2 className="font-bold text-2xl mb-5">政党から探す</h2>
