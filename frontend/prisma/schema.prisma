@@ -13,6 +13,17 @@ model Views {
   count BigInt @default(1)
 }
 
+model Group {
+  id ParliamentaryGroup @id @unique
+  name String
+  image String?
+  facebook String?
+  wikipedia String?
+  website String?
+  description String?
+  twitter     String?
+}
+
 model Timeline {
   id              String  @id @default(cuid())
   title           String  @db.Text()

@@ -101,6 +101,8 @@ export default async function Page() {
   const meetingPromise = meeting_list();
   const billPromise = getBillWithCommentCounts();
 
+  const groups = await prisma.group.findMany();
+
   const membersByGroup = await fetchItemsByStatus();
   const [topics, meetings, bills] = await Promise.all([
     topicsPromise,
@@ -110,6 +112,29 @@ export default async function Page() {
 
   return (
     <>
+      <section className="py-8 bg-gray-100">
+        <div className="mx-auto max-w-screen-xl px-4 md:px-8">
+          <h2 className="font-bold text-2xl mb-5">政党から探す</h2>
+          <div className="grid md:grid-cols-4 grid-cols-1 gap-y-5">
+            {groups.map((group) => (
+              <Link
+                href={`/group/${group.id}`}
+                className="flex items-center"
+                key={group.id}
+              >
+                <img
+                  className="border rounded-2xl"
+                  src={group.image ?? "/noimage.png"}
+                  alt={group.name}
+                  width={100}
+                  height={100}
+                />
+                <p className="font-bold ml-3">{group.name}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
       {Object.keys(membersByGroup).map((group) => (
         <section key={group} className="py-8">
           <div className="mx-auto max-w-screen-xl px-4 md:px-8">
