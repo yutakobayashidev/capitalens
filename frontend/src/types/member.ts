@@ -7,4 +7,7 @@ export type Member = {
   group: string | null;
   win: number | null;
   youtube: string | null;
+  house: string | null;
+  twitter: string | null;
+  birthplace: string | null;
 };
