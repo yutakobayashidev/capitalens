@@ -27,7 +27,9 @@ export async function GET(
 
       return NextResponse.json(foundMember);
     } else {
-      return NextResponse.json({ error: "Not found" });
+      return new Response(JSON.stringify({ error: "Not found" }), {
+        status: 500,
+      });
     }
   } catch (error) {
     console.error(error);
