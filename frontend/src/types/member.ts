@@ -10,4 +10,5 @@ export type Member = {
   house: string | null;
   twitter: string | null;
   birthplace: string | null;
+  abstract: string | null;
 };

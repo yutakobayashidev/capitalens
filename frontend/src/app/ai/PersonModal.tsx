@@ -59,9 +59,17 @@ const PersonModal: React.FC<PersonModalProps> = ({ member, onClose }) => {
                 </span>
               </div>
             </div>
-            <p className="text-gray-500 text-sm leading-normal line-clamp-3 mb-3">
-              {member.description}
-            </p>
+            {member.abstract ? (
+              <p className="text-gray-500 text-sm leading-normal line-clamp-3 mb-3">
+                {member.abstract}
+              </p>
+            ) : (
+              member.description && (
+                <p className="text-gray-500 text-sm leading-normal line-clamp-3 mb-3">
+                  {member.description}
+                </p>
+              )
+            )}
             <div className="mb-3">
               <Link
                 href={`/members/${member.id}`}
