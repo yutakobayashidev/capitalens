@@ -4,6 +4,7 @@ import { FaRss, FaTwitter, FaFacebook, FaWikipediaW } from "react-icons/fa";
 import { AiOutlineLink } from "react-icons/ai";
 import Article from "@src/app/group/Article";
 import { notFound } from "next/navigation";
+import Members from "@src/app/group/[id]/Members";
 
 export const revalidate = 3600;
 
@@ -138,20 +139,10 @@ export default async function Page({
       <section className="mb-5">
         <div className="mx-auto max-w-screen-xl px-4 md:px-8">
           <h2 className="md:text-4xl text-2xl font-bold mb-3">議員</h2>
-          <p className="mb-5 text-gray-600 text-lg">
+          <p className="mb-3 text-gray-600 text-lg">
             {members.length}人の議員が見つかりました
           </p>
-          <div className="grid md:grid-cols-12 grid-cols-4 gap-4">
-            {members.map((member) => (
-              <Link href={`/members/${member.id}`} key={member.id}>
-                <img
-                  src={member.image ?? "/noimage.png"}
-                  className="border rounded-full w-20 h-20 mr-3 object-cover object-center"
-                  alt={member.name}
-                />
-              </Link>
-            ))}
-          </div>
+          <Members members={members} />
         </div>
       </section>
     </>
