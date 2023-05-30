@@ -13,7 +13,7 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const faceRecognitionModelUrl = "/models/faceRecognitionModel.json";
   const faceMatcherTolerance = 0.6;
-  const faceDetectionInterval = 100;
+  const faceDetectionInterval = 1000;
   const intervalIdRef = useRef<NodeJS.Timeout>();
   const [isFaceDetected, setIsFaceDetected] = useState(false);
   const [cameraPermission, setCameraPermission] = useState(false);
@@ -67,34 +67,30 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
         return;
       }
 
-      const detections = await faceapi
-        .detectAllFaces(videoRef.current)
+      const detection = await faceapi
+        .detectSingleFace(videoRef.current)
         .withFaceLandmarks()
-        .withFaceDescriptors();
+        .withFaceDescriptor();
 
-      if (detections.length > 0) {
-        setIsFaceDetected(true);
-      } else {
-        setIsFaceDetected(false);
+      const displaySize = {
+        width: videoRef.current.clientWidth,
+        height: videoRef.current.clientHeight,
+      };
+      faceapi.matchDimensions(canvasRef.current, displaySize);
+
+      const context = canvasRef.current.getContext(
+        "2d"
+      ) as CanvasRenderingContext2D;
+      if (context) {
+        context.clearRect(0, 0, displaySize.width, displaySize.height);
       }
 
-      if (canvasRef.current) {
-        const displaySize = {
-          width: videoRef.current.clientWidth,
-          height: videoRef.current.clientHeight,
-        };
-        faceapi.matchDimensions(canvasRef.current, displaySize);
-        const resizedDetections = faceapi.resizeResults(
-          detections,
-          displaySize
-        );
-        const context = canvasRef.current.getContext(
-          "2d"
-        ) as CanvasRenderingContext2D; // Add explicit type casting
-        if (context) {
-          context.clearRect(0, 0, displaySize.width, displaySize.height);
-          faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
-        }
+      if (detection) {
+        setIsFaceDetected(true);
+        const resizedDetection = faceapi.resizeResults(detection, displaySize);
+        faceapi.draw.drawDetections(canvasRef.current, resizedDetection);
+      } else {
+        setIsFaceDetected(false);
       }
     };
 
@@ -110,7 +106,12 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
   };
 
   const handleNameDetect = async () => {
-    if (!videoRef.current || !canvasRef.current || isLoadingModels) {
+    if (
+      !videoRef.current ||
+      !canvasRef.current ||
+      isLoadingModels ||
+      !isFaceDetected
+    ) {
       return;
     }
 
@@ -129,16 +130,16 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
       faceMatcherTolerance
     );
 
-    const detections = await faceapi
-      .detectAllFaces(videoRef.current)
+    const detection = await faceapi
+      .detectSingleFace(videoRef.current)
       .withFaceLandmarks()
-      .withFaceDescriptors();
+      .withFaceDescriptor();
 
-    if (detections.length === 0) {
+    if (!detection) {
       return;
     }
 
-    const bestMatch = faceMatcher.findBestMatch(detections[0].descriptor);
+    const bestMatch = faceMatcher.findBestMatch(detection.descriptor);
     onFaceDetect(bestMatch.label);
   };
 
