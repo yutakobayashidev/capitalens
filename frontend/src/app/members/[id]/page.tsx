@@ -10,6 +10,7 @@ import WordCloud from "@src/app/members/[id]/WordCloud";
 import type { Metadata } from "next";
 import { AiOutlineLink } from "react-icons/ai";
 import prisma from "@src/lib/prisma";
+import TwitterTimeline from "@src/app/members/[id]/TwitterTimeline";
 
 dayjs.locale("ja");
 dayjs.extend(relativeTime);
@@ -155,7 +156,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             <p className="text-gray-500">{member.description}</p>
           )
         )}
-        <div className="mt-3">
+        <div className="my-3">
           {member.twitter && (
             <Link
               className="bg-[#F1F5F9] rounded-md m-2 inline-flex items-center justify-center h-10 w-10"
@@ -201,6 +202,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             </Link>
           )}
         </div>
+        {member.twitter && <TwitterTimeline username={member.twitter} />}
       </section>
       <section className="my-10">
         <h2 className="text-center text-4xl font-bold">WordCloud</h2>
