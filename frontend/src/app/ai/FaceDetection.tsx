@@ -13,7 +13,7 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const faceRecognitionModelUrl = "/models/faceRecognitionModel.json";
   const faceMatcherTolerance = 0.6;
-  const faceDetectionInterval = 1000;
+  const faceDetectionInterval = 300;
   const intervalIdRef = useRef<NodeJS.Timeout>();
   const [isFaceDetected, setIsFaceDetected] = useState(false);
   const [cameraPermission, setCameraPermission] = useState(false);
