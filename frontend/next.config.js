@@ -1,7 +1,12 @@
 const { withContentlayer } = require("next-contentlayer");
 
+const withPWA = require("@ducanh2912/next-pwa").default({
+  disable: process.env.NODE_ENV === "development",
+  dest: "public",
+});
+
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig = withPWA({
   images: {
     disableStaticImages: true,
   },
@@ -17,6 +22,6 @@ const nextConfig = {
   },
   reactStrictMode: true,
   swcMinify: true,
-};
+});
 
 module.exports = withContentlayer(nextConfig);

@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@apollo/server": "^4.7.1",
+    "@ducanh2912/next-pwa": "^8.5.1",
     "@headlessui/react": "^1.7.14",
     "@microsoft/fetch-event-source": "^2.0.1",
     "@next-auth/prisma-adapter": "^1.0.6",
