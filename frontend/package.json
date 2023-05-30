@@ -27,7 +27,7 @@
     "contentlayer": "^0.3.2",
     "dayjs": "^1.11.7",
     "dotenv": "^16.0.3",
-    "eslint": "8.35.0",
+    "eslint": "8.41.0",
     "eslint-config-next": "13.4.4",
     "face-api.js": "^0.22.2",
     "graphql": "^16.6.0",
