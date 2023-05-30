@@ -41,6 +41,9 @@ export default function RootLayout({
             type="image/png"
             href="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f3db.png"
           />
+          <link rel="manifest" href="/manifest.json" />
+          <link rel="apple-touch-icon" href="/icon-512x512.png"></link>
+          <meta name="theme-color" content="#1E50B5" />
         </head>
         <body>
           {/* @ts-expect-error Server Component */}
