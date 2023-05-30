@@ -10,6 +10,9 @@
     "build:timeline": "ts-node --project tsconfig.builder.json ./src/builder/feed.ts",
     "build:youtube": "ts-node --project tsconfig.builder.json ./src/builder/youtube.ts"
   },
+  "browser": {
+    "fs": false
+  },
   "dependencies": {
     "@apollo/server": "^4.7.1",
     "@headlessui/react": "^1.7.14",
