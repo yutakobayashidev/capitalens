@@ -174,7 +174,11 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
   const handleRequestCameraAccess = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
+        video: {
+          facingMode: isFrontCamera ? "user" : "environment",
+          width: { ideal: 640 }, // add these
+          height: { ideal: 480 }, // add these
+        },
       });
       if (stream) {
         setCameraPermission(true);
