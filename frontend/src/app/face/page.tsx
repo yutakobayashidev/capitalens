@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import FaceDetection from "@src/app/ai/FaceDetection";
+import FaceDetection from "@src/app/face/FaceDetection";
 import { Member } from "@src/types/member";
 import toast, { Toaster } from "react-hot-toast";
 import PersonModal from "./PersonModal";
