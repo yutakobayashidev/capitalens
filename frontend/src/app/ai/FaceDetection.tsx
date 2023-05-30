@@ -202,6 +202,8 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
             ref={videoRef}
             autoPlay
             muted
+            loop
+            playsInline
             className="w-full h-full"
           ></video>
           <canvas
