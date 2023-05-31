@@ -15,7 +15,11 @@ function Article({
     title: string;
     ogImageURL: string | null;
     isoDate: string | null;
-    member: Member;
+    member: {
+      id: string;
+      name: string;
+      image: string | null;
+    };
   };
 }) {
   return (

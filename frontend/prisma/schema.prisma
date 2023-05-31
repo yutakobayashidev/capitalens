@@ -22,6 +22,41 @@ model Group {
   website String?
   description String?
   twitter     String?
+  members   Member[]
+}
+
+model Member {
+  id            String              @id @default(cuid())
+  name          String
+  nameHira      String?
+  groupId       ParliamentaryGroup?
+  group         Group? @relation(fields: [groupId], references: [id])
+  firstName     String?
+  firstNameHira String?
+  lastName      String?
+  lastNameHira  String?
+  house         House?
+  win           Int?
+  scannedCount  Int                 @default(0)
+  description   String?             @db.Text()
+  image         String?
+  website       String?
+  wikipedia     String?
+  abstract      String?             @db.Text()
+  twitter       String?
+  facebook      String?
+  youtube       String?
+  instagram     String?
+  feed          String?
+  birthplace    String?
+  school        String?
+  birthday      DateTime?
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  supporters    BillSupport[]
+  timelines     Timeline[]
+
+  @@index([groupId])
 }
 
 model Timeline {
@@ -36,36 +71,6 @@ model Timeline {
   memberId        String
 
   @@index([memberId])
-}
-
-model Member {
-  id            String              @id @default(cuid())
-  name          String
-  nameHira      String?
-  firstName     String?
-  firstNameHira String?
-  lastName      String?
-  lastNameHira  String?
-  house         House?
-  win           Int?
-  giin          String?
-  scannedCount  Int                 @default(0)
-  group         ParliamentaryGroup?
-  description   String?             @db.Text()
-  image         String?
-  website       String?
-  wikipedia     String?
-  abstract      String?             @db.Text()
-  twitter       String?
-  facebook      String?
-  youtube       String?
-  instagram     String?
-  feed          String?
-  birthplace    String?
-  createdAt     DateTime            @default(now())
-  updatedAt     DateTime            @updatedAt
-  supporters    BillSupport[]
-  timelines     Timeline[]
 }
 
 model Bill {

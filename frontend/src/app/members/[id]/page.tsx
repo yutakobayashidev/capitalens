@@ -46,6 +46,7 @@ async function getMember(id: string) {
   const people = await prisma.member.findUnique({
     where: { id },
     include: {
+      group: true,
       supporters: {
         include: {
           bill: true,
@@ -142,10 +143,10 @@ export default async function Page({ params }: { params: { id: string } }) {
         <h1 className="mt-5 font-bold text-4xl mb-2 font-base">
           {member.name}
         </h1>
-        {member.house && (
+        {member.house && member.group && (
           <div className="mb-4 font-bold text-gray-600">
             {member.house == "REPRESENTATIVES"
-              ? member.group + "の" + "衆議院議員"
+              ? member.group.name + "の" + "衆議院議員"
               : "参議院議員"}
           </div>
         )}
@@ -212,10 +213,18 @@ export default async function Page({ params }: { params: { id: string } }) {
         <h2 className="text-3xl mb-5 font-bold">詳細情報</h2>
         {member.group && (
           <div className="flex items-center mb-3">
-            <div className="w-[70px] h-[70px] mr-2 flex justify-center items-center bg-blue-100 text-4xl rounded-full text-center">
-              <span>🏛️</span>
-            </div>
-            <div className="font-semibold">{member.group}</div>
+            {member.group.image ? (
+              <img
+                className="w-[70px] border h-[70px] rounded-full mr-2"
+                alt={member.group.name}
+                src={member.group.image}
+              />
+            ) : (
+              <div className="w-[70px] h-[70px] mr-2 flex justify-center items-center bg-blue-100 text-4xl rounded-full text-center">
+                <span>🏛️</span>
+              </div>
+            )}
+            <div className="font-semibold">{member.group.name}</div>
           </div>
         )}
         {member.birthplace && (

@@ -29,22 +29,21 @@ export default async function Page({
 
   const group = await prisma.group.findUnique({
     where: { id: params.id },
+    include: {
+      members: true,
+    },
   });
 
   if (!group) {
     notFound();
   }
 
-  const members = await prisma.member.findMany({
-    where: {
-      group: params.id,
-    },
-  });
-
   const timeline = await prisma.timeline.findMany({
     where: {
       member: {
-        group: params.id,
+        group: {
+          id: params.id,
+        },
       },
     },
     include: {
@@ -140,9 +139,9 @@ export default async function Page({
         <div className="mx-auto max-w-screen-xl px-4 md:px-8">
           <h2 className="md:text-4xl text-2xl font-bold mb-3">議員</h2>
           <p className="mb-3 text-gray-600 text-lg">
-            {members.length}人の議員が見つかりました
+            {group.members.length}人の議員が見つかりました
           </p>
-          <Members members={members} />
+          <Members members={group.members} />
         </div>
       </section>
     </>

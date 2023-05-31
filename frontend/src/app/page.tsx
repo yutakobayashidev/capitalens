@@ -8,20 +8,20 @@ export const revalidate = 3600;
 
 async function fetchItemsByStatus() {
   const groups = [
-    "JIMIN",
-    "RIKKEN",
-    "KOMEI",
-    "KYOSAN",
-    "ISHIN",
-    "KOKUMIN",
-    "REIWA",
+    "自由民主党",
+    "立憲民主党",
+    "公明党",
+    "日本共産党",
+    "日本維新の会",
+    "国民民主党",
+    "れいわ新選組",
   ];
 
   const queries = groups.map((group) =>
     prisma.member.findMany({
       where: {
         group: {
-          equals: group as any,
+          name: group,
         },
       },
       take: 12,

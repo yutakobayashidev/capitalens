@@ -16,6 +16,9 @@ export async function GET(
       where: {
         name: name,
       },
+      include: {
+        group: true,
+      },
     });
 
     if (foundMember) {

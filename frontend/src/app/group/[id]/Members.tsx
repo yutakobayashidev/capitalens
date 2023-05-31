@@ -4,7 +4,15 @@ import { Member } from "@src/types/member";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
-export default function Members({ members }: { members: Member[] }) {
+export default function Members({
+  members,
+}: {
+  members: {
+    id: string;
+    name: string;
+    image: string | null;
+  }[];
+}) {
   const [search, setSearch] = useState("");
   const [filteredMembers, setFilteredMembers] = useState(members);
 

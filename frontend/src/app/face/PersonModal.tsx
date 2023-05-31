@@ -52,11 +52,13 @@ const PersonModal: React.FC<PersonModalProps> = ({ member, onClose }) => {
               />
               <div>
                 <h1 className="font-bold text-xl">{member.name}</h1>
-                <span className="text-gray-500 text-xs font-semibold">
-                  {member.house == "REPRESENTATIVES"
-                    ? member.group + "の" + "衆議院議員"
-                    : "参議院議員"}
-                </span>
+                {member.group && (
+                  <span className="text-gray-500 text-xs font-semibold">
+                    {member.house == "REPRESENTATIVES"
+                      ? member.group.name + "の" + "衆議院議員"
+                      : "参議院議員"}
+                  </span>
+                )}
               </div>
             </div>
             {member.abstract ? (
@@ -91,7 +93,7 @@ const PersonModal: React.FC<PersonModalProps> = ({ member, onClose }) => {
             </div>
             <h2 className="text-gray-400 font-bold mb-3">基本情報</h2>
             {member.group && (
-              <MemberInfo emoji="🏛️" info={member.group} color="#dbeafe" />
+              <MemberInfo emoji="🏛️" info={member.group.name} color="#dbeafe" />
             )}
             {member.win && (
               <MemberInfo
