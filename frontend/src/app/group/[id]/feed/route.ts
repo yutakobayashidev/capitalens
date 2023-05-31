@@ -35,7 +35,9 @@ export async function GET(
   const timeline = await prisma.timeline.findMany({
     where: {
       member: {
-        group: params.id,
+        group: {
+          name: params.id,
+        },
       },
     },
     include: {
