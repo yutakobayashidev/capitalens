@@ -5,8 +5,54 @@ import { AiOutlineLink } from "react-icons/ai";
 import Article from "@src/app/group/Article";
 import { notFound } from "next/navigation";
 import Members from "@src/app/group/[id]/Members";
+import type { Metadata } from "next";
 
 export const revalidate = 3600;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: keyof typeof Group };
+}): Promise<Metadata | undefined> {
+  if (!Object.keys(Group).includes(params.id)) {
+    notFound();
+  }
+
+  const group = await prisma.group.findUnique({
+    where: { id: params.id },
+    include: {
+      members: true,
+    },
+  });
+
+  if (!group) {
+    notFound();
+  }
+  return {
+    title: group.name,
+    description: group.description,
+    twitter: {
+      card: "summary",
+      title: group.name,
+      description:
+        group.description ?? group.name + "の情報をチェックしましょう",
+      images: [group.image ?? "/noimage.png"],
+    },
+    openGraph: {
+      title: group.name,
+      siteName: "CapitaLens",
+      url: `https://parliament-data.vercel.app/group/${group.id}`,
+      description:
+        group.description ?? group.name + "の情報をチェックしましょう",
+      locale: "ja-JP",
+      images: [
+        {
+          url: group.image ?? "/noimage.png",
+        },
+      ],
+    },
+  };
+}
 
 enum Group {
   JIMIN,
