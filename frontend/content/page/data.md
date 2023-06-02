@@ -4,6 +4,11 @@ title: 当サイトの使用データに関して
 
 当サイトは非営利のプロジェクトであり、以下に記載するウェブサイトからデータを引用、出典を行っている場合がございます。なにか問題があれば[お問い合わせフォーム](https://forms.gle/d3n196yyQ6V4GdEt6)よりご連絡ください。
 
+## 参議院
+
+- URL: [www.sangiin.go.jp](https://www.sangiin.go.jp/)
+- 目的: 議員情報の取得
+
 ## 衆議院
 
 - URL: [www.shugiin.go.jp](https://www.shugiin.go.jp/internet/index.nsf/html/index.htm)
