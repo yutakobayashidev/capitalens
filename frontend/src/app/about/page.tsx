@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { FaGithub } from "react-icons/fa";
+import { FaGithub, FaDiscord } from "react-icons/fa";
 
 export const metadata: Metadata = {
   title: "このサイトについて",
@@ -14,7 +14,7 @@ export default async function Page() {
           <div className="block md:flex justify-between items-center">
             <div className="xl:w-5/12 h-auto overflow-hidden rounded-lg">
               <h1 className="font-bold text-center md:text-left mb-7 text-5xl md:text-4xl">
-                政治をもっとおもしろく
+                国会をもっとシンプルに
               </h1>
               <div className="prose">
                 <p>
@@ -39,18 +39,26 @@ export default async function Page() {
           <h2 className="text-4xl text-center font-bold mb-5">
             開発に貢献する
           </h2>
-          <p className="text-center mb-4">
-            当サイトのオープンソース化を予定しています。もうしばらくお待ち下さい。
-          </p>
-          <div className="grid grid-cols-2 md:grid-cols-4">
+          <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
             <Link
-              href="https://github.com/yutakobayashidev/parliament-data"
-              className="rounded-lg hover:bg-gray-100 transition duration-500 border block text-center md:px-4 md:py-6 py-4 px-2"
+              href="https://github.com/yutakobayashidev/capitalens"
+              className="rounded-lg hover:bg-gray-100 transition duration-500 border block text-center md:px-2 md:py-6 py-4 px-2"
             >
               <div className="flex justify-center">
                 <FaGithub size={50} />
               </div>
               <div className="mt-5 text-gray-700 font-bold text-lg">GitHub</div>
+            </Link>
+            <Link
+              href="https://github.com/yutakobayashidev/capitalens"
+              className="rounded-lg hover:bg-gray-100 transition duration-500 border block text-center md:px-2 md:py-6 py-4 px-2"
+            >
+              <div className="flex justify-center">
+                <FaDiscord className="text-[#5865F2]" size={50} />
+              </div>
+              <div className="mt-5 text-gray-700 font-bold text-lg">
+                Discord
+              </div>
             </Link>
           </div>
         </div>
