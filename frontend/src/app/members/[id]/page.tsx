@@ -145,9 +145,10 @@ export default async function Page({ params }: { params: { id: string } }) {
         </h1>
         {member.house && member.group && (
           <div className="mb-4 font-bold text-gray-600">
-            {member.house == "REPRESENTATIVES"
-              ? member.group.name + "の" + "衆議院議員"
-              : "参議院議員"}
+            {member.group.name +
+              "の" +
+              (member.house === "REPRESENTATIVES" ? "衆議院" : "参議院") +
+              "議員"}
           </div>
         )}
         {member.abstract ? (

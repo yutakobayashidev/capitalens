@@ -14,27 +14,32 @@ model Views {
 }
 
 model Group {
-  id ParliamentaryGroup @id @unique
-  name String
-  image String?
-  facebook String?
-  wikipedia String?
-  website String?
+  id          ParliamentaryGroup @id @unique
+  name        String
+  image       String?
+  facebook    String?
+  wikipedia   String?
+  website     String?
   description String?
   twitter     String?
-  members   Member[]
+  members     Member[]
 }
 
 model Member {
   id            String              @id @default(cuid())
   name          String
-  nameHira      String?
-  groupId       ParliamentaryGroup?
-  group         Group? @relation(fields: [groupId], references: [id])
+  fullname      String?
   firstName     String?
-  firstNameHira String?
   lastName      String?
+  nameHira      String?
+  firstNameHira String?
   lastNameHira  String?
+  nameKana      String?
+  firstNameKana String?
+  lastNameKana  String?
+  role          String?
+  groupId       ParliamentaryGroup?
+  group         Group?              @relation(fields: [groupId], references: [id])
   house         House?
   win           Int?
   scannedCount  Int                 @default(0)
@@ -55,6 +60,7 @@ model Member {
   updatedAt     DateTime            @updatedAt
   supporters    BillSupport[]
   timelines     Timeline[]
+  annotations   Annotation[]
 
   @@index([groupId])
 }
@@ -204,4 +210,30 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Video {
+  m3u8_url     String       @id
+  page_url     String
+  date         String
+  house        House?
+  meeting_name String
+  annotations  Annotation[]
+  meetingURL   String
+}
+
+model Annotation {
+  id           String  @id @default(cuid())
+  speaker_name String
+  video        Video   @relation(fields: [videoId], references: [m3u8_url]) // Add this line to define relation
+  videoId      String
+  start_sec    Float
+  time         String
+  end_sec      Float?
+  speaker_info String
+  member       Member? @relation(fields: [memberId], references: [id])
+  memberId     String?
+
+  @@index([videoId])
+  @@index([memberId])
 }

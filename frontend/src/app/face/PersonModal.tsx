@@ -54,9 +54,12 @@ const PersonModal: React.FC<PersonModalProps> = ({ member, onClose }) => {
                 <h1 className="font-bold text-xl">{member.name}</h1>
                 {member.group && (
                   <span className="text-gray-500 text-xs font-semibold">
-                    {member.house == "REPRESENTATIVES"
-                      ? member.group.name + "の" + "衆議院議員"
-                      : "参議院議員"}
+                    {member.group.name +
+                      "の" +
+                      (member.house === "REPRESENTATIVES"
+                        ? "衆議院"
+                        : "参議院") +
+                      "議員"}
                   </span>
                 )}
               </div>
