@@ -130,7 +130,7 @@ export default function Video({ meeting }: { meeting: Diet }) {
   return (
     <>
       <div>
-        <video controls ref={videoRef} className="video-js" />
+        <video controls playsInline ref={videoRef} className="video-js" />
       </div>
       <div className="flex items-center justify-between my-5">
         <h1 className="text-2xl font-bold items-center flex">
