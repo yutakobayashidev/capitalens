@@ -14,6 +14,11 @@ title: 当サイトの使用データに関して
 - URL: [www.shugiin.go.jp](https://www.shugiin.go.jp/internet/index.nsf/html/index.htm)
 - 目的: 議員や提出された法案の取得、加工
 
+## 参議院インターネット審議中継
+
+- URL: [www.webtv.sangiin.go.jp](https://www.webtv.sangiin.go.jp/webtv/index.php)
+- 目的: 審議中継の配信
+
 ## 国会会議録検索システム 検索用 API
 
 - URL: [kokkai.ndl.go.jp/api.html](https://kokkai.ndl.go.jp/api.html)

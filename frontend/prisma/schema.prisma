@@ -217,9 +217,12 @@ model Video {
   page_url     String
   date         String
   house        House?
+  summary      String?      @db.Text()
   meeting_name String
+  kids         String? @db.Text()
   annotations  Annotation[]
-  meetingURL   String
+  meetingURL   String?
+  apiURL       String?
 }
 
 model Annotation {

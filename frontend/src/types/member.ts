@@ -16,4 +16,6 @@ export type Member = {
   twitter: string | null;
   birthplace: string | null;
   abstract: string | null;
+  wikipedia: string | null;
+  website: string | null;
 };
