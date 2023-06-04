@@ -100,7 +100,7 @@ const pscale_config = {
   url: process.env.DATABASE_URL || "mysql://user:pass@host",
 };
 
-export const conn = process.env.DATABASE_URL ? connect(pscale_config) : null;
+const conn = process.env.DATABASE_URL ? connect(pscale_config) : null;
 
 export async function POST(request: Request) {
   if (!conn) return null;
