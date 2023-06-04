@@ -40,7 +40,7 @@ export default function Video({ meeting }: { meeting: Diet }) {
   useEffect(() => {
     if (videoRef.current) {
       const player = videojs(videoRef.current, {
-        autoplay: true,
+        autoplay: false,
         controls: true,
         responsive: true,
         fluid: true,
