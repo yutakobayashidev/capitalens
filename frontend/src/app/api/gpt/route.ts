@@ -96,7 +96,7 @@ REFINED SUMMARY:`;
   return stream.readable;
 }
 
-export const pscale_config = {
+const pscale_config = {
   url: process.env.DATABASE_URL || "mysql://user:pass@host",
 };
 
