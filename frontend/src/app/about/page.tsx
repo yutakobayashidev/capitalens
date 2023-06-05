@@ -51,7 +51,7 @@ export default async function Page() {
               <div className="mt-5 text-gray-700 font-bold text-lg">GitHub</div>
             </Link>
             <Link
-              href="https://discord.gg/tcc5AvRSr9"
+              href={config.SocialLinks.discord}
               className="rounded-lg hover:bg-gray-100 transition duration-500 border block text-center md:px-2 md:py-6 py-4 px-2"
             >
               <div className="flex justify-center">
