@@ -38,7 +38,7 @@
     "jsonwebtoken": "^9.0.0",
     "kuromoji": "^0.1.2",
     "kuromojin": "^3.0.0",
-    "langchain": "^0.0.90",
+    "langchain": "^0.0.91",
     "next": "13.4.4",
     "next-auth": "^4.22.1",
     "next-contentlayer": "^0.3.2",
