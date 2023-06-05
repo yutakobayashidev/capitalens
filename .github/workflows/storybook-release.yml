@@ -27,12 +27,15 @@ jobs:
 
       - name: Build package
         run: pnpm run build
+        working-directory: ./frontend
 
       - name: Build storybook
         run: pnpm run build-storybook -o ./dist/storybook
+        working-directory: ./frontend
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+          working-directory: ./frontend
