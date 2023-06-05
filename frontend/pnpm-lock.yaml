@@ -1,4 +1,8 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
 
 dependencies:
   '@apollo/server':
@@ -80,8 +84,8 @@ dependencies:
     specifier: ^0.3.2
     version: 0.3.2(esbuild@0.17.19)(next@13.4.4)(react-dom@18.2.0)(react@18.2.0)
   node-fetch:
-    specifier: 2.6.6
-    version: 2.6.6
+    specifier: 2.6.7
+    version: 2.6.7
   open-graph-scraper:
     specifier: ^6.0.1
     version: 6.0.1
@@ -282,7 +286,7 @@ packages:
       lru-cache: 7.18.3
       negotiator: 0.6.3
       node-abort-controller: 3.1.1
-      node-fetch: 2.6.11
+      node-fetch: 2.6.7
       uuid: 9.0.0
       whatwg-mimetype: 3.0.0
     transitivePeerDependencies:
@@ -4643,7 +4647,7 @@ packages:
       globby: 11.1.0
       ip: 2.0.0
       lodash: 4.17.21
-      node-fetch: 2.6.11
+      node-fetch: 2.6.7
       open: 8.4.2
       pretty-hrtime: 1.0.3
       prompts: 2.4.2
@@ -5048,6 +5052,7 @@ packages:
       nanoid: 3.3.6
       read-pkg-up: 7.0.1
     transitivePeerDependencies:
+      - encoding
       - supports-color
     dev: true
 
@@ -9887,8 +9892,10 @@ packages:
   /isomorphic-unfetch@3.1.0:
     resolution: {integrity: sha512-geDJjpoZ8N0kWexiwkX8F9NkTsXhetLPVbZFQ+JTW239QNOwvB0gniuR1Wc6f0AMTn7/mFGyXvHTifrCp/GH8Q==}
     dependencies:
-      node-fetch: 2.6.6
+      node-fetch: 2.6.7
       unfetch: 4.2.0
+    transitivePeerDependencies:
+      - encoding
     dev: true
 
   /istanbul-lib-coverage@3.2.0:
@@ -11421,10 +11428,16 @@ packages:
         optional: true
     dependencies:
       whatwg-url: 5.0.0
+    dev: false
 
-  /node-fetch@2.6.6:
-    resolution: {integrity: sha512-Z8/6vRlTUChSdIgMa51jxQ4lrw/Jy5SOW10ObaA47/RElsAN2c5Pn8bTgFGWn/ibwzXTE8qwr1Yzx28vsecXEA==}
+  /node-fetch@2.6.7:
+    resolution: {integrity: sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==}
     engines: {node: 4.x || >=6.0.0}
+    peerDependencies:
+      encoding: ^0.1.0
+    peerDependenciesMeta:
+      encoding:
+        optional: true
     dependencies:
       whatwg-url: 5.0.0
 
