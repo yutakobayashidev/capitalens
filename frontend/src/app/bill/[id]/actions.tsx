@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import LoginModal from "@src/components/Login";
+import LoginModal from "@src/app/_components/Login";
 import { AiOutlineLink } from "react-icons/ai";
 
 export function Login() {

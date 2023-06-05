@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Topics from "@src/components/Topics";
-import Meetings from "@src/components/Meetings";
+import Topics from "@src/app/_components/Topics";
+import Meetings from "@src/app/_components/Meetings";
 import prisma from "@src/lib/prisma";
 import { FaGithub } from "react-icons/fa";
 
@@ -55,7 +55,7 @@ async function getTopicViews() {
 
 async function meeting_list() {
   const res = await fetch(
-    "https://kokkai.ndl.go.jp/api/meeting?from=2023-04-01&recordPacking=json",
+    "https://kokkai.ndl.go.jp/api/meeting?from=2023-05-01&recordPacking=json",
     {
       next: { revalidate: 3600 },
     }
@@ -101,14 +101,14 @@ export default async function Page() {
   const topicsPromise = getTopicViews();
   const meetingPromise = meeting_list();
   const billPromise = getBillWithCommentCounts();
-
-  const groups = await prisma.group.findMany();
+  const groupsPromise = prisma.group.findMany();
 
   const membersByGroup = await fetchItemsByStatus();
-  const [topics, meetings, bills] = await Promise.all([
+  const [topics, meetings, bills, groups] = await Promise.all([
     topicsPromise,
     meetingPromise,
     billPromise,
+    groupsPromise,
   ]);
 
   return (

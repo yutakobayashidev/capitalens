@@ -1,12 +1,12 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import cn from "classnames";
-import Header from "@src/components/Header";
-import Footer from "@src/components/Footer";
+import Header from "@src/app/_components/Header";
+import Footer from "@src/app/_components/Footer";
 import { Inter, Noto_Sans_JP } from "next/font/google";
-import MobileFooter from "@src/components/MobileFooter";
-import GoogleAnalytics from "@src/components/GoogleAnalytics";
-import SessionProvider from "@src/components/SessionProvider";
+import MobileFooter from "@src/app/_components/MobileFooter";
+import GoogleAnalytics from "@src/app/_components/GoogleAnalytics";
+import SessionProvider from "@src/app/_components/SessionProvider";
 
 export const metadata: Metadata = {
   title: {
