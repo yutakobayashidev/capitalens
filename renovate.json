@@ -1,16 +1,10 @@
 {
-  "extends": [
-    "gitmoji",
-    "config:base"
-  ],
-  "ignorePresets": [
-    ":prHourlyLimit2"
-  ],
-  "labels": [
-    "dependencies"
-  ],
+  "extends": ["gitmoji", "config:base"],
+  "ignorePresets": [":prHourlyLimit2"],
+  "labels": ["dependencies"],
   "timezone": "Asia/Tokyo",
   "dependencyDashboard": false,
   "automerge": true,
+  "rangeStrategy": "bump",
   "branchConcurrentLimit": 0
 }
