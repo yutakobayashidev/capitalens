@@ -62,7 +62,7 @@
     "@storybook/blocks": "^7.0.18",
     "@storybook/nextjs": "^7.0.18",
     "@storybook/react": "^7.0.18",
-    "@storybook/testing-library": "^0.0.14-next.2",
+    "@storybook/testing-library": "^0.1.0",
     "@svgr/webpack": "^8.0.1",
     "@tailwindcss/typography": "^0.5.9",
     "@types/gtag.js": "^0.0.12",
