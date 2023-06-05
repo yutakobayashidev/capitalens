@@ -22,14 +22,13 @@ jobs:
         with:
           node-version: 16.x
 
-      - name: Navigate to frontend
-        run: cd frontend
-
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: 7.1.0
+
       - name: Install Node Dependencies
         run: pnpm install
+        working-directory: ./frontend
 
       - name: Build package
         run: npm run build
