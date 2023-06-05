@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { allPages } from "contentlayer/generated";
 import { notFound } from "next/navigation";
+import { config } from "@site.config";
 
 export async function generateMetadata({
   params,
@@ -15,7 +16,7 @@ export async function generateMetadata({
     notFound();
   }
 
-  const ogImage = `https://parliament-data.vercel.app/opengraph.jpg`;
+  const ogImage = `${config.siteRoot}opengraph.jpg`;
 
   return {
     title: page.title,
@@ -26,11 +27,8 @@ export async function generateMetadata({
     },
     openGraph: {
       title: page.title,
-      siteName: "CapitaLens",
-      url: `https://parliament-data.vercel.app/${page._raw.sourceFileName.replace(
-        ".md",
-        ""
-      )}`,
+      siteName: config.siteMeta.title,
+      url: config.siteRoot + page._raw.sourceFileName.replace(".md", ""),
       locale: "ja-JP",
       images: [
         {

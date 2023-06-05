@@ -1,4 +1,5 @@
 import prisma from "@src/lib/prisma";
+import { config } from "@site.config";
 
 export const revalidate = 3600;
 
@@ -54,22 +55,20 @@ export async function GET(
     <feed xmlns="http://www.w3.org/2005/Atom">
         <title>${group.name}</title>
         <subtitle>${group.name}議員のブログ・動画のRSSフィードです</subtitle>
-        <link href="https://parliament-data.vercel.app/group/${
-          group.id
-        }/feed" rel="self"/>
-        <link href="https://parliament-data.vercel.app/group/${group.id}/feed"/>
+        <link href="${config.siteRoot}group/${group.id}/feed" rel="self"/>
+        <link href="${config.siteRoot}group/${group.id}/feed"/>
         <updated>${timeline[0].isoDate}</updated>
-        <id>https://parliament-data.vercel.app</id>${timeline
-          .map((post) => {
-            return `
+        <id>${config.siteRoot}</id>${timeline
+      .map((post) => {
+        return `
         <entry>
             <id>${post.link}</id>
             <title>${post.title}</title>
             <link href="${post.link}"/>
             <updated>${post.isoDate}</updated>
         </entry>`;
-          })
-          .join("")}
+      })
+      .join("")}
     </feed>`,
     {
       headers: {

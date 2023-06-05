@@ -11,6 +11,7 @@ import type { Metadata } from "next";
 import { AiOutlineLink } from "react-icons/ai";
 import prisma from "@src/lib/prisma";
 import TwitterTimeline from "@src/app/members/[id]/TwitterTimeline";
+import { config } from "@site.config";
 
 dayjs.locale("ja");
 dayjs.extend(relativeTime);
@@ -80,8 +81,7 @@ export async function generateMetadata({
     notFound();
   }
 
-  const ogImage =
-    member.image ?? `https://parliament-data.vercel.app/opengraph.jpg`;
+  const ogImage = member.image ?? `${config.siteRoot}opengraph.jpg`;
 
   return {
     title: member.name,
@@ -95,8 +95,8 @@ export async function generateMetadata({
     },
     openGraph: {
       title: member.name,
-      siteName: "CapitaLens",
-      url: `https://parliament-data.vercel.app/people/${member.id}`,
+      siteName: config.siteRoot,
+      url: `${config.siteRoot}people/${member.id}`,
       description:
         member.abstract ??
         member.description ??

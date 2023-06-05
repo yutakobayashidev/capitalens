@@ -6,6 +6,7 @@ import Article from "@src/app/group/Article";
 import { notFound } from "next/navigation";
 import Members from "@src/app/group/[id]/Members";
 import type { Metadata } from "next";
+import { config } from "@site.config";
 
 export const revalidate = 3600;
 
@@ -40,8 +41,8 @@ export async function generateMetadata({
     },
     openGraph: {
       title: group.name,
-      siteName: "CapitaLens",
-      url: `https://parliament-data.vercel.app/group/${group.id}`,
+      siteName: config.siteMeta.title,
+      url: `${config.siteRoot}group/${group.id}`,
       description:
         group.description ?? group.name + "の情報をチェックしましょう",
       locale: "ja-JP",

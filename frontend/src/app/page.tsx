@@ -3,6 +3,7 @@ import Topics from "@src/app/_components/Topics";
 import Meetings from "@src/app/_components/Meetings";
 import prisma from "@src/lib/prisma";
 import { FaGithub } from "react-icons/fa";
+import { config } from "@site.config";
 
 export const revalidate = 3600;
 
@@ -122,7 +123,7 @@ export default async function Page() {
           <div>
             <Link
               className="bg-white rounded-full font-semibold px-4 py-2 mr-4 inline-flex items-center text-base transition-all duration-500 ease-in-out hover:shadow"
-              href="https://github.com/yutakobayashidev/capitalens"
+              href={config.SocialLinks.github}
             >
               <FaGithub className="text-xl mr-3 align-middle" />
               開発に貢献する

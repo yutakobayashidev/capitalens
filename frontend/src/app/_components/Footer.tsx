@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { config } from "@site.config";
 
 export default function Footer() {
   return (
@@ -7,7 +8,7 @@ export default function Footer() {
         <div className="md:grid-cols-4 grid gap-10">
           <div>
             <Link className="mb-3 block text-2xl font-bold" href="/">
-              CapitaLens
+              {config.siteMeta.title}
             </Link>
             <p className="text-gray-500 text-sm">国のデータを整理する</p>
           </div>
@@ -43,7 +44,7 @@ export default function Footer() {
               <li className="my-3">
                 <a
                   className="text-sm hover:underline"
-                  href="https://github.com/yutakobayashidev/capitalens"
+                  href={config.SocialLinks.github}
                 >
                   GitHub
                 </a>
@@ -51,7 +52,7 @@ export default function Footer() {
               <li className="my-3">
                 <a
                   className="text-sm hover:underline"
-                  href="https://discord.gg/tcc5AvRSr9"
+                  href={config.SocialLinks.discord}
                 >
                   Discord
                 </a>
@@ -80,7 +81,7 @@ export default function Footer() {
           </nav>
         </div>
         <div className="text-gray-400 text-center pt-4 mt-5 border-t">
-          © CapitaLens
+          © {config.siteMeta.title}
         </div>
       </div>
     </footer>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Login } from "@src/app/bill/[id]/actions";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@src/app/api/auth/[...nextauth]/authOptions";
+import { config } from "@site.config";
 
 export default async function Header() {
   const session = await getServerSession(authOptions);
@@ -14,7 +15,7 @@ export default async function Header() {
             href="/"
             className="font-bold font-base text-2xl md:text-3xl flex items-center"
           >
-            CapitaLens
+            {config.siteMeta.title}
             <span className="text-sm ml-3 text-gray-400 border py-0.5 px-1 font-medium rounded-md">
               BETA
             </span>

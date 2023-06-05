@@ -8,6 +8,7 @@ import "video.js/dist/video-js.css";
 import { Member } from "@src/types/member";
 import Speaker from "./Speaker";
 import { useSearchParams } from "next/navigation";
+import { config } from "@site.config";
 
 type Annotation = {
   id: string;
@@ -115,8 +116,10 @@ export default function Video({ meeting }: { meeting: Diet }) {
   const MAX_TWEET_LENGTH = 140;
   const TWITTER_SHORTENED_URL_LENGTH = 23;
   const ellipsis = "...";
-  const baseText = "参議院 国土交通委員会 第5号\n\n";
-  const url = "https://parliament-data.vercel.app/meetings";
+  const baseText = `${meeting.house === "COUNCILLORS" ? "参議院" : "衆議院"} ${
+    meeting.meeting_name
+  }\n\n`;
+  const url = `${config.siteRoot}meetings`;
 
   // summaryが長い場合は途中で切り、代わりに"..."を追加します。
   function truncateSummary(summary: string, maxChars: number): string {

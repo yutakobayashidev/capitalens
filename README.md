@@ -22,7 +22,7 @@
 
 バックエンド:
 
-使用している情報について、詳しくは[こちらのページ](https://parliament-data.vercel.app/data)をご覧ください。
+使用している情報について、詳しくは[こちらのページ](https://capitalens.vercel.app/data)をご覧ください。
 
 - Scrapy (参衆サイトや議員ウェブサイトのスクレイピング)
 - DBpedia

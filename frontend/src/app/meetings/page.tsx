@@ -4,6 +4,7 @@ import Video from "./Video";
 import type { Metadata } from "next";
 import dayjs from "dayjs";
 import Summarize from "./Summarize";
+import { config } from "@site.config";
 
 export async function generateMetadata(): Promise<Metadata | undefined> {
   const meeting = await getMeeting();
@@ -33,8 +34,8 @@ export async function generateMetadata(): Promise<Metadata | undefined> {
       title:
         (meeting.house === "COUNCILLORS" ? "参議院 " : "衆議院 ") +
         meeting.meeting_name,
-      siteName: "CapitaLens",
-      url: `https://parliament-data.vercel.app/diet`,
+      siteName: config.siteMeta.title,
+      url: `${config.siteRoot}diet`,
       locale: "ja-JP",
     },
   };

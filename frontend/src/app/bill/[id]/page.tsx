@@ -6,6 +6,7 @@ import prisma from "@src/lib/prisma";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { config } from "@site.config";
 
 async function getBill(id: string) {
   const bill = await prisma.bill.findUnique({
@@ -81,11 +82,13 @@ async function getCount(id: string) {
 }
 
 function ShareSection({ bill }: ShareSectionProps) {
-  const tweet = `https://twitter.com/share?url=https://parliament-data.vercel.app/bill/${
+  const tweet = `https://twitter.com/share?url=${config.siteRoot}bill/${
     bill.id
-  }&text=${"📑" + bill.name + "について議論しましょう"}&hashtags=CapitaLens`;
+  }&text=${"📑" + bill.name + "について議論しましょう"}&hashtags=${
+    config.siteMeta.title
+  }`;
 
-  const line = `https://social-plugins.line.me/lineit/share?url=https://parliament-data.vercel.app/bill/${bill.id}`;
+  const line = `https://social-plugins.line.me/lineit/share?url=${config.siteRoot}bill/${bill.id}`;
 
   return (
     <section className="bg-gray-100 py-12">
@@ -130,7 +133,7 @@ export async function generateMetadata({
 }): Promise<Metadata | undefined> {
   const bill = await getBill(params.id);
 
-  const ogImage = `https://parliament-data.vercel.app/opengraph.jpg`;
+  const ogImage = `${config.siteRoot}opengraph.jpg`;
 
   return {
     title: bill.name,
@@ -143,8 +146,8 @@ export async function generateMetadata({
     },
     openGraph: {
       title: bill.name,
-      siteName: "CapitaLens",
-      url: `https://parliament-data.vercel.app/bill/${bill.id}`,
+      siteName: config.siteMeta.title,
+      url: `${config.siteRoot}bill/${bill.id}`,
       description: bill.reason,
       locale: "ja-JP",
       images: [

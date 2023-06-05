@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { FaGithub, FaDiscord } from "react-icons/fa";
+import { config } from "@site.config";
 
 export const metadata: Metadata = {
   title: "このサイトについて",
@@ -41,7 +42,7 @@ export default async function Page() {
           </h2>
           <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
             <Link
-              href="https://github.com/yutakobayashidev/capitalens"
+              href={config.SocialLinks.github}
               className="rounded-lg hover:bg-gray-100 transition duration-500 border block text-center md:px-2 md:py-6 py-4 px-2"
             >
               <div className="flex justify-center">
