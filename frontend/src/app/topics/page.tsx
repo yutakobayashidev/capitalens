@@ -1,6 +1,6 @@
 import prisma from "@src/lib/prisma";
 import type { Metadata } from "next";
-import Topics from "@src/components/Topics";
+import Topics from "@src/app/_components/Topics";
 
 export const revalidate = 3600;
 
