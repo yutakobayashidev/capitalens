@@ -1,7 +1,7 @@
 {
   "theme_color": "#1E50B5",
   "background_color": "#1E50B5",
-  "display": "fullscreen",
+  "display": "standalone",
   "scope": "/",
   "start_url": "/",
   "short_name": "CapitaLens",
