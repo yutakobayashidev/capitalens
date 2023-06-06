@@ -13,6 +13,7 @@ export default {
       },
       colors: {
         primary: "#1E50B5",
+        "black-rgba": "rgba(0, 0, 0, 0.2)",
       },
       fontFamily: {
         inter: ["var(--font-inter)"],

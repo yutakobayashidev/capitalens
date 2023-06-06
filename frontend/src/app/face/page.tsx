@@ -5,6 +5,7 @@ import FaceDetection from "@src/app/face/FaceDetection";
 import { Member } from "@src/types/member";
 import toast, { Toaster } from "react-hot-toast";
 import PersonModal from "./PersonModal";
+import { AnimatePresence } from "framer-motion";
 
 // カスタムフックを定義
 const useMember = () => {
@@ -46,7 +47,9 @@ export default function Page() {
       <section>
         <div>
           <FaceDetection onFaceDetect={handleFaceDetect} />
-          {member && <PersonModal member={member} onClose={clearMember} />}
+          <AnimatePresence>
+            {member && <PersonModal member={member} onClose={clearMember} />}
+          </AnimatePresence>
         </div>
       </section>
       <Toaster position="bottom-center" />

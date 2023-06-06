@@ -33,6 +33,7 @@
     "eslint": "8.42.0",
     "eslint-config-next": "13.4.4",
     "face-api.js": "^0.22.2",
+    "framer-motion": "^10.12.16",
     "graphql": "^16.6.0",
     "graphql-scalars": "^1.21.3",
     "jsonwebtoken": "^9.0.0",
