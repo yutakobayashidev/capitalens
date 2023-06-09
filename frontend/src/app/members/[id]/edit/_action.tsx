@@ -49,6 +49,7 @@ export const registerAction = zact(MemberSchema)(async (data) => {
       lastNameKana,
       house: data.house,
       group: groupData,
+      website: data.website,
     },
   });
 
