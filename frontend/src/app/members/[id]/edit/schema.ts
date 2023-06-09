@@ -34,8 +34,7 @@ export const MemberSchema = z.object({
         .string()
         .trim()
         .url({ message: "httpから始まる正しいURLを入力してください" }),
-    ])
-    .transform((val) => (val === "" ? null : val)),
+    ]).nullable(),
   twitter: z
     .union([
       z.literal(""),
@@ -47,8 +46,7 @@ export const MemberSchema = z.object({
           message:
             "ハンドルネームには、英数字またはアンダースコアのみを使用できます。",
         }),
-    ])
-    .transform((val) => (val === "" ? null : val)),
+    ]).nullable(),
 });
 
 export type FormSchema = z.infer<typeof MemberSchema>;
