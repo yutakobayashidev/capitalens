@@ -20,23 +20,17 @@ export async function generateMetadata({
   const ogImage = member.image ?? `${config.siteRoot}opengraph.jpg`;
 
   return {
-    title: member.name,
+    title: member.name + "議員の情報を更新",
     description: member.description,
     twitter: {
       card: member.image ? "summary" : "summary_large_image",
       title: member.name,
-      description:
-        member.description ?? member.name + "議員の情報をチェックしましょう",
       images: [ogImage],
     },
     openGraph: {
       title: member.name,
       siteName: config.siteRoot,
       url: `${config.siteRoot}people/${member.id}`,
-      description:
-        member.abstract ??
-        member.description ??
-        member.name + "議員の情報をチェックしましょう",
       locale: "ja-JP",
       images: [
         {

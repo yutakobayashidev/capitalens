@@ -8,6 +8,68 @@ import { useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MemberSchema, FormSchema } from "@src/app/members/[id]/edit/schema";
 
+type InputFieldProps = {
+  id: string;
+  register: any;
+  placeholder: string;
+  errors: any;
+}
+
+const InputField: React.FC<InputFieldProps> = ({
+  id,
+  register,
+  placeholder,
+  errors,
+}) => (
+  <>
+    <input
+      className="w-full block resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2 mb-2"
+      type="text"
+      id={id}
+      placeholder={placeholder}
+      {...register(id)}
+    />
+    {errors[id] && (
+      <span className="text-sm text-gray-500 mb-2 block">
+        {errors[id]?.message}
+      </span>
+    )}
+  </>
+);
+
+type SelectFieldProps =  {
+  id: string;
+  register: any
+  errors: any
+  options: { label: string; value: string }[];
+}
+
+const SelectField: React.FC<SelectFieldProps> = ({
+  id,
+  register,
+  errors,
+  options,
+}) => (
+  <>
+    <select
+      className="w-full block resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2 mb-2"
+      id={id}
+      {...register(id)}
+    >
+      {options.map((option, i) => (
+        <option key={i} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
+    {errors[id] && (
+      <span className="text-sm text-gray-500 mb-2 block">
+        {errors[id]?.message}
+      </span>
+    )}
+  </>
+);
+
 export default function Form({
   member,
   groups,
@@ -27,23 +89,10 @@ export default function Form({
     formState: { errors },
   } = useForm<FormSchema>({
     resolver: zodResolver(MemberSchema),
-    defaultValues: {
-      id: member.id,
-      name: member.name,
-      firstName: member.firstName,
-      lastName: member.lastName,
-      firstNameHira: member.firstNameHira,
-      lastNameHira: member.lastNameHira,
-      description: member.description,
-      website: member.website,
-      twitter: member.twitter,
-      house: member.house,
-      groupId: member.groupId,
-    },
+    defaultValues: member,
   });
 
   const onSubmit = handleSubmit((data) => {
-
     startTransition(async () => {
       const response = await registerAction(data);
 
@@ -72,98 +121,84 @@ export default function Form({
           </h1>
           <form onSubmit={onSubmit}>
             <label className="mb-2 flex font-bold items-center">議員名</label>
-            <input
-              className="w-full block resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2 mb-3"
-              type="text"
+            <InputField
               id="name"
+              register={register}
               placeholder="議員名を入力"
-              {...register("name")}
+              errors={errors}
             />
-            {errors.name && <span>{errors.name?.message}</span>}
             <label className="mb-2 flex font-bold items-center">
               フルネーム
             </label>
             <div className="flex gap-x-4">
-              <input
-                className="w-full block resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2 mb-3"
-                type="text"
-                placeholder="山田"
+              <InputField
                 id="firstName"
-                {...register("firstName")}
+                register={register}
+                placeholder="山田"
+                errors={errors}
               />
-              <input
-                className="w-full block resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2 mb-3"
-                type="text"
-                placeholder="太郎"
+              <InputField
                 id="lastName"
-                {...register("lastName")}
+                register={register}
+                placeholder="太郎"
+                errors={errors}
               />
             </div>
             <label className="mb-2 flex font-bold items-center">ひらがな</label>
             <div className="flex gap-x-4">
-              <input
-                className="w-full block resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2 mb-3"
-                type="text"
-                placeholder="やまだ"
+              <InputField
                 id="firstNameHira"
-                {...register("firstNameHira")}
+                register={register}
+                placeholder="やまだ"
+                errors={errors}
               />
-              <input
-                className="w-full block resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2 mb-3"
-                type="text"
-                placeholder="たろう"
+              <InputField
                 id="lastNameHira"
-                {...register("lastNameHira")}
+                register={register}
+                placeholder="たろう"
+                errors={errors}
               />
             </div>
             <label className="mb-2 flex font-bold items-center">
               公式サイト
             </label>
-            <input
-              className="w-full block resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2 mb-3"
-              type="text"
+            <InputField
               id="website"
+              register={register}
               placeholder="https://example.com"
-              {...register("website")}
+              errors={errors}
             />
-            {errors.website && <span>{errors.website?.message}</span>}
             <label className="mb-2 flex font-bold items-center">Twitter</label>
-            <input
-              className="w-full block resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2 mb-3"
-              type="text"
+            <InputField
               id="twitter"
+              register={register}
               placeholder="@を含めないで入力"
-              {...register("twitter")}
+              errors={errors}
             />
-            {errors.twitter && <span>{errors.twitter?.message}</span>}
             <label className="mb-2 flex font-bold items-center">所属政党</label>
-            <select
-              className="w-full block resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2 mb-3"
-              id="group"
-              {...register("groupId")}
-            >
-              <option value="">無所属・その他</option>
-              {groups.map((annotation, i) => (
-                <option key={i} value={annotation.id}>
-                  {annotation.name}
-                </option>
-              ))}
-            </select>
-            {errors.groupId && <span>{errors.groupId?.message}</span>}
+            <SelectField
+              id="groupId"
+              register={register}
+              errors={errors}
+              options={groups.map((group) => ({
+                label: group.name,
+                value: group.id,
+              }))}
+            />
             <label className="mb-2 flex font-bold items-center">議会</label>
-            <select
-              className="w-full block resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2 mb-3"
+            <SelectField
               id="house"
-              {...register("house")}
-            >
-              <option value="COUNCILLORS">参議院</option>
-              <option value="REPRESENTATIVES">衆議院</option>
-            </select>
-            {errors.house && <span>{errors.house.message}</span>}
+              register={register}
+              errors={errors}
+              options={[
+                { label: "参議院", value: "COUNCILLORS" },
+                { label: "衆議院", value: "REPRESENTATIVES" },
+              ]}
+            />
             <label className="mb-2 flex font-bold items-center">説明</label>
             <TextareaAutosize
               {...register("description")}
-              className="w-full block resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2 mb-3"
+              className="w-full block resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2 mb-2"
               id="description"
             />
             <div className="flex justify-center">
