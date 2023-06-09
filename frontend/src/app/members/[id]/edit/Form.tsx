@@ -180,10 +180,13 @@ export default function Form({
               id="groupId"
               register={register}
               errors={errors}
-              options={groups.map((group) => ({
-                label: group.name,
-                value: group.id,
-              }))}
+              options={[
+                { label: "無所属・その他", value: "" },
+                ...groups.map(group => ({
+                  label: group.name,
+                  value: group.id
+                }))
+              ]}
             />
             <label className="mb-2 flex font-bold items-center">議会</label>
             <SelectField
