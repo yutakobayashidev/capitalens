@@ -26,3 +26,12 @@ export function formatDate(dateText: string, format = "YYYY-MM-DD") {
 
   return isRecent ? date.fromNow() : date.format(format);
 }
+
+export function hiraToKana(str: string | null) {
+  if (!str) {
+    return null
+  }
+  return str.replace(/[\u3041-\u3096]/g, function(match) {
+    return String.fromCharCode(match.charCodeAt(0) + 0x60);
+  });
+}

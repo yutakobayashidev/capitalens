@@ -211,7 +211,8 @@ export default async function Page({ params }: { params: { id: string } }) {
         <WordCloud name={member.name} />
       </section>
       <section>
-        <h2 className="text-3xl mb-5 font-bold">詳細情報</h2>
+        <h2 className="text-3xl mb-3 font-bold">詳細情報</h2>
+        <Link href={`/members/${member.id}/edit`} className="mb-5 text-primary block">情報を更新する</Link>
         {member.group && (
           <div className="flex items-center mb-3">
             {member.group.image ? (
