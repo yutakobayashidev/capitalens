@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MemberSchema, FormSchema } from "@src/app/members/[id]/edit/schema";
+import { useRequireLogin } from "@src/hooks/useRequireLogin"
 
 type InputFieldProps = {
   id: string;
@@ -80,6 +81,9 @@ export default function Form({
     id: string;
   }[];
 }) {
+
+  useRequireLogin();
+
   const [done, setDone] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
 

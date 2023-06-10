@@ -37,6 +37,7 @@
     "framer-motion": "^10.12.16",
     "graphql": "^16.6.0",
     "graphql-scalars": "^1.21.3",
+    "jotai": "^2.1.1",
     "jsonwebtoken": "^9.0.0",
     "kuromoji": "^0.1.2",
     "kuromojin": "^3.0.0",
