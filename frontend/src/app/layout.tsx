@@ -65,6 +65,7 @@ export default function RootLayout({
           <meta name="theme-color" content="#1E50B5" />
         </head>
         <body>
+          {/* @ts-expect-error Async Server Component */}
           <Header />
           {children}
           <Footer />
