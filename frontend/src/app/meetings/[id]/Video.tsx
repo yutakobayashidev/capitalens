@@ -167,7 +167,7 @@ export default function Video({ meeting }: { meeting: Diet }) {
         <div className="flex items-center mb-3 justify-between">
           <div className="flex items-center text-base">
             <span className="mr-2 font-medium">
-              {dayjs(meeting.date).format("YYYY年MM月DD日")}
+              {dayjs(meeting.date).format("YYYY/MM/DD")}
             </span>
           </div>
         </div>
@@ -201,7 +201,7 @@ export default function Video({ meeting }: { meeting: Diet }) {
             className="md:p-10 px-2 py-8 bg-white text-xl justify-center text-gray-800 transition-all duration-500 ease-in-out hover:shadow-md flex font-bold items-center border rounded-xl"
           >
             <span className="text-4xl mr-3">📺</span>
-            {meeting.house === "COUNCILLORS" ? "インターネット審議中継" : ""}
+            インターネット審議中継
           </a>
           {meeting.meetingURL && (
             <a

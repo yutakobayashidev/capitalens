@@ -4,8 +4,9 @@ import { IoAlertCircle } from "react-icons/io5";
 import { Fragment } from "react";
 import { SiOpenai } from "react-icons/si";
 import { useState, useEffect, useCallback, useRef } from "react";
-import * as kuromoji from "kuromoji";
 import { AiOutlineLink } from "react-icons/ai";
+import { useKuromoji } from "@src/hooks/useKuromoji";
+import { kanaToHira, isKanji } from "@src/helper/utils";
 
 export default function Summarize({
   meeting,
@@ -14,6 +15,7 @@ export default function Summarize({
     summary: string | null;
     kids: string | null;
     m3u8_url: string;
+    id: string;
   };
 }) {
   const [summary, setSummary] = useState<string>("");
@@ -22,21 +24,8 @@ export default function Summarize({
   const [start, Summarystart] = useState<boolean>(false);
   const [copy, setCopy] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-  const [isTokenizerReady, setIsTokenizerReady] = useState(false); // New state for tokenizer readiness
 
-  const tokenizerInstanceRef =
-    useRef<kuromoji.Tokenizer<kuromoji.IpadicFeatures>>();
-
-  useEffect(() => {
-    kuromoji.builder({ dicPath: "/dict" }).build((err, tokenizer) => {
-      if (err) {
-        console.log(err);
-      } else {
-        tokenizerInstanceRef.current = tokenizer;
-        setIsTokenizerReady(true);
-      }
-    });
-  }, []);
+  const { isTokenizerReady, tokenizer } = useKuromoji(); // use the custom hook here
 
   function copyTextToClipboard(text: string) {
     navigator.clipboard.writeText(text).then(
@@ -80,39 +69,33 @@ export default function Summarize({
     Summarystart(false);
   }
 
-  const kanaToHira = (str: string) =>
-    str.replace(/[\u30a1-\u30f6]/g, (match) =>
-      String.fromCharCode(match.charCodeAt(0) - 0x60)
-    );
-
-  const isKanji = (ch: string): boolean => {
-    const unicode = ch.charCodeAt(0);
-    return unicode >= 0x4e00 && unicode <= 0x9faf;
-  };
-
-  const generateYomi = useCallback(async (text: string) => {
-    if (!tokenizerInstanceRef.current) {
-      console.error("Tokenizer not initialized");
-      return;
-    }
-
-    const tokens = tokenizerInstanceRef.current.tokenize(text);
-
-    const rubyArray = tokens.map((token) => {
-      const surface = token.surface_form;
-      const reading = token.reading;
-      if (!reading) {
-        return surface;
+  const generateYomi = useCallback(
+    async (text: string) => {
+      if (!tokenizer) {
+        // Use the tokenizer obtained from the custom hook
+        console.error("Tokenizer not initialized");
+        return;
       }
-      const hiraReading = kanaToHira(reading);
-      if (surface.split("").some(isKanji)) {
-        return `<ruby>${surface}<rt>${hiraReading}</rt></ruby>`;
-      } else {
-        return surface;
-      }
-    });
-    return rubyArray.join("");
-  }, []);
+
+      const tokens = tokenizer.tokenize(text);
+
+      const rubyArray = tokens.map((token) => {
+        const surface = token.surface_form;
+        const reading = token.reading;
+        if (!reading) {
+          return surface;
+        }
+        const hiraReading = kanaToHira(reading);
+        if (surface.split("").some(isKanji)) {
+          return `<ruby>${surface}<rt>${hiraReading}</rt></ruby>`;
+        } else {
+          return surface;
+        }
+      });
+      return rubyArray.join("");
+    },
+    [tokenizer]
+  );
 
   const applyRuby = useCallback(async () => {
     const text = kids ? kids : meeting.kids ? meeting.kids : "";
@@ -135,7 +118,7 @@ export default function Summarize({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          m3u8: meeting.m3u8_url,
+          id: meeting.id,
           kids: isChecked,
         }),
       });
@@ -176,8 +159,9 @@ export default function Summarize({
   return (
     <div className="border rounded-xl border-gray-200 px-5 pt-2 pb-4">
       <h2 className="text-2xl font-bold my-3">AIによるサマリー</h2>
-      {((isChecked && meeting.kids === null && kids === "") ||
-        (meeting.summary === null && summary === "")) && (
+      {(isChecked
+        ? meeting.kids === null && kids === ""
+        : meeting.summary === null && summary === "") && (
         <button
           onClick={handleSummarize}
           disabled={start}
@@ -187,6 +171,7 @@ export default function Summarize({
           OpenAIで要約
         </button>
       )}
+
       <label className="flex items-center mb-3">
         <input
           type="checkbox"
@@ -260,7 +245,7 @@ export default function Summarize({
       <div className="flex items-center text-sm mt-3 text-gray-500">
         <IoAlertCircle className="text-xl text-red-400" />
         <div className="ml-1 text-xs">
-          AIによる要約は間違いが含まれている可能性があります
+          AIによる要約は間違いを含む可能性があります
         </div>
       </div>
     </div>

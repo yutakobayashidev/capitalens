@@ -213,7 +213,8 @@ model VerificationToken {
 }
 
 model Video {
-  m3u8_url     String       @id
+  id           String @id  @default(cuid())
+  m3u8_url     String @unique
   page_url     String
   date         String
   house        House?

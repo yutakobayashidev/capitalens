@@ -10,12 +10,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = true;
 export const runtime = "edge";
 
-async function runLLMChain(
-  text: string,
-  kids: boolean,
-  m3u8: string,
-  conn: any
-) {
+async function runLLMChain(text: string, kids: boolean, id: string, conn: any) {
   const encoder = new TextEncoder();
 
   const stream = new TransformStream();
@@ -39,8 +34,8 @@ async function runLLMChain(
           await writer.ready;
           await writer.close();
           const column = kids ? "kids" : "summary";
-          const query = `UPDATE Video SET ${column} = ? WHERE m3u8_url = ?`;
-          const params = [finalResult, m3u8];
+          const query = `UPDATE Video SET ${column} = ? WHERE id = ?`;
+          const params = [finalResult, id];
           await conn.execute(query, params);
         },
         async handleLLMError(e) {
@@ -107,8 +102,8 @@ export async function POST(request: Request) {
 
   const body = await request.json();
 
-  const query = "SELECT * FROM Video WHERE m3u8_url = ? LIMIT 1";
-  const params = [body.m3u8];
+  const query = "SELECT * FROM Video WHERE id = ? LIMIT 1";
+  const params = [body.id];
 
   const results = await conn.execute(query, params);
   const column = body.kids ? "kids" : "summary";
@@ -132,7 +127,7 @@ export async function POST(request: Request) {
       .slice(1)
       .map((record) => JSON.stringify(record.speech));
 
-    const stream = runLLMChain(speeches.join("\n"), body.kids, body.m3u8, conn);
+    const stream = runLLMChain(speeches.join("\n"), body.kids, body.id, conn);
 
     return new Response(await stream, {
       headers: {

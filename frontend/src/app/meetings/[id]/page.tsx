@@ -6,8 +6,12 @@ import dayjs from "dayjs";
 import Summarize from "./Summarize";
 import { config } from "@site.config";
 
-export async function generateMetadata(): Promise<Metadata | undefined> {
-  const meeting = await getMeeting();
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata | undefined> {
+  const meeting = await getMeeting(params.id);
 
   if (!meeting) {
     notFound();
@@ -41,8 +45,9 @@ export async function generateMetadata(): Promise<Metadata | undefined> {
   };
 }
 
-async function getMeeting() {
+async function getMeeting(id: string) {
   const meeting = await prisma.video.findFirst({
+    where: { id },
     include: {
       annotations: {
         include: {
@@ -59,8 +64,8 @@ async function getMeeting() {
   return meeting;
 }
 
-export default async function IndexPage() {
-  const meeting = await getMeeting();
+export default async function Page({ params }: { params: { id: string } }) {
+  const meeting = await getMeeting(params.id);
 
   if (!meeting) {
     notFound();
@@ -73,7 +78,9 @@ export default async function IndexPage() {
           <Video meeting={meeting} />
         </div>
         <div className="flex-1">
-          {meeting.apiURL && <Summarize meeting={meeting} />}
+          {meeting.apiURL && meeting.meetingURL && (
+            <Summarize meeting={meeting} />
+          )}
         </div>
       </div>
     </section>

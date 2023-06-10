@@ -27,11 +27,21 @@ export function formatDate(dateText: string, format = "YYYY-MM-DD") {
   return isRecent ? date.fromNow() : date.format(format);
 }
 
+export const kanaToHira = (str: string) =>
+  str.replace(/[\u30a1-\u30f6]/g, (match) =>
+    String.fromCharCode(match.charCodeAt(0) - 0x60)
+  );
+
+export const isKanji = (ch: string): boolean => {
+  const unicode = ch.charCodeAt(0);
+  return unicode >= 0x4e00 && unicode <= 0x9faf;
+};
+
 export function hiraToKana(str: string | null) {
   if (!str) {
-    return null
+    return null;
   }
-  return str.replace(/[\u3041-\u3096]/g, function(match) {
+  return str.replace(/[\u3041-\u3096]/g, function (match) {
     return String.fromCharCode(match.charCodeAt(0) + 0x60);
   });
 }

@@ -246,10 +246,7 @@ export default async function Page() {
       <section className="py-8 bg-gray-50">
         <div className="mx-auto max-w-screen-xl px-4 md:px-8">
           <h2 className="font-bold text-2xl mb-5">最新の議会</h2>
-          <p className="mb-3">
-            ChatGPTのAPIを使用して、議会での議論を簡単に要約できます。ただし、必ずしも正確な情報を提供できない可能性があるため、情報の確認や補完が必要です。短時間で議論の概要を把握するのに役立ちます。
-          </p>
-          <Meetings meetings={meetings} />
+          <Meetings />
         </div>
       </section>
     </>
