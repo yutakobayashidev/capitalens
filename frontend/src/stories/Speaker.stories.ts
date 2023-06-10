@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import Speaker from "@src/app/meetings/Speaker";
+import Speaker from "@src/app/meetings/[id]/Speaker";
 const meta: Meta<typeof Speaker> = {
   component: Speaker,
   parameters: {
