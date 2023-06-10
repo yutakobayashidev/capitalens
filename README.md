@@ -26,3 +26,7 @@
 
 - Scrapy (参衆サイトや議員ウェブサイトのスクレイピング)
 - DBpedia
+
+## お問い合わせ・貢献
+
+フィードバックやご意見はIssueまたは[Googleフォーム](https://docs.google.com/forms/d/e/1FAIpQLSdHZokKXiyXcPgzrZQ0_Jx-LDGc5phcG8gaDHTJwCqMxpK98Q/viewform)までご連絡ください。
