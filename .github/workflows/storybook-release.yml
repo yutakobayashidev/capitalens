@@ -29,6 +29,10 @@ jobs:
         run: pnpm run build-storybook -o ./dist/storybook
         working-directory: ./frontend
 
+      - name: Create dict/frontend directory
+        run: mkdir -p ./frontend/dict/frontend
+        working-directory: .
+
       - name: Copy vercel-ignore-build-step.sh
         run: cp ./frontend/vercel-ignore-build-step.sh ./frontend/dict/frontend
         working-directory: .
