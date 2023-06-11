@@ -29,17 +29,16 @@ jobs:
         run: pnpm run build-storybook -o ./dist/storybook
         working-directory: ./frontend
 
-      - name: Create dict/frontend directory
-        run: mkdir -p ./frontend/dict/frontend
-        working-directory: .
+      - name: Create dist/frontend directory
+        run: mkdir -p ./dist/frontend
+        working-directory: ./frontend
 
-      - name: Copy vercel-ignore-build-step.sh
-        run: cp ./frontend/vercel-ignore-build-step.sh ./frontend/dict/frontend
-        working-directory: .
+      - name: Copy vercel-ignore-build-step.sh to dist/frontend directory
+        run: cp ./vercel-ignore-build-step.sh ./dist/frontend
+        working-directory: ./frontend
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./frontend/dist
-          working-directory: ./frontend
