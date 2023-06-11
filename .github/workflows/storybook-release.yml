@@ -30,7 +30,7 @@ jobs:
         working-directory: ./frontend
 
       - name: Copy vercel-ignore-build-step.sh
-        run: cp ./frontend/vercel-ignore-build-step.sh ./dict/frontend
+        run: cp ./frontend/vercel-ignore-build-step.sh ./frontend/dict/frontend
         working-directory: .
 
       - name: Deploy
