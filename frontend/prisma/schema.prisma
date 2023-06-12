@@ -203,7 +203,6 @@ model User {
   comments      Comment[]
   votes         Vote[]
   kids          Boolean @default(false)
-  videoComments   VideoComment[]
 }
 
 model VerificationToken {
@@ -226,19 +225,6 @@ model Video {
   annotations  Annotation[]
   meetingURL   String?
   apiURL       String?
-  comments     VideoComment[]
-}
-
-model VideoComment {
-  id       String  @id @default(cuid())
-  content  String  @db.Text()
-  video    Video   @relation(fields: [videoId], references: [id])
-  videoId  String
-  user     User    @relation(fields: [userId], references: [id])
-  userId   String
-
-  @@index([videoId])
-  @@index([userId])
 }
 
 
