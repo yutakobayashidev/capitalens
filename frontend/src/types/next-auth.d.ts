@@ -8,9 +8,19 @@ declare module "next-auth" {
     user: {
       /** The user's Id. */
       id: string;
+      kids: boolean;
       email?: string | null;
       image?: string | null;
       name?: string | null;
     };
+  }
+
+  interface User {
+    id: string;
+    kids: boolean;
+    name?: string | null;
+    email?: string | null;
+    email?: string | null;
+    image?: string | null;
   }
 }

@@ -44,13 +44,11 @@ export default function Page() {
 
   return (
     <>
-      <section>
-        <div>
-          <FaceDetection onFaceDetect={handleFaceDetect} />
-          <AnimatePresence>
-            {member && <PersonModal member={member} onClose={clearMember} />}
-          </AnimatePresence>
-        </div>
+      <section className="my-12">
+        <FaceDetection onFaceDetect={handleFaceDetect} />
+        <AnimatePresence>
+          {member && <PersonModal member={member} onClose={clearMember} />}
+        </AnimatePresence>
       </section>
       <Toaster position="bottom-center" />
     </>

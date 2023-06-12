@@ -6,6 +6,7 @@ import { FaClock } from "react-icons/fa";
 import { useKuromoji } from "@src/hooks/useKuromoji";
 import { useState, useEffect } from "react";
 import { kanaToHira, isKanji } from "@src/helper/utils";
+import { useSession } from "next-auth/react";
 
 export default function Meeting({
   meetings,
@@ -22,6 +23,14 @@ export default function Meeting({
   const [isChecked, setIsChecked] = useState(false);
   const { isTokenizerReady, tokenizer } = useKuromoji();
   const [rubyKids, setRubyKids] = useState<{ [id: string]: string }>({});
+
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session && session.user && tokenizer) {
+      setIsChecked(session.user.kids);
+    }
+  }, [session, tokenizer]);
 
   useEffect(() => {
     const generateRubyForAllMeetings = async () => {
@@ -69,7 +78,7 @@ export default function Meeting({
         {meetings.map((meeting) => (
           <Link
             href={`/meetings/${meeting.id}`}
-            className="mb-5 bg-white px-4 py-6 rounded-lg shadow"
+            className="mb-5 bg-gray-50 p-6 rounded-xl border border-gray-200"
             key={meeting.id}
           >
             <h1 className="text-xl font-bold items-center flex mb-2">
@@ -77,7 +86,7 @@ export default function Meeting({
                 <span
                   className={`${
                     meeting.house === "COUNCILLORS"
-                      ? "bg-[rgb(0,122,187)]"
+                      ? "bg-indigo-400"
                       : "bg-[#EA5433]"
                   } text-white rounded font-bold mr-2 text-sm py-1 px-2`}
                 >

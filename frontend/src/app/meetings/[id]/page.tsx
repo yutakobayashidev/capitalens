@@ -73,7 +73,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return (
     <section className="mx-auto max-w-screen-xl px-4 md:px-8">
-      <div className="md:flex block justify-center">
+      <div className="md:flex block justify-center my-7">
         <div className="md:w-[calc(65%)] md:mr-5">
           <Video meeting={meeting} />
         </div>

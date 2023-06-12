@@ -32,7 +32,7 @@ export default function Speaker({
           <p className="mb-3 text-sm text-gray-600 line-clamp-4">
             {currentSpeaker.abstract ?? currentSpeaker.description}
           </p>
-          <div>
+          <div className="flex items-center">
             <Link
               href={`/members/${currentSpeaker.id}`}
               className="mr-2 bg-gray-600 text-sm items-center font-semibold rounded-full py-2 px-3 text-white inline-flex"

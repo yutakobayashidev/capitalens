@@ -50,29 +50,31 @@ export default async function Page({ params }: { params: { slug: string } }) {
   }
 
   return (
-    <div className="mx-auto max-w-screen-sm px-4 md:px-8 my-12">
-      <section>
+    <section className="my-12">
+      <div className="mx-auto max-w-screen-sm px-4 md:px-8">
         <h1 className="font-bold mb-7 text-4xl text-center">{page.title}</h1>
         <div className="flex items-center mb-5 p-4 text-gray-500 bg-gray-100 rounded-lg">
           <FaGithub className="text-xl mr-2" />
-          {page.title}の変更履歴は
-          <a
-            className="underline text-gray-600"
-            href={
-              config.SocialLinks.github +
-              "/commits/main/frontend/content/page/" +
-              page._raw.sourceFileName
-            }
-          >
-            GitHub
-          </a>
-          で確認できます
+          <div className="flex-1">
+            {page.title}の変更履歴は
+            <a
+              className="underline text-gray-600"
+              href={
+                config.SocialLinks.github +
+                "/commits/main/frontend/content/page/" +
+                page._raw.sourceFileName
+              }
+            >
+              GitHub
+            </a>
+            で確認できます
+          </div>
         </div>
         <div
           className="prose prose-a:no-underline hover:prose-a:underline prose-a:text-primary prose-neutral max-w-none"
           dangerouslySetInnerHTML={{ __html: page.body.html }}
         />
-      </section>
-    </div>
+      </div>
+    </section>
   );
 }

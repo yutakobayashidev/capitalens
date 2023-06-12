@@ -7,6 +7,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { AiOutlineLink } from "react-icons/ai";
 import { useKuromoji } from "@src/hooks/useKuromoji";
 import { kanaToHira, isKanji } from "@src/helper/utils";
+import { useSession } from "next-auth/react";
 
 export default function Summarize({
   meeting,
@@ -25,7 +26,15 @@ export default function Summarize({
   const [copy, setCopy] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
 
-  const { isTokenizerReady, tokenizer } = useKuromoji(); // use the custom hook here
+  const { isTokenizerReady, tokenizer } = useKuromoji();
+
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session && session.user && tokenizer) {
+      setIsChecked(session.user.kids);
+    }
+  }, [session, tokenizer]);
 
   function copyTextToClipboard(text: string) {
     navigator.clipboard.writeText(text).then(

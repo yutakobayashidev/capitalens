@@ -4,7 +4,7 @@ import cn from "classnames";
 import Header from "@src/app/_components/Header";
 import Footer from "@src/app/_components/Footer";
 import { Inter, Noto_Sans_JP } from "next/font/google";
-import MobileFooter from "@src/app/_components/MobileFooter";
+import BottomMenu from "@src/app/_components/BottomMenu";
 import GoogleAnalytics from "@src/app/_components/GoogleAnalytics";
 import SessionProvider from "@src/app/_components/SessionProvider";
 import { config } from "@site.config";
@@ -69,7 +69,7 @@ export default function RootLayout({
           <Header />
           {children}
           <Footer />
-          <MobileFooter />
+          <BottomMenu />
           <GoogleAnalytics />
         </body>
       </html>

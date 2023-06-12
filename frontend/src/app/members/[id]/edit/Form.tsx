@@ -7,14 +7,14 @@ import { useForm } from "react-hook-form";
 import { useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MemberSchema, FormSchema } from "@src/app/members/[id]/edit/schema";
-import { useRequireLogin } from "@src/hooks/useRequireLogin"
+import { useRequireLogin } from "@src/hooks/useRequireLogin";
 
 type InputFieldProps = {
   id: string;
   register: any;
   placeholder: string;
   errors: any;
-}
+};
 
 const InputField: React.FC<InputFieldProps> = ({
   id,
@@ -24,26 +24,26 @@ const InputField: React.FC<InputFieldProps> = ({
 }) => (
   <>
     <input
-      className="w-full block resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2 mb-2"
+      className="w-full block resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2 mb-3"
       type="text"
       id={id}
       placeholder={placeholder}
       {...register(id)}
     />
     {errors[id] && (
-      <span className="text-sm text-gray-500 mb-2 block">
+      <span className="text-sm text-red-500 mb-3 block">
         {errors[id]?.message}
       </span>
     )}
   </>
 );
 
-type SelectFieldProps =  {
+type SelectFieldProps = {
   id: string;
-  register: any
-  errors: any
+  register: any;
+  errors: any;
   options: { label: string; value: string }[];
-}
+};
 
 const SelectField: React.FC<SelectFieldProps> = ({
   id,
@@ -53,7 +53,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
 }) => (
   <>
     <select
-      className="w-full block resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2 mb-2"
+      className="w-full appearance-none block resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2 mb-3"
       id={id}
       {...register(id)}
     >
@@ -64,7 +64,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
       ))}
     </select>
     {errors[id] && (
-      <span className="text-sm text-gray-500 mb-2 block">
+      <span className="text-sm text-red-500 mb-3 block">
         {errors[id]?.message}
       </span>
     )}
@@ -81,7 +81,6 @@ export default function Form({
     id: string;
   }[];
 }) {
-
   useRequireLogin();
 
   const [done, setDone] = useState<boolean>(false);
@@ -107,7 +106,7 @@ export default function Form({
   });
 
   return (
-    <>
+    <section className="my-8">
       {done ? (
         <div className="text-center">
           <h1 className="text-4xl mb-5 font-bold">
@@ -124,7 +123,9 @@ export default function Form({
             {member.name}議員の情報を更新する
           </h1>
           <form onSubmit={onSubmit}>
-            <label className="mb-2 flex font-bold items-center">議員名</label>
+            <label className="mb-2 flex font-bold items-center">
+              議員名<span className="text-red-500 font-normal ml-2">必須</span>
+            </label>
             <InputField
               id="name"
               register={register}
@@ -179,20 +180,25 @@ export default function Form({
               placeholder="@を含めないで入力"
               errors={errors}
             />
-            <label className="mb-2 flex font-bold items-center">所属政党</label>
+            <label className="mb-2 flex font-bold items-center">
+              所属政党
+              <span className="text-red-500 font-normal ml-2">必須</span>
+            </label>
             <SelectField
               id="groupId"
               register={register}
               errors={errors}
               options={[
                 { label: "無所属・その他", value: "" },
-                ...groups.map(group => ({
+                ...groups.map((group) => ({
                   label: group.name,
-                  value: group.id
-                }))
+                  value: group.id,
+                })),
               ]}
             />
-            <label className="mb-2 flex font-bold items-center">議会</label>
+            <label className="mb-2 flex font-bold items-center">
+              議会<span className="text-red-500 font-normal ml-2">必須</span>
+            </label>
             <SelectField
               id="house"
               register={register}
@@ -205,7 +211,7 @@ export default function Form({
             <label className="mb-2 flex font-bold items-center">説明</label>
             <TextareaAutosize
               {...register("description")}
-              className="w-full block resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2 mb-2"
+              className="w-full block resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2 mb-3"
               id="description"
             />
             <div className="flex justify-center">
@@ -219,6 +225,6 @@ export default function Form({
           </form>
         </div>
       )}
-    </>
+    </section>
   );
 }

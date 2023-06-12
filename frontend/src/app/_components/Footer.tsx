@@ -3,7 +3,7 @@ import { config } from "@site.config";
 
 export default function Footer() {
   return (
-    <footer className="bg-white pt-10 pb-8">
+    <footer className="py-14">
       <div className="mx-auto max-w-[1200px] px-4 md:px-8">
         <div className="md:grid-cols-4 grid gap-10">
           <div>
@@ -79,9 +79,6 @@ export default function Footer() {
               </li>
             </ul>
           </nav>
-        </div>
-        <div className="text-gray-400 text-center pt-4 mt-5 border-t">
-          © {config.siteMeta.title}
         </div>
       </div>
     </footer>

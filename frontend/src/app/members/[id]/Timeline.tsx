@@ -106,8 +106,8 @@ function Kokkai({ data, member }: { data: MeetingRecord; member: Member }) {
         <a href={meetingURL} className="font-bold leading-10">
           <span
             className={`${
-              nameOfHouse === "参議院" ? "bg-[#007ABB]" : "bg-[#EA5433]"
-            } text-white text-lg rounded-md font-bold mr-3 px-3 py-1.5`}
+              nameOfHouse === "参議院" ? "bg-indigo-400" : "bg-[#EA5433]"
+            } text-white text-lg rounded-md font-bold mr-2 px-2 py-1.5`}
           >
             {nameOfHouse}
           </span>

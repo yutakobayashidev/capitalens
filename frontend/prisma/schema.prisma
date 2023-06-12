@@ -25,6 +25,11 @@ model Group {
   members     Member[]
 }
 
+model VideoComents {
+  id      String @id @default(cuid())
+  content String @db.Text()
+}
+
 model Member {
   id            String              @id @default(cuid())
   name          String
@@ -202,6 +207,7 @@ model User {
   sessions      Session[]
   comments      Comment[]
   votes         Vote[]
+  kids          Boolean @default(false)
 }
 
 model VerificationToken {
@@ -213,14 +219,14 @@ model VerificationToken {
 }
 
 model Video {
-  id           String @id  @default(cuid())
-  m3u8_url     String @unique
+  id           String       @id @default(cuid())
+  m3u8_url     String       @unique
   page_url     String
   date         String
   house        House?
   summary      String?      @db.Text()
   meeting_name String
-  kids         String? @db.Text()
+  kids         String?      @db.Text()
   annotations  Annotation[]
   meetingURL   String?
   apiURL       String?

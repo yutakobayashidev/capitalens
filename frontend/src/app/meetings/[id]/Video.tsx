@@ -139,8 +139,8 @@ export default function Video({ meeting }: { meeting: Diet }) {
         <h1 className="text-2xl font-bold items-center flex">
           <span
             className={`${
-              meeting.house === "COUNCILLORS" ? "bg-[#007ABB]" : "bg-[#EA5433]"
-            } text-white rounded font-bold mr-2 text-xl py-1 px-2`}
+              meeting.house === "COUNCILLORS" ? "bg-indigo-400" : "bg-[#EA5433]"
+            } text-white rounded font-bold mr-2 text-base py-1 px-2`}
           >
             {meeting.house === "COUNCILLORS" ? "参議院" : "衆議院"}
           </span>
@@ -163,7 +163,7 @@ export default function Video({ meeting }: { meeting: Diet }) {
         </a>
       </div>
       {currentSpeaker && <Speaker currentSpeaker={currentSpeaker} />}
-      <div className="bg-gray-100 px-4 pt-4 pb-6 mb-5 md:mb-5 rounded-xl">
+      <div className="bg-gray-100 px-4 pt-4 pb-6 mb-5 rounded-xl">
         <div className="flex items-center mb-3 justify-between">
           <div className="flex items-center text-base">
             <span className="mr-2 font-medium">

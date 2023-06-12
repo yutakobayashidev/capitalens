@@ -100,14 +100,12 @@ async function getBillWithCommentCounts() {
 
 export default async function Page() {
   const topicsPromise = getTopicViews();
-  const meetingPromise = meeting_list();
   const billPromise = getBillWithCommentCounts();
   const groupsPromise = prisma.group.findMany();
 
   const membersByGroup = await fetchItemsByStatus();
-  const [topics, meetings, bills, groups] = await Promise.all([
+  const [topics, bills, groups] = await Promise.all([
     topicsPromise,
-    meetingPromise,
     billPromise,
     groupsPromise,
   ]);
@@ -120,9 +118,9 @@ export default async function Page() {
           <p className="text-lg text-gray-500 mb-3">
             本プロジェクトは、国会での議論、提出された法案、国会議員の情報などを整理し、視覚的に表示することを目的としています。
           </p>
-          <div>
+          <div className="flex items-center gap-x-3">
             <Link
-              className="bg-white rounded-full font-semibold px-4 py-2 mr-4 inline-flex items-center text-base transition-all duration-500 ease-in-out hover:shadow"
+              className="bg-white rounded-full font-semibold px-4 py-2 inline-flex items-center text-base transition-all duration-500 ease-in-out hover:shadow"
               href={config.SocialLinks.github}
             >
               <FaGithub className="text-xl mr-3 align-middle" />
@@ -243,7 +241,7 @@ export default async function Page() {
           </div>
         </div>
       </section>
-      <section className="py-8 bg-gray-50">
+      <section className="py-8">
         <div className="mx-auto max-w-screen-xl px-4 md:px-8">
           <h2 className="font-bold text-2xl mb-5">最新の議会</h2>
           {/* @ts-expect-error Async Server Component */}

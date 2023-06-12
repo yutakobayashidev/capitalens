@@ -115,12 +115,12 @@ const PersonModal: React.FC<PersonModalProps> = ({ member, onClose }) => {
             </p>
           )
         )}
-        <div className="mb-3">
+        <div className="mb-3 flex items-center gap-x-3">
           <Link
             href={`/members/${member.id}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="mr-3 bg-gray-600 text-sm items-center font-semibold rounded-full py-2 px-3 text-white inline-flex"
+            className="bg-gray-600 text-sm items-center font-semibold rounded-full py-2 px-3 text-white inline-flex"
           >
             <FaGlobe className="mr-2 text-base" />
             詳細

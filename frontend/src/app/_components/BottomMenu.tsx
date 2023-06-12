@@ -14,7 +14,7 @@ export default function MobileFooter() {
           <Link
             href="/"
             className={`flex pb-1.5 pt-2 flex-col font-bold overflow-hidden whitespace-nowrap ${
-              pathname === "/" ? "text-blue-400" : "text-gray-400"
+              pathname === "/" ? "text-primary" : "text-gray-400"
             }`}
           >
             <FaHome size={25} className="inline-block w-auto" />
@@ -25,7 +25,7 @@ export default function MobileFooter() {
           <Link
             href="/face"
             className={`flex flex-col pb-1.5 pt-2  font-bold overflow-hidden whitespace-nowrap ${
-              pathname === "/face" ? "text-blue-400" : "text-gray-400"
+              pathname === "/face" ? "text-primary" : "text-gray-400"
             }`}
           >
             <FaRobot size={25} className="inline-block w-auto" />
@@ -36,7 +36,7 @@ export default function MobileFooter() {
           <Link
             href="/topics"
             className={`pb-1.5 pt-2 flex flex-col font-bold overflow-hidden whitespace-nowrap ${
-              pathname === "/topics" ? "text-blue-400" : "text-gray-400"
+              pathname === "/topics" ? "text-primary" : "text-gray-400"
             }`}
           >
             <FaHashtag size={25} className="inline-block w-auto" />
