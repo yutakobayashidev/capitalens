@@ -72,6 +72,7 @@ export const registerAction = zact(MemberSchema)(async (data) => {
     const embed = {
       title: `${name} (ID: ${id})`,
       description,
+      color: 1986741,
       url: config.siteRoot + "members/" + id,
       fields: [
         { name: "Name", value: name, inline: true },
