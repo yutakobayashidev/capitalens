@@ -6,16 +6,30 @@ import prisma from "@src/lib/prisma";
 import { hiraToKana } from "@src/helper/utils";
 
 export const registerAction = zact(MemberSchema)(async (data) => {
-  const fullname = data.firstName && data.lastName ? data.firstName + data.lastName : null
-  const nameHira =  data.firstNameHira && data.lastNameHira ? data.firstNameHira + data.lastNameHira : null
-  const nameKana = hiraToKana(nameHira);
-  const firstNameKana = hiraToKana(data.firstNameHira);
-  const lastNameKana = hiraToKana(data.lastNameHira);
+  const {
+    name,
+    id,
+    groupId,
+    house,
+    firstName,
+    lastName,
+    firstNameHira,
+    twitter,
+    lastNameHira,
+    description,
+    website,
+  } = data;
 
-  // Get the current group of the member
+  const fullname = firstName && lastName ? firstName + lastName : null;
+  const nameHira =
+    firstNameHira && lastNameHira ? firstNameHira + lastNameHira : null;
+  const nameKana = hiraToKana(nameHira);
+  const firstNameKana = hiraToKana(firstNameHira);
+  const lastNameKana = hiraToKana(lastNameHira);
+
   const currentMember = await prisma.member.findUnique({
     where: {
-      id: data.id,
+      id: id,
     },
     select: {
       group: true,
@@ -24,34 +38,62 @@ export const registerAction = zact(MemberSchema)(async (data) => {
 
   let groupData;
 
-  if (data.groupId) {
-    groupData = { connect: { id: data.groupId } };
+  if (groupId) {
+    groupData = { connect: { id: groupId } };
   } else if (currentMember && currentMember.group) {
     groupData = { disconnect: true };
   }
 
   const res = await prisma.member.update({
     where: {
-      id: data.id,
+      id: id,
     },
     data: {
-      name: data.name,
-      twitter: data.twitter,
-      description: data.description,
-      fullname: fullname,
-      firstName: data.firstName,
-      lastName: data.lastName,
+      name,
+      twitter,
+      description,
+      fullname,
+      firstName,
+      lastName,
       nameHira,
-      firstNameHira: data.firstNameHira,
-      lastNameHira: data.lastNameHira,
+      firstNameHira,
+      lastNameHira,
       nameKana,
       firstNameKana,
       lastNameKana,
-      house: data.house,
+      house,
       group: groupData,
-      website: data.website,
+      website,
     },
   });
+
+  if (res) {
+    const embed = {
+      title: `${name} (ID: ${id})`,
+      description,
+      url: website,
+      fields: [
+        { name: "Name", value: name, inline: true },
+        { name: "House", value: house, inline: true },
+        { name: "Group ID", value: groupId ?? "無所属・その他", inline: true },
+      ],
+    };
+
+    const discordData = {
+      content: "Member information has been updated!",
+      embeds: [embed],
+    };
+
+    const WEBHOOK_URL = process.env.WEBHOOK_URL as string;
+
+    await fetch(WEBHOOK_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(discordData),
+    });
+  }
 
   return res;
 });
