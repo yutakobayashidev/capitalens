@@ -4,6 +4,7 @@ import { MemberSchema } from "@src/app/members/[id]/edit/schema";
 import { zact } from "zact/server";
 import prisma from "@src/lib/prisma";
 import { hiraToKana } from "@src/helper/utils";
+import { config } from "@site.config";
 
 export const registerAction = zact(MemberSchema)(async (data) => {
   const {
@@ -71,7 +72,7 @@ export const registerAction = zact(MemberSchema)(async (data) => {
     const embed = {
       title: `${name} (ID: ${id})`,
       description,
-      url: website,
+      url: config.siteRoot + "members/" + id,
       fields: [
         { name: "Name", value: name, inline: true },
         { name: "House", value: house, inline: true },
