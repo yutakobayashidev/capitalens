@@ -17,11 +17,11 @@ model Group {
   id          ParliamentaryGroup @id @unique
   name        String
   image       String?
-  facebook    String?
-  wikipedia   String?
-  website     String?
-  description String?
   twitter     String?
+  facebook    String?
+  wikipedia   String? @db.Text()
+  website     String?
+  description String? @db.Text()
   members     Member[]
 }
 
@@ -203,6 +203,16 @@ model User {
   comments      Comment[]
   votes         Vote[]
   kids          Boolean @default(false)
+  prefecture  Prefecture? @relation(fields: [prefectureId], references: [id])
+  prefectureId Int?
+
+  @@index([prefectureId])
+}
+
+model Prefecture {
+  id      Int     @id @default(autoincrement())
+  name    String
+  users   User[]
 }
 
 model VerificationToken {
@@ -226,7 +236,6 @@ model Video {
   meetingURL   String?
   apiURL       String?
 }
-
 
 model Annotation {
   id           String  @id @default(cuid())
