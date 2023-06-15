@@ -39,7 +39,7 @@ export async function generateMetadata({
         (meeting.house === "COUNCILLORS" ? "参議院 " : "衆議院 ") +
         meeting.meeting_name,
       siteName: config.siteMeta.title,
-      url: `${config.siteRoot}diet`,
+      url: `${config.siteRoot}meetings/${meeting.id}`,
       locale: "ja-JP",
     },
   };
