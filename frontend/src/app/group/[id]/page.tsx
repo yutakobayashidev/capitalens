@@ -127,13 +127,15 @@ export default async function Page({
                     <FaTwitter className="text-lg" />
                   </Link>
                 )}
-                <Link
-                  aria-label={`${group.facebook}`}
-                  className="text-gray-400"
-                  href={`https://www.facebook.com/${group.facebook}`}
-                >
-                  <FaFacebook className="text-lg" />
-                </Link>
+                {group.facebook && (
+                  <Link
+                    aria-label={`${group.facebook}`}
+                    className="text-gray-400"
+                    href={`https://www.facebook.com/${group.facebook}`}
+                  >
+                    <FaFacebook className="text-lg" />
+                  </Link>
+                )}
                 {group.wikipedia && (
                   <Link
                     aria-label="wikipedia"
