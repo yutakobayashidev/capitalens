@@ -18,7 +18,7 @@ async function runLLMChain(text: string, kids: boolean, id: string, conn: any) {
   let finalResult = "";
 
   const chatStreaming = new ChatOpenAI({
-    modelName: "gpt-3.5-turbo",
+    modelName: "gpt-3.5-turbo-16k",
     streaming: true,
     maxTokens: -1,
     temperature: 0,
@@ -47,10 +47,25 @@ async function runLLMChain(text: string, kids: boolean, id: string, conn: any) {
     ],
   });
 
-  const prompt_template =
-    kids === true
-      ? "次の文章の簡潔に議員のフルネームや時刻などは省略せず小学生でもわかるよう要約を書いてください: {text} 小学生でもわかるような簡潔な日本語の要約: "
-      : "次の文章の簡潔に議員のフルネームや時刻などは省略せず要約を書いてください: {text} 簡潔な日本語の要約: ";
+  const Prompt = `Instructions: Your output should use the following template:
+
+- Bulletpoint
+- Bulletpoint
+
+🔎 ハイライト: text
+
+You will summarize the proceedings of the Japanese Diet. Please respond in Japanese. Do not omit the names of legislators or the time of day. Do not use Kanji characters for the time, but use numbers. Use up to 6 brief bullet points to summarize the content below,and summarize a short highlight: {text}.`;
+
+  const KidsPrompt = `Instructions: Your output should use the following template:
+
+- Bulletpoint
+- Bulletpoint
+
+🔎 ハイライト: text
+
+You will summarize the proceedings of the Japanese Diet in polite, easy-to-understand, simple, soft-spoken language that can be easily understood by Japanese elementary school students and other children. Please respond in Japanese. Do not omit the names of legislators or the time of day. Do not use Kanji characters for the time, but use numbers. Use up to 6 brief bullet points to summarize the content below,and summarize a short highlight: {text}.`;
+
+  const prompt_template = kids ? KidsPrompt : Prompt;
 
   const RPROMPT = new PromptTemplate({
     template: prompt_template,

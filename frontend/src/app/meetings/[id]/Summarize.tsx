@@ -8,6 +8,9 @@ import { AiOutlineLink } from "react-icons/ai";
 import { useKuromoji } from "@src/hooks/useKuromoji";
 import { kanaToHira, isKanji } from "@src/helper/utils";
 import { useSession } from "next-auth/react";
+import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import rehypeSanitize from "rehype-sanitize";
 
 export default function Summarize({
   meeting,
@@ -165,6 +168,16 @@ export default function Summarize({
     setCopy(false);
   }, [isChecked]);
 
+  const displayText = (): string => {
+    if (isChecked) {
+      if (kids || meeting.kids) return ruby;
+    } else {
+      if (summary) return summary;
+      if (meeting.summary) return meeting.summary;
+    }
+    return "OpenAIで要約ボタンをクリックしてください";
+  };
+
   return (
     <div className="border rounded-xl border-gray-200 px-5 pt-2 pb-4">
       <h2 className="text-2xl font-bold my-3">AIによるサマリー</h2>
@@ -191,50 +204,16 @@ export default function Summarize({
         />
         子ども向けに説明
       </label>
-      <div className="text-gray-800 leading-5 text-sm">
-        {isChecked && meeting.kids
-          ? meeting.kids.split("\n").map((item, index) => {
-              const text = isChecked ? ruby : item;
-
-              return (
-                <Fragment key={index}>
-                  <span dangerouslySetInnerHTML={{ __html: text }} />
-                  <br />
-                </Fragment>
-              );
-            })
-          : isChecked && kids
-          ? kids.split("\n").map((item, index) => {
-              const text = isChecked ? ruby : item;
-
-              return (
-                <Fragment key={index}>
-                  <span dangerouslySetInnerHTML={{ __html: text }} />
-                  <br />
-                </Fragment>
-              );
-            })
-          : isChecked
-          ? "OpenAIで要約ボタンをクリックしてください"
-          : meeting.summary
-          ? meeting.summary.split("\n").map((item, index) => {
-              return (
-                <Fragment key={index}>
-                  {item}
-                  <br />
-                </Fragment>
-              );
-            })
-          : summary
-          ? summary.split("\n").map((item, index) => {
-              return (
-                <Fragment key={index}>
-                  {item}
-                  <br />
-                </Fragment>
-              );
-            })
-          : "OpenAIで要約ボタンをクリックしてください"}
+      <div className="text-gray-800 leading-5">
+        <ReactMarkdown
+          className="prose text-sm"
+          rehypePlugins={[
+            rehypeRaw,
+            [rehypeSanitize, { tagNames: ["p", "li", "ol", "ruby", "rt"] }],
+          ]}
+        >
+          {displayText()}
+        </ReactMarkdown>
       </div>
       {(meeting.summary || summary) && !start && (
         <button
