@@ -95,7 +95,7 @@ REFINED SUMMARY:`;
   });
 
   const textSplitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 3000,
+    chunkSize: 7000,
   });
 
   const docs = await textSplitter.createDocuments([text]);
@@ -150,7 +150,7 @@ export async function POST(request: Request) {
       },
     });
   }
-  // @ts-expect-error: https://github.com/planetscale/database-js/issues/71
 
+  // @ts-expect-error: https://github.com/planetscale/database-js/issues/71
   return NextResponse.json({ summary: results.rows[0][column] });
 }
