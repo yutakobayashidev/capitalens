@@ -244,7 +244,6 @@ export default async function Page() {
       <section className="py-8">
         <div className="mx-auto max-w-screen-xl px-4 md:px-8">
           <h2 className="font-bold text-2xl mb-5">最新の議会</h2>
-          {/* @ts-expect-error Async Server Component */}
           <Meetings />
         </div>
       </section>
