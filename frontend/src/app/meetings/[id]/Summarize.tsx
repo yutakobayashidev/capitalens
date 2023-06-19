@@ -124,7 +124,7 @@ export default function Summarize({
   const handleSummarize = async () => {
     try {
       Summarystart(true);
-      const response = await fetch("/api/gpt", {
+      const response = await fetch("/api/summarize", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
