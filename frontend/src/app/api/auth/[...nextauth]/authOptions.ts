@@ -20,6 +20,7 @@ export const authOptions: NextAuthOptions = {
       user: {
         ...session.user,
         id: user.id,
+        prefecture: user.prefectureId,
         kids: user.kids,
       },
     }),

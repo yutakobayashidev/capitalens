@@ -18,6 +18,7 @@ export async function POST(request: Request) {
     },
     data: {
       kids: body.kids,
+      prefectureId: body.prefecture,
     },
   });
 
