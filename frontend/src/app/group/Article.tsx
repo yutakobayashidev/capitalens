@@ -4,7 +4,6 @@ import {
   getFaviconSrcFromHostname,
   formatDate,
 } from "@src/helper/utils";
-import { Member } from "@src/types/member";
 
 function Article({
   item,

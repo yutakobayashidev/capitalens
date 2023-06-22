@@ -1,29 +1,15 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
+import { useRef, useState } from "react";
 import { VscTriangleUp } from "react-icons/vsc";
-import { Login } from "@src/app/bill/[id]/actions";
-import { useSession } from "next-auth/react";
 import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-const thresholds = [
-  { l: "s", r: 1 },
-  { l: "m", r: 1 },
-  { l: "mm", r: 59, d: "minute" },
-  { l: "h", r: 1 },
-  { l: "hh", r: 23, d: "hour" },
-  { l: "d", r: 1 },
-  { l: "dd", r: 29, d: "day" },
-  { l: "M", r: 1 },
-  { l: "MM", r: 11, d: "month" },
-  { l: "y" },
-  { l: "yy", d: "year" },
-];
-dayjs.extend(relativeTime, {
-  thresholds,
-});
+import { type Session } from "next-auth";
+import { LoginPrompt } from "@src/app/_components/Login";
+import { addComment, Vote } from "./actions";
 import "dayjs/locale/ja";
+import { experimental_useFormStatus as useFormStatus } from "react-dom";
+
 dayjs.locale("ja");
 
 type Comment = {
@@ -48,6 +34,7 @@ type Bill = {
 type Props = {
   bill: Bill;
   count: ObjectDefinition;
+  user: Session["user"];
 };
 
 type ObjectDefinition = {
@@ -56,13 +43,12 @@ type ObjectDefinition = {
   OPPOSITION: number;
 };
 
-const Form = ({ bill, count }: Props) => {
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
-  const [isFetching, setIsFetching] = useState(false);
-  const isMutating = isFetching || isPending;
+const Form = ({ bill, count, user }: Props) => {
   const [selectedGroup, setSelectedGroup] = useState("AGREEMENT");
-  const session = useSession();
+  const form = useRef<HTMLFormElement>(null);
+  const { pending } = useFormStatus();
+
+  const [_, startTransition] = useTransition();
 
   const filteredDiscussion = bill.comments.filter(
     (item) => item.type === selectedGroup
@@ -71,45 +57,6 @@ const Form = ({ bill, count }: Props) => {
   const handleGroupChange = (group: keyof ObjectDefinition) => {
     setSelectedGroup(group);
   };
-
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsFetching(true);
-    const form = e.currentTarget;
-    const input = form.elements.namedItem("entry") as HTMLInputElement;
-
-    await fetch("/api/comment", {
-      body: JSON.stringify({
-        body: input.value,
-        type: selectedGroup,
-        bill_id: bill.id,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-    });
-
-    input.value = "";
-    setIsFetching(false);
-    startTransition(() => {
-      router.refresh();
-    });
-  };
-
-  async function votes(id: string) {
-    await fetch("/api/vote", {
-      body: JSON.stringify({
-        id,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-    });
-
-    router.refresh();
-  }
 
   const renderFilteredDiscussion = () => {
     return filteredDiscussion.map((item, i) => (
@@ -133,7 +80,9 @@ const Form = ({ bill, count }: Props) => {
           <div>
             <button
               onClick={async () => {
-                await votes(item.id);
+                startTransition(async () => {
+                  Vote({ id: item.id });
+                });
               }}
             >
               <span>+{item._count.votes}</span>
@@ -148,18 +97,25 @@ const Form = ({ bill, count }: Props) => {
     ));
   };
 
-  const renderLoginPrompt = () => (
-    <div className="text-center mt-3">
-      <p className="font-semibold mb-3">
-        法案に対して意見を投稿するにはログインが必要です
-      </p>
-      <Login />
-    </div>
-  );
-
   const renderInputForm = () => (
     <>
-      <form className="relative text-sm" onSubmit={onSubmit}>
+      <form
+        ref={form}
+        className="relative text-sm"
+        action={async (formData) => {
+          const comment = formData.get("comment");
+
+          if (typeof comment !== "string") return;
+
+          await addComment({
+            bill_id: bill.id,
+            type: selectedGroup,
+            comment,
+          });
+
+          form.current?.reset();
+        }}
+      >
         <input
           aria-label="Your message"
           placeholder={
@@ -169,16 +125,16 @@ const Form = ({ bill, count }: Props) => {
               ? "どちらでもないとして意見を投稿"
               : "反対として意見を投稿"
           }
-          disabled={isPending}
-          name="entry"
+          name="comment"
           type="text"
+          disabled={pending}
           required
           className="pl-4 pr-32 py-2 mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full border-neutral-300 rounded-md bg-gray-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
         />
         <button
           className="flex items-center justify-center absolute right-1 top-1 px-2 py-1 font-medium h-7 bg-neutral-200 dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100 rounded w-16"
-          disabled={isMutating}
           type="submit"
+          disabled={pending}
         >
           投稿
         </button>
@@ -233,9 +189,11 @@ const Form = ({ bill, count }: Props) => {
         </button>
       </nav>
       {renderFilteredDiscussion()}
-      {session && session.data && session.data.user
-        ? renderInputForm()
-        : renderLoginPrompt()}
+      {user ? (
+        renderInputForm()
+      ) : (
+        <LoginPrompt message="法案に対して意見を投稿するにはログインが必要です" />
+      )}
     </>
   );
 };

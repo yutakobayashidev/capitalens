@@ -9,33 +9,41 @@ import { Member } from "@src/types/member";
 import Speaker from "./Speaker";
 import { useSearchParams } from "next/navigation";
 import { config } from "@site.config";
+import { type Session } from "next-auth";
+import Comments from "./Comments";
+import { Meeting } from "@src/types/meeting";
 
-type Annotation = {
-  id: string;
-  start_sec: number;
-  speaker_name: string;
-  speaker_info: string;
-  time: string;
-  member: Member | null;
-};
+function LinkButton({
+  url,
+  title,
+  emoji,
+}: {
+  url: string;
+  title: string;
+  emoji: string;
+}) {
+  return (
+    <a
+      href={url}
+      className="md:p-10 px-2 py-8 bg-white text-xl justify-center text-gray-800 transition-all duration-500 ease-in-out hover:shadow-md flex font-bold items-center border rounded-xl"
+    >
+      <span className="text-4xl mr-3">{emoji}</span>
+      {title}
+    </a>
+  );
+}
 
-type Diet = {
-  house: string | null;
-  m3u8_url: string;
-  meeting_name: string;
-  page_url: string;
-  date: string;
-  summary: string | null;
-  meetingURL: string | null;
-  annotations: Annotation[];
-};
-
-export default function Video({ meeting }: { meeting: Diet }) {
+export default function Video({
+  meeting,
+  user,
+}: {
+  meeting: Meeting;
+  user: Session["user"];
+}) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [currentSpeaker, setCurrentSpeaker] = useState<Member | null>(null);
   const searchParams = useSearchParams();
   const [currentTime, setCurrentTime] = useState<number>(0);
-
   const startSec = searchParams?.get("t");
 
   useEffect(() => {
@@ -196,24 +204,21 @@ export default function Video({ meeting }: { meeting: Diet }) {
         </div>
         <h2 className="text-xl font-bold mb-3">関連リンク</h2>
         <div className="grid gap-5 md:grid-cols-2">
-          <a
-            href={meeting.page_url}
-            className="md:p-10 px-2 py-8 bg-white text-xl justify-center text-gray-800 transition-all duration-500 ease-in-out hover:shadow-md flex font-bold items-center border rounded-xl"
-          >
-            <span className="text-4xl mr-3">📺</span>
-            インターネット審議中継
-          </a>
+          <LinkButton
+            url={meeting.page_url}
+            emoji="📺"
+            title="インターネット審議中継"
+          />
           {meeting.meetingURL && (
-            <a
-              href={meeting.meetingURL}
-              className="md:p-10 px-2 py-8 text-xl justify-center bg-white text-gray-800 transition-all duration-500 ease-in-out hover:shadow-md flex font-bold items-center border rounded-xl"
-            >
-              <span className="text-4xl mr-3">📝</span>
-              国会会議録検索システム
-            </a>
+            <LinkButton
+              emoji="📝"
+              url={meeting.meetingURL}
+              title="国会会議録検索システム"
+            />
           )}
         </div>
       </div>
+      <Comments meeting={meeting} user={user} />
     </>
   );
 }

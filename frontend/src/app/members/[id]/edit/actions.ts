@@ -5,8 +5,17 @@ import { zact } from "zact/server";
 import prisma from "@src/lib/prisma";
 import { hiraToKana } from "@src/helper/utils";
 import { config } from "@site.config";
+import { auth } from "auth";
 
 export const registerAction = zact(MemberSchema)(async (data) => {
+  const session = await auth();
+
+  if (!session) {
+    return {
+      error: "Unauthorized",
+    };
+  }
+
   const {
     name,
     id,

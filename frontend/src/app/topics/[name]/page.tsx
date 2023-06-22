@@ -1,5 +1,4 @@
 import BarChartComponent from "@src/app/topics/[name]/Chart";
-import Link from "next/link";
 import type { Metadata } from "next";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import ViewCounter from "@src/app/topics/[name]/view-counter";

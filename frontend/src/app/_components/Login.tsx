@@ -1,13 +1,21 @@
 "use client";
 
-import { useState } from "react";
-import Modal from "@src/app/_components/Modal";
-import { AiOutlineLink } from "react-icons/ai";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import GLogo from "@public/g-logo.svg";
 import { config } from "@site.config";
 import { Dialog } from "@headlessui/react";
+import Modal from "@src/app/_components/Modal";
+import { useState } from "react";
+
+export function LoginPrompt({ message }: { message: string }) {
+  return (
+    <div className="text-center mt-3">
+      <p className="font-semibold mb-3">{message}</p>
+      <Login />
+    </div>
+  );
+}
 
 export function Login() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -61,37 +69,5 @@ export function Login() {
         </Dialog.Panel>
       </Modal>
     </div>
-  );
-}
-
-export function Clipboard() {
-  const [button, setButton] = useState(false);
-
-  const copyLink = async () => {
-    try {
-      const url = window.location.href;
-      await navigator.clipboard.writeText(url);
-      setButton(true);
-    } catch (err) {
-      console.error("リンクのコピーに失敗しました:", err);
-    }
-  };
-
-  return (
-    <button
-      className="rounded-lg bg-white hover:shadow-md transition duration-500 border block text-center md:px-4 md:py-6 py-4 px-2"
-      onClick={copyLink}
-    >
-      <div className="flex justify-center">
-        {button ? (
-          <span className="mb-3 text-4xl">✨</span>
-        ) : (
-          <AiOutlineLink className="mb-3 text-4xl text-gray-400" />
-        )}
-      </div>
-      <span className="font-bold">
-        {button ? "コピーしました" : "リンクをコピー"}
-      </span>
-    </button>
   );
 }

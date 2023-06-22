@@ -19,9 +19,9 @@ model Group {
   image       String?
   twitter     String?
   facebook    String?
-  wikipedia   String? @db.Text()
+  wikipedia   String?            @db.Text()
   website     String?
-  description String? @db.Text()
+  description String?            @db.Text()
   members     Member[]
 }
 
@@ -111,7 +111,7 @@ model Comment {
   type      CommentType
   bill      Bill        @relation(fields: [billId], references: [id])
   billId    String
-  user      User        @relation(fields: [userId], references: [id])
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
@@ -126,8 +126,8 @@ model Vote {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  comment   Comment  @relation(references: [id], fields: [commentId])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comment   Comment  @relation(references: [id], fields: [commentId], onDelete: Cascade)
   commentId String
 
   @@unique([userId, commentId])
@@ -193,26 +193,27 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String         @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?        @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
   comments      Comment[]
   votes         Vote[]
-  kids          Boolean @default(false)
-  prefecture  Prefecture? @relation(fields: [prefectureId], references: [id])
-  prefectureId Int?
+  kids          Boolean        @default(false)
+  prefecture    Prefecture?    @relation(fields: [prefectureId], references: [id])
+  prefectureId  Int?
+  videoComments VideoComment[]
 
   @@index([prefectureId])
 }
 
 model Prefecture {
-  id      Int     @id @default(autoincrement())
-  name    String
-  users   User[]
+  id    Int    @id @default(autoincrement())
+  name  String
+  users User[]
 }
 
 model VerificationToken {
@@ -224,17 +225,32 @@ model VerificationToken {
 }
 
 model Video {
-  id           String       @id @default(cuid())
-  m3u8_url     String       @unique
-  page_url     String
-  date         String
-  house        House?
-  summary      String?      @db.Text()
-  meeting_name String
-  kids         String?      @db.Text()
-  annotations  Annotation[]
-  meetingURL   String?
-  apiURL       String?
+  id            String         @id @default(cuid())
+  m3u8_url      String         @unique
+  page_url      String
+  date          String
+  house         House?
+  summary       String?        @db.Text()
+  meeting_name  String
+  kids          String?        @db.Text()
+  annotations   Annotation[]
+  meetingURL    String?
+  apiURL        String?
+  videoComments VideoComment[]
+}
+
+model VideoComment {
+  id        String   @id @default(cuid())
+  comment   String   @db.Text()
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  video     Video    @relation(fields: [videoId], references: [id])
+  videoId   String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+
+  @@index([videoId])
+  @@index([userId])
 }
 
 model Annotation {

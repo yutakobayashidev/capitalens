@@ -6,7 +6,6 @@ import Footer from "@src/app/_components/Footer";
 import { Inter, Noto_Sans_JP } from "next/font/google";
 import BottomMenu from "@src/app/_components/BottomMenu";
 import GoogleAnalytics from "@src/app/_components/GoogleAnalytics";
-import SessionProvider from "@src/app/_components/SessionProvider";
 import { config } from "@site.config";
 
 const ogImage = `${config.siteRoot}opengraph.jpg`;
@@ -48,34 +47,32 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <SessionProvider>
-      <html lang="ja" className={cn(inter.variable, notoSansJP.variable)}>
-        <head>
-          <link
-            rel="icon"
-            href={`data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%%22 y=%2250%%22 style=%22dominant-baseline:central;text-anchor:middle;font-size:90px;%22>${
-              process.env.NODE_ENV === `development` ? `🚧` : `🏛️`
-            }</text></svg>`}
-          />
-          <link
-            rel="icon alternate"
-            type="image/png"
-            href={`https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/${
-              process.env.NODE_ENV === `development` ? `1f6a7` : `1f3db`
-            }.png`}
-          />
-          <link rel="manifest" href="/manifest.json" />
-          <link rel="apple-touch-icon" href="/icon-512x512.png"></link>
-          <meta name="theme-color" content="#1E50B5" />
-        </head>
-        <body>
-          <Header />
-          {children}
-          <Footer />
-          <BottomMenu />
-          <GoogleAnalytics />
-        </body>
-      </html>
-    </SessionProvider>
+    <html lang="ja" className={cn(inter.variable, notoSansJP.variable)}>
+      <head>
+        <link
+          rel="icon"
+          href={`data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%%22 y=%2250%%22 style=%22dominant-baseline:central;text-anchor:middle;font-size:90px;%22>${
+            process.env.NODE_ENV === `development` ? `🚧` : `🏛️`
+          }</text></svg>`}
+        />
+        <link
+          rel="icon alternate"
+          type="image/png"
+          href={`https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/${
+            process.env.NODE_ENV === `development` ? `1f6a7` : `1f3db`
+          }.png`}
+        />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/icon-512x512.png"></link>
+        <meta name="theme-color" content="#1E50B5" />
+      </head>
+      <body>
+        <Header />
+        {children}
+        <Footer />
+        <BottomMenu />
+        <GoogleAnalytics />
+      </body>
+    </html>
   );
 }

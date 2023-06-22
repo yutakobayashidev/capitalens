@@ -1,12 +1,13 @@
 import Form from "@src/app/bill/[id]/form";
 import { FaTwitter } from "react-icons/fa";
 import { BsLine } from "react-icons/bs";
-import { Clipboard } from "@src/app/bill/[id]/actions";
+import Clipboard from "@src/app/bill/[id]/Clipboard";
 import prisma from "@src/lib/prisma";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { config } from "@site.config";
+import { auth } from "@auth";
 
 async function getBill(id: string) {
   const bill = await prisma.bill.findUnique({
@@ -169,8 +170,15 @@ type supportedBill = {
 };
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const bill = await getBill(params.id);
-  const count = await getCount(params.id);
+  const billPromise = getBill(params.id);
+  const countPromise = getCount(params.id);
+  const sessionPromise = auth();
+
+  const [bill, count, session] = await Promise.all([
+    billPromise,
+    countPromise,
+    sessionPromise,
+  ]);
 
   return (
     <>
@@ -179,7 +187,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           <h1 className="text-3xl font-bold mb-5">{bill.name}</h1>
           <div className="md:flex">
             <div className="flex-1 md:mr-6">
-              <Form bill={bill} count={count} />
+              <Form user={session?.user} bill={bill} count={count} />
             </div>
             <div className="flex-1 mt-5 md:mt-0">
               <h2 className="text-2xl font-bold mb-3">提出理由</h2>

@@ -32,7 +32,7 @@ export default function Speaker({
           <p className="mb-3 text-sm text-gray-600 line-clamp-4">
             {currentSpeaker.abstract ?? currentSpeaker.description}
           </p>
-          <div className="flex items-center">
+          <div className="flex flex-wrap gap-y-2 items-center">
             <Link
               href={`/members/${currentSpeaker.id}`}
               className="mr-2 bg-gray-600 text-sm items-center font-semibold rounded-full py-2 px-3 text-white inline-flex"
@@ -68,7 +68,7 @@ export default function Speaker({
               className="text-primary hover:underline font-medium"
               href={currentSpeaker.wikipedia}
             >
-              Wikipediaの項目
+              ウィキペディアの項目
             </a>
           ) : (
             <span className="font-medium">Wikipediaの項目</span>
@@ -76,9 +76,9 @@ export default function Speaker({
           を
           <a
             className="text-primary hover:underline font-medium"
-            href="https://creativecommons.org/licenses/by-sa/4.0/legalcode"
+            href="https://creativecommons.org/licenses/by-sa/3.0/deed.ja"
           >
-            Creative Commons Attribution (CC BY-SA 4.0)
+            Creative Commons Attribution (CC BY-SA 3.0)
           </a>
           に基づき二次利用しています。
         </div>

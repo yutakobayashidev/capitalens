@@ -6,10 +6,12 @@ import { FaClock } from "react-icons/fa";
 import { useKuromoji } from "@src/hooks/useKuromoji";
 import { useState, useEffect } from "react";
 import { kanaToHira, isKanji } from "@src/helper/utils";
-import { useSession } from "next-auth/react";
+import { type Session } from "next-auth";
+import { Meeting } from "@src/types/meeting";
 
 export default function Meeting({
   meetings,
+  user,
 }: {
   meetings: {
     id: string;
@@ -19,18 +21,17 @@ export default function Meeting({
     summary: string | null;
     meeting_name: string;
   }[];
+  user: Session["user"];
 }) {
   const [isChecked, setIsChecked] = useState(false);
   const { isTokenizerReady, tokenizer } = useKuromoji();
   const [rubyKids, setRubyKids] = useState<{ [id: string]: string }>({});
 
-  const { data: session } = useSession();
-
   useEffect(() => {
-    if (session && session.user && tokenizer) {
-      setIsChecked(session.user.kids);
+    if (user && tokenizer) {
+      setIsChecked(user.kids);
     }
-  }, [session, tokenizer]);
+  }, [user, tokenizer]);
 
   useEffect(() => {
     const generateRubyForAllMeetings = async () => {

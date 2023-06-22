@@ -5,6 +5,10 @@ import type { Metadata } from "next";
 import dayjs from "dayjs";
 import Summarize from "./Summarize";
 import { config } from "@site.config";
+import { auth } from "@/auth";
+import { Meeting } from "@src/types/meeting";
+
+export const revalidate = 0;
 
 export async function generateMetadata({
   params,
@@ -49,6 +53,17 @@ async function getMeeting(id: string) {
   const meeting = await prisma.video.findFirst({
     where: { id },
     include: {
+      videoComments: {
+        include: {
+          user: {
+            select: {
+              name: true,
+              image: true,
+              id: true,
+            },
+          },
+        },
+      },
       annotations: {
         include: {
           member: {
@@ -61,11 +76,19 @@ async function getMeeting(id: string) {
     },
   });
 
-  return meeting;
+  const json: Meeting = JSON.parse(JSON.stringify(meeting));
+
+  return json;
 }
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const meeting = await getMeeting(params.id);
+  const meetingPromise = getMeeting(params.id);
+  const sessionPromise = auth();
+
+  const [session, meeting] = await Promise.all([
+    sessionPromise,
+    meetingPromise,
+  ]);
 
   if (!meeting) {
     notFound();
@@ -75,11 +98,11 @@ export default async function Page({ params }: { params: { id: string } }) {
     <section className="mx-auto max-w-screen-xl px-4 md:px-8">
       <div className="md:flex block justify-center my-7">
         <div className="md:w-[calc(65%)] md:mr-5">
-          <Video meeting={meeting} />
+          <Video user={session?.user} meeting={meeting} />
         </div>
         <div className="flex-1">
           {meeting.apiURL && meeting.meetingURL && (
-            <Summarize meeting={meeting} />
+            <Summarize user={session?.user} meeting={meeting} />
           )}
         </div>
       </div>

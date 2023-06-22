@@ -7,13 +7,12 @@ import toast, { Toaster } from "react-hot-toast";
 import PersonModal from "./PersonModal";
 import { AnimatePresence } from "framer-motion";
 
-// カスタムフックを定義
 const useMember = () => {
   const [member, setMember] = useState<Member | null>(null);
 
   const fetchMember = async (name: string) => {
     try {
-      const response = await fetch(`/api/member/${name}`);
+      const response = await fetch(`/api/members/${name}`);
       if (response.ok) {
         const foundMember = await response.json();
         setMember(foundMember as Member);

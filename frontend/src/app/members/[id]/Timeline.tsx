@@ -5,7 +5,7 @@ import {
   formatDate,
   getHostFromURLProtocol,
 } from "@src/helper/utils";
-import { MeetingRecord } from "@src/types/meeting";
+import { MeetingRecord } from "@src/types/api";
 import { Member } from "@src/types/member";
 
 type TimelineItem = {

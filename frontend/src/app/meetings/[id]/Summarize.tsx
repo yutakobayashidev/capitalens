@@ -1,26 +1,24 @@
 "use client";
 
 import { IoAlertCircle } from "react-icons/io5";
-import { Fragment } from "react";
 import { SiOpenai } from "react-icons/si";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { AiOutlineLink } from "react-icons/ai";
 import { useKuromoji } from "@src/hooks/useKuromoji";
 import { kanaToHira, isKanji } from "@src/helper/utils";
-import { useSession } from "next-auth/react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize from "rehype-sanitize";
+import { FaMagic } from "react-icons/fa";
+import { type Session } from "next-auth";
+import { Meeting } from "@src/types/meeting";
 
 export default function Summarize({
   meeting,
+  user,
 }: {
-  meeting: {
-    summary: string | null;
-    kids: string | null;
-    m3u8_url: string;
-    id: string;
-  };
+  meeting: Meeting;
+  user: Session["user"];
 }) {
   const [summary, setSummary] = useState<string>("");
   const [kids, setKids] = useState<string>("");
@@ -31,13 +29,11 @@ export default function Summarize({
 
   const { isTokenizerReady, tokenizer } = useKuromoji();
 
-  const { data: session } = useSession();
-
   useEffect(() => {
-    if (session && session.user && tokenizer) {
-      setIsChecked(session.user.kids);
+    if (user && tokenizer) {
+      setIsChecked(user.kids);
     }
-  }, [session, tokenizer]);
+  }, [user, tokenizer]);
 
   function copyTextToClipboard(text: string) {
     navigator.clipboard.writeText(text).then(
@@ -180,7 +176,10 @@ export default function Summarize({
 
   return (
     <div className="border rounded-xl border-gray-200 px-5 pt-2 pb-4">
-      <h2 className="text-2xl font-bold my-3">AIによるサマリー</h2>
+      <h2 className="text-2xl flex items-center font-bold my-3 gap-x-2">
+        <FaMagic className="text-[#9d34da] text-lg" />
+        AIによるサマリー
+      </h2>
       {(isChecked
         ? meeting.kids === null && kids === ""
         : meeting.summary === null && summary === "") && (

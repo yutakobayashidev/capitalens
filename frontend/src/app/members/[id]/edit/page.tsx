@@ -3,6 +3,8 @@ import prisma from "@src/lib/prisma";
 import Form from "./Form";
 import type { Metadata } from "next";
 import { config } from "@site.config";
+import { auth } from "@auth";
+import { redirect } from "next/navigation";
 
 export const revalidate = 0;
 
@@ -54,14 +56,19 @@ async function getMember(id: string) {
 }
 
 export default async function Page({ params }: { params: { id: string } }) {
-
   const MemberPromise = getMember(params.id);
   const GroupsePromise = prisma.group.findMany();
+  const sessionPromise = auth();
 
-  const [member, groups] = await Promise.all([
+  const [member, groups, session] = await Promise.all([
     MemberPromise,
     GroupsePromise,
+    sessionPromise,
   ]);
+
+  if (!session?.user) {
+    redirect(`/`);
+  }
 
   return (
     <div className="mx-auto max-w-2xl px-4 md:px-8">

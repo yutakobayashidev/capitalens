@@ -4,7 +4,7 @@ import { ChatOpenAI } from "langchain/chat_models/openai";
 import { loadSummarizationChain } from "langchain/chains";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { PromptTemplate } from "langchain/prompts";
-import { SpeechRecord } from "@src/types/meeting";
+import { SpeechRecord } from "@src/types/api";
 
 export const dynamic = "force-dynamic";
 export const revalidate = true;

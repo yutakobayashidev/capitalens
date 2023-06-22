@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import "dayjs/locale/ja";
-import { MeetingRecord } from "@src/types/meeting";
+import { MeetingRecord } from "@src/types/api";
 import { notFound } from "next/navigation";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Timeline from "@src/app/members/[id]/Timeline";
@@ -12,6 +12,7 @@ import { AiOutlineLink } from "react-icons/ai";
 import prisma from "@src/lib/prisma";
 import TwitterTimeline from "@src/app/members/[id]/TwitterTimeline";
 import { config } from "@site.config";
+import { auth } from "@auth";
 
 dayjs.locale("ja");
 dayjs.extend(relativeTime);
@@ -113,7 +114,11 @@ export async function generateMetadata({
 
 export default async function Page({ params }: { params: { id: string } }) {
   const member = await getMember(params.id);
-  const kokkai = await getKokkai(member.name);
+
+  const kokkaiPromise = await getKokkai(member.name);
+  const sessionPromise = auth();
+
+  const [kokkai, session] = await Promise.all([kokkaiPromise, sessionPromise]);
 
   let combinedData: Timeline[] = [
     ...member.timelines.map((item) => ({
@@ -212,7 +217,14 @@ export default async function Page({ params }: { params: { id: string } }) {
       </section>
       <section>
         <h2 className="text-3xl mb-3 font-bold">詳細情報</h2>
-        <Link href={`/members/${member.id}/edit`} className="mb-5 text-primary block">情報を更新する</Link>
+        {session?.user && (
+          <Link
+            href={`/members/${member.id}/edit`}
+            className="mb-5 text-primary block"
+          >
+            情報を更新する
+          </Link>
+        )}
         {member.group && (
           <div className="flex items-center mb-3">
             {member.group.image ? (

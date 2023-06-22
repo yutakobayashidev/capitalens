@@ -19,20 +19,20 @@ const userNavigation = [
   {
     name: "ログアウト",
     icon: <MdOutlineLogout color="#93a5b1" />,
-    onClick: () => signOut({ callbackUrl: `/` }),
+    onClick: () => signOut(),
     elementType: "button",
   },
 ];
 
-export function ProfileDropdown({ session }: { session: Session }) {
+export default function UserMenu({ user }: { user: Session["user"] }) {
   return (
     <Menu as="div" className="relative">
       <div>
         <Menu.Button className="flex text-sm focus:outline-none focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
           <img
             className="w-10 h-10 rounded-full"
-            src={session.user.image ?? "/noimage.png"}
-            alt={session.user.name || "メニューを開く"}
+            src={user.image ?? "/noimage.png"}
+            alt={user.name || "メニューを開く"}
           />
         </Menu.Button>
       </div>
