@@ -115,7 +115,7 @@ export async function generateMetadata({
 export default async function Page({ params }: { params: { id: string } }) {
   const member = await getMember(params.id);
 
-  const kokkaiPromise = await getKokkai(member.name);
+  const kokkaiPromise = getKokkai(member.name);
   const sessionPromise = auth();
 
   const [kokkai, session] = await Promise.all([kokkaiPromise, sessionPromise]);
