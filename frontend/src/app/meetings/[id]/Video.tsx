@@ -42,6 +42,9 @@ export default function Video({
 }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [currentSpeaker, setCurrentSpeaker] = useState<Member | null>(null);
+  const [currentSpeakerInfo, setCurrentSpeakerInfo] = useState<string | null>(
+    null
+  );
   const searchParams = useSearchParams();
   const [currentTime, setCurrentTime] = useState<number>(0);
   const startSec = searchParams?.get("t");
@@ -77,6 +80,7 @@ export default function Video({
           if (currentTime >= annotation.start_sec) {
             if (annotation.speaker_name !== (currentSpeaker?.name ?? "")) {
               setCurrentSpeaker(annotation.member);
+              setCurrentSpeakerInfo(annotation.speaker_info);
             }
             break;
           }
@@ -170,7 +174,12 @@ export default function Video({
           ツイートする
         </a>
       </div>
-      {currentSpeaker && <Speaker currentSpeaker={currentSpeaker} />}
+      {currentSpeaker && (
+        <Speaker
+          currentSpeaker={currentSpeaker}
+          speakerInfo={currentSpeakerInfo}
+        />
+      )}
       <div className="bg-gray-100 px-4 pt-4 pb-6 mb-5 rounded-xl">
         <div className="flex items-center mb-3 justify-between">
           <div className="flex items-center text-base">

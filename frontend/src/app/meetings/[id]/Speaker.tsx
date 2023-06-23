@@ -6,8 +6,10 @@ import { getHostFromURL } from "@src/helper/utils";
 
 export default function Speaker({
   currentSpeaker,
+  speakerInfo,
 }: {
   currentSpeaker: Member;
+  speakerInfo: string | null;
 }) {
   return (
     <div className="rounded-lg border mb-5 px-4 pt-6 pb-2">
@@ -19,7 +21,7 @@ export default function Speaker({
         />
         <div>
           <h2 className="text-2xl font-bold mb-1">{currentSpeaker.name}</h2>
-          {currentSpeaker.group && (
+          {currentSpeaker.group ? (
             <div className="text-gray-500 mb-2">
               {currentSpeaker.group.name +
                 "の" +
@@ -28,6 +30,8 @@ export default function Speaker({
                   : "参議院") +
                 "議員"}
             </div>
+          ) : (
+            <div className="text-gray-500 mb-2">{speakerInfo}</div>
           )}
           <p className="mb-3 text-sm text-gray-600 line-clamp-4">
             {currentSpeaker.abstract ?? currentSpeaker.description}
