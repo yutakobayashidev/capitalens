@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaHome, FaSearch, FaHashtag, FaRobot } from "react-icons/fa";
+import { BsFillChatFill } from "react-icons/bs";
 
 export default function MobileFooter() {
   let pathname = usePathname() || "/";
@@ -30,6 +31,17 @@ export default function MobileFooter() {
           >
             <FaRobot size={25} className="inline-block w-auto" />
             <span className="mt-1">顔認識</span>
+          </Link>
+        </li>
+        <li className="table-cell text-center">
+          <Link
+            href="/chat"
+            className={`flex pb-1.5 pt-2 flex-col font-bold overflow-hidden whitespace-nowrap ${
+              pathname === "/chat" ? "text-primary" : "text-gray-400"
+            }`}
+          >
+            <BsFillChatFill size={25} className="inline-block w-auto" />
+            <span className="mt-1">チャット</span>
           </Link>
         </li>
         <li className="table-cell text-center">
