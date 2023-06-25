@@ -13,6 +13,7 @@ import prisma from "@src/lib/prisma";
 import TwitterTimeline from "@src/app/members/[id]/TwitterTimeline";
 import { config } from "@site.config";
 import { auth } from "@auth";
+import Chat from "./Chat";
 
 dayjs.locale("ja");
 dayjs.extend(relativeTime);
@@ -137,7 +138,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return (
     <div className="mx-auto max-w-screen-sm px-4 md:px-8 my-12">
-      <section className="text-center">
+      <section>
         <img
           alt={member.name}
           className="rounded-2xl mx-auto h-56 w-56 object-cover object-center"
@@ -145,25 +146,28 @@ export default async function Page({ params }: { params: { id: string } }) {
           width={230}
           src={member.image ?? ""}
         />
-        <h1 className="mt-5 font-bold text-4xl mb-2 font-base">
-          {member.name}
-        </h1>
-        {member.house && member.group && (
-          <div className="mb-4 font-bold text-gray-600">
-            {member.group.name +
-              "の" +
-              (member.house === "REPRESENTATIVES" ? "衆議院" : "参議院") +
-              "議員"}
-          </div>
-        )}
-        {member.abstract ? (
-          <p className="text-gray-500">{member.abstract}</p>
-        ) : (
-          member.description && (
-            <p className="text-gray-500">{member.description}</p>
-          )
-        )}
-        <div className="my-3">
+        <div className="text-center">
+          <h1 className="mt-5 font-bold text-4xl mb-2 font-base">
+            {member.name}
+          </h1>
+          {member.house && member.group && (
+            <div className="mb-4 font-bold text-gray-600">
+              {member.group.name +
+                "の" +
+                (member.house === "REPRESENTATIVES" ? "衆議院" : "参議院") +
+                "議員"}
+            </div>
+          )}
+          {member.abstract ? (
+            <p className="text-gray-500 mb-2">{member.abstract}</p>
+          ) : (
+            member.description && (
+              <p className="text-gray-500 mb-2">{member.description}</p>
+            )
+          )}
+        </div>
+        <Chat user={session?.user} member={member} />
+        <div className="my-3 text-center">
           {member.twitter && (
             <Link
               className="bg-[#F1F5F9] rounded-md m-2 inline-flex items-center justify-center h-10 w-10"

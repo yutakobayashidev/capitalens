@@ -20,12 +20,16 @@ export function EmptyScreen({
 }) {
   const exampleMessages = [
     {
-      heading: `${president}総理について調べる`,
+      heading: `議員情報を調べる`,
       message: `日本の国会議員で、現在の総理大臣である${president}議員について教えてください。`,
     },
     {
       heading: `日本の人口推移の調査`,
       message: `日本の人口の推移を教えてください。またその理由を考えてください`,
+    },
+    {
+      heading: `議会での議論を調べる`,
+      message: `マイナンバーに関する議会での議論を調べてください`,
     },
   ];
 
@@ -106,10 +110,7 @@ export default function Chat({
                   )}
                 </div>
               )}
-              <ReactMarkdown
-                key={m.id}
-                className="prose ml-4 flex-1 space-y-2 overflow-hidden px-1 prose-img:rounded-lg prose-img:shadow prose-a:no-underline hover:prose-a:underline prose-a:text-primary prose-neutral max-w-none"
-              >
+              <ReactMarkdown className="prose ml-4 flex-1 space-y-2 overflow-hidden px-1 prose-img:rounded-lg prose-img:shadow prose-a:no-underline hover:prose-a:underline prose-a:text-primary prose-neutral max-w-none">
                 {m.content}
               </ReactMarkdown>
             </div>
