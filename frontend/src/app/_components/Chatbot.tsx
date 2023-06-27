@@ -104,6 +104,12 @@ export default function Chatbot({ user }: { user: Session["user"] }) {
                 required
                 value={input}
                 onChange={handleInputChange}
+                onKeyDown={(e) => {
+                  if (e.key === "Tab") {
+                    e.preventDefault(); // This prevents the normal Tab key behaviour
+                    handleInputChange({ target: { value: placeholder } }); // Here, placeholder is the content you want to insert
+                  }
+                }}
                 className="outline-none w-full resize-none border-0 bg-transparent p-0 pr-10 focus:ring-0 focus-visible:ring-0 md:pr-12 pl-3 md:pl-0"
                 placeholder={placeholder}
               />
