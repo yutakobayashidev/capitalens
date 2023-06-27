@@ -3,7 +3,7 @@
 import { useState } from "react";
 import FaceDetection from "@src/app/face/FaceDetection";
 import { Member } from "@src/types/member";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import PersonModal from "./PersonModal";
 import { AnimatePresence } from "framer-motion";
 
@@ -49,7 +49,6 @@ export default function Page() {
           {member && <PersonModal member={member} onClose={clearMember} />}
         </AnimatePresence>
       </section>
-      <Toaster position="bottom-center" />
     </>
   );
 }

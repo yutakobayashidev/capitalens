@@ -13,6 +13,7 @@ import ReactMarkdown from "react-markdown";
 import { type Session } from "next-auth";
 import { useAtom } from "jotai";
 import { placeholderAtom } from "@src/store/placeholder";
+import toast from "react-hot-toast";
 
 export default function Chatbot({ user }: { user: Session["user"] }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,6 +32,12 @@ export default function Chatbot({ user }: { user: Session["user"] }) {
   const { messages, input, isLoading, handleInputChange, handleSubmit } =
     useChat({
       api: "/api/chat",
+      onResponse: (response) => {
+        if (response.status === 429) {
+          toast.error("利用制限を超えました。時間を開けてお試しください。");
+          return;
+        }
+      },
     });
 
   return (

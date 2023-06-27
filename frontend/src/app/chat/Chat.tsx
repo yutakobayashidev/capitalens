@@ -10,6 +10,7 @@ import ReactMarkdown from "react-markdown";
 import { AiOutlineArrowRight, AiOutlineUser } from "react-icons/ai";
 import { SiOpenai } from "react-icons/si";
 import { type Session } from "next-auth";
+import toast from "react-hot-toast";
 
 export function EmptyScreen({
   setInput,
@@ -67,6 +68,12 @@ export default function Chat({
   const { messages, input, handleInputChange, handleSubmit, setInput } =
     useChat({
       api: "/api/chat",
+      onResponse: (response) => {
+        if (response.status === 429) {
+          toast.error("利用制限を超えました。時間を開けてお試しください。");
+          return;
+        }
+      },
     });
 
   const [isModalOpen, setIsModalOpen] = useState(false);

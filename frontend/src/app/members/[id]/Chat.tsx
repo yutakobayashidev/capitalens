@@ -8,6 +8,7 @@ import { SiOpenai } from "react-icons/si";
 import { AiOutlineUser } from "react-icons/ai";
 import { IoMdSend } from "react-icons/io";
 import { type Session } from "next-auth";
+import toast from "react-hot-toast";
 
 export default function Chat({
   member,
@@ -18,6 +19,12 @@ export default function Chat({
 }) {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     api: "/api/chat",
+    onResponse: (response) => {
+      if (response.status === 429) {
+        toast.error("利用制限を超えました。時間を開けてお試しください。");
+        return;
+      }
+    },
     initialMessages: [
       {
         role: "system",

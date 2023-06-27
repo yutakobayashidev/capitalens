@@ -9,6 +9,7 @@ import GoogleAnalytics from "@src/app/_components/GoogleAnalytics";
 import Chatbot from "@src/app/_components/Chatbot";
 import { config } from "@site.config";
 import { auth } from "@auth";
+import Toaster from "@src/app/_components/toaster";
 
 const ogImage = `${config.siteRoot}opengraph.jpg`;
 
@@ -71,12 +72,13 @@ export default async function RootLayout({
         <meta name="theme-color" content="#1E50B5" />
       </head>
       <body>
+        <Toaster />
         <Header />
         {children}
         <Footer />
         <BottomMenu />
-        <GoogleAnalytics />
         <Chatbot user={session?.user} />
+        <GoogleAnalytics />
       </body>
     </html>
   );
