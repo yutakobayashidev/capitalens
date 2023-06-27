@@ -6,7 +6,9 @@ import Footer from "@src/app/_components/Footer";
 import { Inter, Noto_Sans_JP } from "next/font/google";
 import BottomMenu from "@src/app/_components/BottomMenu";
 import GoogleAnalytics from "@src/app/_components/GoogleAnalytics";
+import Chatbot from "@src/app/_components/Chatbot";
 import { config } from "@site.config";
+import { auth } from "@auth";
 
 const ogImage = `${config.siteRoot}opengraph.jpg`;
 
@@ -41,11 +43,13 @@ const notoSansJP = Noto_Sans_JP({
   variable: "--font-noto-sans-jp",
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
+
   return (
     <html lang="ja" className={cn(inter.variable, notoSansJP.variable)}>
       <head>
@@ -72,6 +76,7 @@ export default function RootLayout({
         <Footer />
         <BottomMenu />
         <GoogleAnalytics />
+        <Chatbot user={session?.user} />
       </body>
     </html>
   );

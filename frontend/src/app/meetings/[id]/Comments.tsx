@@ -48,7 +48,7 @@ export default function Comments({
             </button>
           </>
         ) : (
-          <LoginPrompt message="この議会にコメントするにはログインが必要です" />
+          <LoginPrompt message="この会議にコメントするにはログインが必要です" />
         )}
       </form>
       <div>

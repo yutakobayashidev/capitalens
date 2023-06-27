@@ -67,7 +67,6 @@ export default function Chat({
   const { messages, input, handleInputChange, handleSubmit, setInput } =
     useChat({
       api: "/api/chat",
-      body: { kids: true },
     });
 
   const [isModalOpen, setIsModalOpen] = useState(false);

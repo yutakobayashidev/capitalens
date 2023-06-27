@@ -131,7 +131,7 @@ export default function Video({
   const baseText = `${meeting.house === "COUNCILLORS" ? "参議院" : "衆議院"} ${
     meeting.meeting_name
   }\n\n`;
-  const url = `${config.siteRoot}meetings`;
+  const url = `${config.siteRoot}meetings/${meeting.id}`;
 
   // summaryが長い場合は途中で切り、代わりに"..."を追加します。
   function truncateSummary(summary: string, maxChars: number): string {
