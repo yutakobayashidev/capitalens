@@ -71,7 +71,7 @@ export default function Chatbot({ user }: { user: Session["user"] }) {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="flex flex-col mt-3 overflow-y-scroll hidden-scrollbar"
+            className="flex flex-col mt-3"
             style={{ maxHeight: "400px" }}
             variants={variants}
             initial="closed"

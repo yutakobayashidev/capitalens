@@ -174,7 +174,7 @@ async function speech_list(args: any) {
   // TODO: なにもargsがない場合の処理を書く
 
   const url =
-    `https://kokkai.ndl.go.jp/api/speech?maximumRecords=3&recordPacking=json` +
+    `https://kokkai.ndl.go.jp/api/speech?maximumRecords=2&recordPacking=json` +
     `${any ? "&any=" + encodeURIComponent(any) : ""}` +
     `${speaker ? "&speaker=" + encodeURIComponent(speaker) : ""}`;
 
