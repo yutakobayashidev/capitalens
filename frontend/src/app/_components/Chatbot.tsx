@@ -114,11 +114,15 @@ export default function Chatbot({ user }: { user: Session["user"] }) {
                   </div>
                 ))
               ) : (
-                <>
-                  <p className="text-base text-gray-500">
-                    AIと対話をし、様々な視点で情報を扱えます。
+                <div className="bg-gray-50 border rounded-lg text-sm text-gray-500 px-4 py-3">
+                  <p className="mb-2">
+                    <span className="text-base">💡</span>{" "}
+                    AIと対話し、様々な視点から効率的に情報を収集できます
                   </p>
-                </>
+                  <span className="text-xs">
+                    Tip: Tabキーでプレスホルダーの内容が自動的に入力されます
+                  </span>
+                </div>
               )}
             </div>
             <form
