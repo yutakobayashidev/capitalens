@@ -9,7 +9,7 @@ import { Dialog } from "@headlessui/react";
 import { useEffect } from "react";
 import { type Session } from "next-auth";
 import { useRouter } from "next/navigation";
-import { AiOutlineDown } from "react-icons/ai";
+import { ArrowDownIcon } from "@xpadev-net/designsystem-icons";
 import { useTransition } from "react";
 import { updateUser, updatePrefecture, DeleteAccount } from "./actions";
 
@@ -88,8 +88,13 @@ export default function Settings({
                   </option>
                 ))}
               </select>
-              <div className="pointer-events-none absolute right-0 px-2 text-gray-400">
-                <AiOutlineDown />
+              <div className="pointer-events-none absolute right-0 px-2">
+                <ArrowDownIcon
+                  className="!fill-gray-400 text-sm"
+                  width="1em"
+                  height="1em"
+                  fill="currentColor"
+                />
               </div>
             </div>
           </section>
@@ -146,36 +151,31 @@ export default function Settings({
         <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-10 align-middle shadow-xl transition-all">
           <div className="text-2xl mb-3 font-bold">退会する</div>
           <div>
-            <p className="leading-7">
+            <p className="leading-7 text-sm">
               本当に退会しますか？この操作は元に戻せません
             </p>
           </div>
-          <div className="mt-5 flex justify-center">
-            <button
-              onClick={() => {
+          <button
+            onClick={() => {
+              setDeleteStatus(true);
+
+              startTransition(async () => {
+                DeleteAccount();
+
                 setDeleteStatus(true);
-
-                startTransition(async () => {
-                  DeleteAccount();
-
-                  setDeleteStatus(true);
-                  router.refresh();
-                  router.push("/");
-                });
-              }}
-              className="border-2 flex items-center rounded-xl text-red-400 font-bold py-2.5 px-3"
-            >
-              {deleteStatus && (
-                <div
-                  className="flex justify-center mr-2"
-                  aria-label="読み込み中"
-                >
-                  <div className="animate-spin h-3 w-3 border-2 border-gray-300 rounded-full border-t-transparent"></div>
-                </div>
-              )}
-              退会する
-            </button>
-          </div>
+                router.refresh();
+                router.push("/");
+              });
+            }}
+            className="border-2 mt-5 w-full justify-center hover:bg-red-50 outline-red-300 duration-500 outline-2 outline-offset-4 flex items-center rounded-xl text-red-400 font-bold py-2.5 px-3"
+          >
+            {deleteStatus && (
+              <div className="flex justify-center mr-2" aria-label="読み込み中">
+                <div className="animate-spin h-3 w-3 border-2 border-gray-300 rounded-full border-t-transparent"></div>
+              </div>
+            )}
+            退会する
+          </button>
         </Dialog.Panel>
       </Modal>
     </>

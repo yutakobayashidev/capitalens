@@ -2,7 +2,7 @@ import { Menu, Transition } from "@headlessui/react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { type Session } from "next-auth";
-import { FiChevronDown } from "react-icons/fi";
+import { ArrowDownIcon } from "@xpadev-net/designsystem-icons";
 import { Fragment } from "react";
 import { useTransition } from "react";
 import { DeleteComment } from "./actions";
@@ -41,7 +41,12 @@ export default function Comment({
           <Menu as="div" className="relative">
             <div>
               <Menu.Button>
-                <FiChevronDown className="text-xl text-gray-500" />
+                <ArrowDownIcon
+                  width="1em"
+                  height="1em"
+                  fill="currentColor"
+                  className="text-base !fill-gray-500"
+                />
               </Menu.Button>
             </div>
             <Transition

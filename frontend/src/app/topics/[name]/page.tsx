@@ -1,6 +1,6 @@
 import BarChartComponent from "@src/app/topics/[name]/Chart";
 import type { Metadata } from "next";
-import { AiOutlineInfoCircle } from "react-icons/ai";
+import { InformationIcon } from "@xpadev-net/designsystem-icons";
 import ViewCounter from "@src/app/topics/[name]/view-counter";
 
 export async function generateMetadata({
@@ -42,8 +42,13 @@ export default async function Page({ params }: { params: { name: string } }) {
           <h1 className="font-bold my-5 text-3xl">
             このトピックをよく言及している人物
           </h1>
-          <div className="flex items-center text-base mb-5 px-6 py-3 rounded-md bg-blue-50">
-            <AiOutlineInfoCircle className="mr-2 text-blue-500" />
+          <div className="flex gap-x-1 items-center text-base mb-5 px-4 py-3 rounded-md bg-blue-50">
+            <InformationIcon
+              width="1em"
+              height="1em"
+              fill="currentColor"
+              className="text-xl !fill-blue-500"
+            />
             このデータは議席数などに依存する可能性があります。
           </div>
         </section>

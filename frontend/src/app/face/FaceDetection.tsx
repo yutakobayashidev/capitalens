@@ -212,18 +212,15 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
           />
         </div>
       ) : (
-        <div className="flex flex-col items-center space-y-4">
+        <div className="flex flex-col items-center">
           <img
-            src="/undraw_voting_nvu7.svg"
-            className="mb-5"
+            src="/l_01_square_white.png"
             height={400}
             width={400}
             alt="Vote"
           />
-          <p className="text-center">
+          <p className="text-center mb-3">
             選挙ポスターや議員の顔をスキャンして、議員の詳細な政策や、SNSをチェックしましょう。
-            <br />
-            この機能の利用には、カメラへのアクセスが必要です。
           </p>
           <button
             className="bg-blue-500 flex items-center hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -232,7 +229,7 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
             <FaCamera className="mr-2" />
             カメラへのアクセスをリクエスト
           </button>
-          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+          {errorMessage && <p className="text-red-500 mt-3">{errorMessage}</p>}
         </div>
       )}
       <div className="flex flex-col items-center space-y-4 my-5">

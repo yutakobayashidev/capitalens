@@ -5,9 +5,8 @@ import { FaMagic } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoMdSend } from "react-icons/io";
 import { useChat } from "ai/react";
-import { FiChevronsUp, FiChevronsDown } from "react-icons/fi";
+import { ArrowUpIcon, MeOutlinedIcon } from "@xpadev-net/designsystem-icons";
 import cn from "classnames";
-import { AiOutlineUser } from "react-icons/ai";
 import { SiOpenai } from "react-icons/si";
 import ReactMarkdown from "react-markdown";
 import { type Session } from "next-auth";
@@ -49,16 +48,26 @@ export default function Chatbot({ user }: { user: Session["user"] }) {
         </h2>
         <button onClick={handleClick}>
           {isOpen ? (
-            <FiChevronsDown className="text-gray-700 text-2xl" />
+            <ArrowUpIcon
+              width="1em"
+              height="1em"
+              fill="currentColor"
+              className="!fill-gray-700 text-xl"
+            />
           ) : (
-            <FiChevronsUp className="text-gray-700 text-2xl" />
+            <ArrowUpIcon
+              width="1em"
+              height="1em"
+              fill="currentColor"
+              className="!fill-gray-700 text-xl"
+            />
           )}
         </button>
       </div>
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="flex flex-col mt-3 overflow-y-scroll"
+            className="flex flex-col mt-3 overflow-y-scroll hidden-scrollbar"
             style={{ maxHeight: "400px" }}
             variants={variants}
             initial="closed"
@@ -84,7 +93,12 @@ export default function Chatbot({ user }: { user: Session["user"] }) {
                         )}
                       >
                         {m.role === "user" ? (
-                          <AiOutlineUser className="h-4 w-4" />
+                          <MeOutlinedIcon
+                            width="1em"
+                            height="1em"
+                            fill="currentColor"
+                            className="h-4 w-4"
+                          />
                         ) : (
                           <SiOpenai className="h-4 w-4 text-white" />
                         )}

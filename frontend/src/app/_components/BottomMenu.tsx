@@ -2,8 +2,18 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FaHome, FaSearch, FaHashtag, FaRobot } from "react-icons/fa";
-import { BsFillChatFill } from "react-icons/bs";
+import cn from "classnames";
+import {
+  HouseIcon,
+  HouseOutlinedIcon,
+  ChildIcon,
+  ChildOutlinedIcon,
+  SearchIcon,
+  InboxIcon,
+  InboxOutlinedIcon,
+  SealCertificateIcon,
+  SealCertificateOutlinedIcon,
+} from "@xpadev-net/designsystem-icons";
 
 export default function MobileFooter() {
   let pathname = usePathname() || "/";
@@ -14,44 +24,116 @@ export default function MobileFooter() {
         <li className="table-cell text-center">
           <Link
             href="/"
-            className={`flex pb-1.5 pt-2 flex-col font-bold overflow-hidden whitespace-nowrap ${
-              pathname === "/" ? "text-primary" : "text-gray-400"
-            }`}
+            className={cn(
+              "flex pb-1.5 pt-2 flex-col font-bold overflow-hidden whitespace-nowrap",
+              {
+                "text-primary": pathname === "/",
+                "text-gray-400": pathname !== "/",
+              }
+            )}
           >
-            <FaHome size={25} className="inline-block w-auto" />
+            {pathname === "/" ? (
+              <HouseIcon
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                className="inline-block !fill-primary text-2xl w-auto"
+              />
+            ) : (
+              <HouseOutlinedIcon
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                className="inline-block !fill-gray-400 text-2xl w-auto"
+              />
+            )}
             <span className="mt-1">ホーム</span>
           </Link>
         </li>
         <li className="table-cell text-center">
           <Link
             href="/face"
-            className={`flex flex-col pb-1.5 pt-2  font-bold overflow-hidden whitespace-nowrap ${
-              pathname === "/face" ? "text-primary" : "text-gray-400"
-            }`}
+            className={cn(
+              "flex flex-col pb-1.5 pt-2  font-bold overflow-hidden whitespace-nowrap",
+              {
+                "text-primary": pathname === "/face",
+                "text-gray-400": pathname !== "/face",
+              }
+            )}
           >
-            <FaRobot size={25} className="inline-block w-auto" />
+            {pathname === "/face" ? (
+              <ChildIcon
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                className="inline-block !fill-primary text-2xl w-auto"
+              />
+            ) : (
+              <ChildOutlinedIcon
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                className="inline-block !fill-gray-400 text-2xl w-auto"
+              />
+            )}
             <span className="mt-1">顔認識</span>
           </Link>
         </li>
         <li className="table-cell text-center">
           <Link
             href="/chat"
-            className={`flex pb-1.5 pt-2 flex-col font-bold overflow-hidden whitespace-nowrap ${
-              pathname === "/chat" ? "text-primary" : "text-gray-400"
-            }`}
+            className={cn(
+              "flex pb-1.5 pt-2 flex-col font-bold overflow-hidden whitespace-nowrap",
+              {
+                "text-primary": pathname === "/chat",
+                "text-gray-400": pathname !== "/chat",
+              }
+            )}
           >
-            <BsFillChatFill size={25} className="inline-block w-auto" />
+            {pathname === "/chat" ? (
+              <InboxIcon
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                className="inline-block !fill-primary text-2xl w-auto"
+              />
+            ) : (
+              <InboxOutlinedIcon
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                className="inline-block !fill-gray-400 text-2xl w-auto"
+              />
+            )}
             <span className="mt-1">チャット</span>
           </Link>
         </li>
         <li className="table-cell text-center">
           <Link
             href="/topics"
-            className={`pb-1.5 pt-2 flex flex-col font-bold overflow-hidden whitespace-nowrap ${
-              pathname === "/topics" ? "text-primary" : "text-gray-400"
-            }`}
+            className={cn(
+              "pb-1.5 pt-2 flex flex-col font-bold overflow-hidden whitespace-nowrap",
+              {
+                "text-primary": pathname === "/topics",
+                "text-gray-400": pathname !== "/topics",
+              }
+            )}
           >
-            <FaHashtag size={25} className="inline-block w-auto" />
+            {pathname === "/topics" ? (
+              <SealCertificateIcon
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                className="inline-block !fill-primary text-2xl w-auto"
+              />
+            ) : (
+              <SealCertificateOutlinedIcon
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                className="inline-block !fill-gray-400 text-2xl w-auto"
+              />
+            )}
             <span className="mt-1">トピック</span>
           </Link>
         </li>
@@ -60,7 +142,12 @@ export default function MobileFooter() {
             onClick={() => alert("Coming soon!")}
             className="pb-1.5 pt-2 text-gray-400 inline-flex flex-col font-bold overflow-hidden whitespace-nowrap"
           >
-            <FaSearch size={25} className="inline-block w-auto" />
+            <SearchIcon
+              width="1em"
+              height="1em"
+              fill="currentColor"
+              className="inline-block !fill-gray-400 text-2xl w-auto"
+            />
             <span className="mt-1">検索</span>
           </button>
         </li>

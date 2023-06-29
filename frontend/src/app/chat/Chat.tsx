@@ -7,7 +7,8 @@ import { Dialog } from "@headlessui/react";
 import { FaMagic } from "react-icons/fa";
 import cn from "classnames";
 import ReactMarkdown from "react-markdown";
-import { AiOutlineArrowRight, AiOutlineUser } from "react-icons/ai";
+import { MeOutlinedIcon } from "@xpadev-net/designsystem-icons";
+import { AiOutlineArrowRight } from "react-icons/ai";
 import { SiOpenai } from "react-icons/si";
 import { type Session } from "next-auth";
 import toast from "react-hot-toast";
@@ -110,7 +111,12 @@ export default function Chat({
                   )}
                 >
                   {m.role === "user" ? (
-                    <AiOutlineUser className="h-4 w-4" />
+                    <MeOutlinedIcon
+                      width="1em"
+                      height="1em"
+                      fill="currentColor"
+                      className="h-4 w-4"
+                    />
                   ) : (
                     <SiOpenai className="h-4 w-4 text-white" />
                   )}

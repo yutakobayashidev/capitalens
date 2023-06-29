@@ -40,6 +40,9 @@ dependencies:
   '@upstash/redis':
     specifier: ^1.21.0
     version: 1.21.0(encoding@0.1.13)
+  '@xpadev-net/designsystem-icons':
+    specifier: ^0.0.5
+    version: 0.0.5
   ai:
     specifier: ^2.0.1
     version: 2.0.1(react@18.2.0)(svelte@3.59.2)
@@ -6322,6 +6325,10 @@ packages:
   /@xmldom/xmldom@0.8.8:
     resolution: {integrity: sha512-0LNz4EY8B/8xXY86wMrQ4tz6zEHZv9ehFMJPm8u2gq5lQ71cfRKdaKyxfJAx5aUoyzx0qzgURblTisPGgz3d+Q==}
     engines: {node: '>=10.0.0'}
+    dev: false
+
+  /@xpadev-net/designsystem-icons@0.0.5:
+    resolution: {integrity: sha512-M37PS6EHI0NfpdjElxiQRnNjouR7Ol3RpP+AvehlqQe2L8XG1x5zUx+0IB/MJn0N3XyrNDOEI4SZKRQWioAGKA==}
     dev: false
 
   /@xtuc/ieee754@1.2.0:

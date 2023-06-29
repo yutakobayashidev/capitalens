@@ -32,6 +32,7 @@
     "@types/react-dom": "18.2.5",
     "@upstash/ratelimit": "^0.4.3",
     "@upstash/redis": "^1.21.0",
+    "@xpadev-net/designsystem-icons": "^0.0.5",
     "ai": "^2.0.1",
     "classnames": "^2.3.2",
     "contentlayer": "^0.3.2",

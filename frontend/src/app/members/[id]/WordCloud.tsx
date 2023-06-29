@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import D3Cloud from "react-d3-cloud";
 import useSWR from "swr";
-import { BsDownload } from "react-icons/bs";
+import { DownloadIcon } from "@xpadev-net/designsystem-icons";
 import { usePathname } from "next/navigation";
 
 interface Word {
@@ -64,7 +64,12 @@ export default function WordCloud({ name }: WordCloudProps) {
               }}
               className="text-green-600 mt-5 text-lg flex items-center font-semibold"
             >
-              <BsDownload className="mr-2" />
+              <DownloadIcon
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                className="mr-2 !fill-green-600"
+              />
               CSVデータをダウンロード
             </button>
           </div>

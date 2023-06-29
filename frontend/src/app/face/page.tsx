@@ -43,7 +43,7 @@ export default function Page() {
 
   return (
     <>
-      <section className="my-12">
+      <section className="my-7">
         <FaceDetection onFaceDetect={handleFaceDetect} />
         <AnimatePresence>
           {member && <PersonModal member={member} onClose={clearMember} />}

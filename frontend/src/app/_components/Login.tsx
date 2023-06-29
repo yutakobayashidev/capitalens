@@ -42,12 +42,13 @@ export function Login() {
           </div>
           <button
             onClick={() => signIn("google")}
-            className="inline-flex items-center justify-center mt-4 border border-gray-200 px-6 py-4 rounded-xl text-gray-600 font-semibold shadow-sm"
+            className="inline-flex items-center justify-center mt-4 border border-gray-200 px-10 md:px-6 py-4 rounded-xl text-gray-600 font-semibold shadow-sm"
           >
             <span className="mr-2 inline-flex items-center">
               <GLogo width={22} height={22} />
             </span>
-            Googleアカウントでログイン
+            <span className="hidden md:block">Googleアカウントでログイン</span>
+            <span className="md:hidden">Googleでログイン</span>
           </button>
           <p className="text-left mt-6 text-sm text-gray-500">
             続行することで、

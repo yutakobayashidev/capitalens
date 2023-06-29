@@ -1,6 +1,5 @@
 "use client";
 
-import { IoAlertCircle } from "react-icons/io5";
 import { SiOpenai } from "react-icons/si";
 import { useState, useEffect, useCallback } from "react";
 import { AiOutlineLink } from "react-icons/ai";
@@ -12,6 +11,7 @@ import rehypeSanitize from "rehype-sanitize";
 import { FaMagic } from "react-icons/fa";
 import { type Session } from "next-auth";
 import { Meeting } from "@src/types/meeting";
+import { AttentionIcon } from "@xpadev-net/designsystem-icons";
 
 export default function Summarize({
   meeting,
@@ -192,7 +192,6 @@ export default function Summarize({
           OpenAIで要約
         </button>
       )}
-
       <label className="flex items-center mb-3">
         <input
           type="checkbox"
@@ -230,7 +229,12 @@ export default function Summarize({
         </button>
       )}
       <div className="flex items-center text-sm mt-3 text-gray-500">
-        <IoAlertCircle className="text-xl text-red-400" />
+        <AttentionIcon
+          width="1em"
+          height="1em"
+          fill="currentColor"
+          className="text-xl !fill-red-400"
+        />
         <div className="ml-1 text-xs">
           AIによる要約は間違いを含む可能性があります
         </div>
