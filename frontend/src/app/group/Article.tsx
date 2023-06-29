@@ -41,7 +41,7 @@ function Article({
       </a>
       <Link
         className="flex px-5 pt-6 items-center text-sm"
-        href={"/members/" + item.member.id}
+        href={`/members/${item.member.id}`}
       >
         <img
           className="border rounded-xl w-10 h-10 mr-3 object-cover object-center"

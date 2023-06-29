@@ -196,7 +196,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               <div className="grid grid-cols-6">
                 {bill.supportedBills.map((item: supportedBill) => (
                   <Link
-                    href={"/members/" + item.member.id}
+                    href={`/members/${item.member.id}`}
                     className="mb-3"
                     key={item.id}
                   >

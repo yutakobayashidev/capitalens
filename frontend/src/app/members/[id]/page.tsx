@@ -173,7 +173,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             {member.twitter && (
               <Link
                 className="bg-[#F1F5F9] rounded-md m-2 inline-flex items-center justify-center h-10 w-10"
-                href={"https://twitter.com/" + member.twitter}
+                href={`https://twitter.com/${member.twitter}`}
               >
                 <FaTwitter className="text-[#1da1f2] text-xl" />
               </Link>
@@ -181,7 +181,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             {member.facebook && (
               <Link
                 className="bg-[#F1F5F9] rounded-md m-2 inline-flex items-center justify-center h-10 w-10"
-                href={"https://www.facebook.com/" + member.facebook}
+                href={`https://www.facebook.com/${member.facebook}`}
               >
                 <FaFacebook className="text-[#1877f2] text-xl" />
               </Link>
@@ -199,20 +199,20 @@ export default async function Page({ params }: { params: { id: string } }) {
               </Link>
             )}
             {member.wikipedia && (
-              <Link
+              <a
                 className="bg-[#F1F5F9] rounded-md m-2 inline-flex items-center justify-center h-10 w-10"
                 href={member.wikipedia}
               >
                 <FaWikipediaW className="text-black text-xl" />
-              </Link>
+              </a>
             )}
             {member.website && (
-              <Link
+              <a
                 className="bg-[#F1F5F9] rounded-md m-2 inline-flex items-center justify-center h-10 w-10"
                 href={member.website}
               >
                 <AiOutlineLink className="text-xl text-gray-500" />
-              </Link>
+              </a>
             )}
           </div>
           {member.twitter && <TwitterTimeline username={member.twitter} />}

@@ -127,7 +127,7 @@ const PersonModal: React.FC<PersonModalProps> = ({ member, onClose }) => {
           </Link>
           {member.twitter && (
             <a
-              href={"https://twitter.com/" + member.twitter}
+              href={`https://twitter.com/${member.twitter}`}
               className="bg-[#1da1f2] mr-3 text-sm items-center font-semibold rounded-full py-2 px-3 text-white inline-flex"
             >
               <FaTwitter className="mr-2 text-base" />@{member.twitter}

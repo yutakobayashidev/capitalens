@@ -119,14 +119,14 @@ export default async function Page() {
             本プロジェクトは、国会での議論、提出された法案、国会議員の情報などを整理し、視覚的に表示することを目的としています。
           </p>
           <div className="flex flex-wrap items-center gap-3">
-            <Link
+            <a
               className="bg-white rounded-full font-semibold px-4 py-2 inline-flex items-center text-base transition-all duration-500 ease-in-out hover:shadow"
               href={config.SocialLinks.github}
             >
               <FaGithub className="text-xl mr-3 align-middle" />
               開発に貢献する
-            </Link>
-            <Link
+            </a>
+            <a
               className="bg-white font-semibold rounded-full px-4 py-2 inline-flex items-center text-base transition-all duration-500 ease-in-out hover:shadow"
               href="https://github.com/users/yutakobayashidev/projects/2"
             >
@@ -134,7 +134,7 @@ export default async function Page() {
                 🚀
               </span>
               ロードマップ
-            </Link>
+            </a>
           </div>
         </div>
       </section>

@@ -9,6 +9,7 @@ const withPWA = require("@ducanh2912/next-pwa").default({
 const nextConfig = withPWA({
   experimental: {
     serverActions: true,
+    typedRoutes: true,
     outputFileTracingExcludes: {
       "*": [
         "node_modules/@swc/core-linux-x64-gnu",

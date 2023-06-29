@@ -131,6 +131,10 @@ async function get_member_info(name: string) {
   const params = [name];
   const data = await conn.execute(query, params);
 
+  if (data.rows.length === 0) {
+    return "Sorry, the member information could not be found.";
+  }
+
   return data.rows[0];
 }
 

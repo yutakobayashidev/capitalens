@@ -137,22 +137,22 @@ export default async function Page({
                   </Link>
                 )}
                 {group.wikipedia && (
-                  <Link
+                  <a
                     aria-label="wikipedia"
                     className="text-gray-400"
                     href={group.wikipedia}
                   >
                     <FaWikipediaW className="text-lg" />
-                  </Link>
+                  </a>
                 )}
                 {group.website && (
-                  <Link
+                  <a
                     aria-label="公式サイト"
                     className="text-gray-400"
                     href={group.website}
                   >
                     <AiOutlineLink className="text-lg" />
-                  </Link>
+                  </a>
                 )}
                 <Link
                   aria-label={`${group.name}議員のブログ・動画をRSSで購読する`}

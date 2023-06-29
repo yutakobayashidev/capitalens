@@ -1,5 +1,6 @@
 "use client";
 
+import type { Route } from "next";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import cn from "classnames";
@@ -9,7 +10,15 @@ import Link from "next/link";
 import { FiSettings } from "react-icons/fi";
 import { MdOutlineLogout } from "react-icons/md";
 
-const userNavigation = [
+type NavigationItem = {
+  icon: React.ReactElement;
+  name: string;
+  href?: Route<string> | URL;
+  onClick?: () => void;
+  elementType: "link" | "button";
+};
+
+const userNavigation: NavigationItem[] = [
   {
     icon: <FiSettings color="#93a5b1" />,
     name: "アカウント設定",

@@ -41,7 +41,7 @@ export default async function Page() {
             開発に貢献する
           </h2>
           <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
-            <Link
+            <a
               href={config.SocialLinks.github}
               className="rounded-lg hover:bg-gray-100 transition duration-500 border block text-center md:px-2 md:py-6 py-4 px-2"
             >
@@ -49,8 +49,8 @@ export default async function Page() {
                 <FaGithub size={50} />
               </div>
               <div className="mt-5 text-gray-700 font-bold text-lg">GitHub</div>
-            </Link>
-            <Link
+            </a>
+            <a
               href={config.SocialLinks.discord}
               className="rounded-lg hover:bg-gray-100 transition duration-500 border block text-center md:px-2 md:py-6 py-4 px-2"
             >
@@ -60,7 +60,7 @@ export default async function Page() {
               <div className="mt-5 text-gray-700 font-bold text-lg">
                 Discord
               </div>
-            </Link>
+            </a>
           </div>
         </div>
       </section>
