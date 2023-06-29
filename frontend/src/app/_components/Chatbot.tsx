@@ -5,7 +5,11 @@ import { FaMagic } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoMdSend } from "react-icons/io";
 import { useChat } from "ai/react";
-import { ArrowUpIcon, MeOutlinedIcon } from "@xpadev-net/designsystem-icons";
+import {
+  ArrowUpIcon,
+  ArrowDownIcon,
+  MeOutlinedIcon,
+} from "@xpadev-net/designsystem-icons";
 import cn from "classnames";
 import { SiOpenai } from "react-icons/si";
 import ReactMarkdown from "react-markdown";
@@ -48,7 +52,7 @@ export default function Chatbot({ user }: { user: Session["user"] }) {
         </h2>
         <button onClick={handleClick}>
           {isOpen ? (
-            <ArrowUpIcon
+            <ArrowDownIcon
               width="1em"
               height="1em"
               fill="currentColor"
