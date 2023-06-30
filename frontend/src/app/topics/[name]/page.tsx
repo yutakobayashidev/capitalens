@@ -47,7 +47,7 @@ export default async function Page({ params }: { params: { name: string } }) {
               width="1em"
               height="1em"
               fill="currentColor"
-              className="text-xl !fill-blue-500"
+              className="text-xl text-blue-500"
             />
             このデータは議席数などに依存する可能性があります。
           </div>

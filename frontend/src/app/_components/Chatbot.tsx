@@ -56,14 +56,14 @@ export default function Chatbot({ user }: { user: Session["user"] }) {
               width="1em"
               height="1em"
               fill="currentColor"
-              className="!fill-gray-700 text-xl"
+              className="text-gray-700 text-xl"
             />
           ) : (
             <ArrowUpIcon
               width="1em"
               height="1em"
               fill="currentColor"
-              className="!fill-gray-700 text-xl"
+              className="text-gray-700 text-xl"
             />
           )}
         </button>

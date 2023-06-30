@@ -233,7 +233,7 @@ export default function Summarize({
           width="1em"
           height="1em"
           fill="currentColor"
-          className="text-xl !fill-red-400"
+          className="text-xl text-red-400"
         />
         <div className="ml-1 text-xs">
           AIによる要約は間違いを含む可能性があります

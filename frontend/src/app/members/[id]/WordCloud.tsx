@@ -68,7 +68,7 @@ export default function WordCloud({ name }: WordCloudProps) {
                 width="1em"
                 height="1em"
                 fill="currentColor"
-                className="mr-2 !fill-green-600"
+                className="mr-2 text-green-600"
               />
               CSVデータをダウンロード
             </button>

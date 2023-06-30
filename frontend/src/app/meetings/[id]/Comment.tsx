@@ -45,7 +45,7 @@ export default function Comment({
                   width="1em"
                   height="1em"
                   fill="currentColor"
-                  className="text-base !fill-gray-500"
+                  className="text-base text-gray-500"
                 />
               </Menu.Button>
             </div>

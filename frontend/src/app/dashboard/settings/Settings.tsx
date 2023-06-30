@@ -90,7 +90,7 @@ export default function Settings({
               </select>
               <div className="pointer-events-none absolute right-0 px-2">
                 <ArrowDownIcon
-                  className="!fill-gray-400 text-sm"
+                  className="text-gray-400 text-sm"
                   width="1em"
                   height="1em"
                   fill="currentColor"

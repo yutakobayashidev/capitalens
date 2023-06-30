@@ -37,14 +37,14 @@ export default function MobileFooter() {
                 width="1em"
                 height="1em"
                 fill="currentColor"
-                className="inline-block !fill-primary text-2xl w-auto"
+                className="inline-block text-primary text-2xl w-auto"
               />
             ) : (
               <HouseOutlinedIcon
                 width="1em"
                 height="1em"
                 fill="currentColor"
-                className="inline-block !fill-gray-400 text-2xl w-auto"
+                className="inline-block text-gray-400 text-2xl w-auto"
               />
             )}
             <span className="mt-1">ホーム</span>
@@ -54,7 +54,7 @@ export default function MobileFooter() {
           <Link
             href="/face"
             className={cn(
-              "flex flex-col pb-1.5 pt-2  font-bold overflow-hidden whitespace-nowrap",
+              "flex flex-col pb-1.5 pt-2 font-bold overflow-hidden whitespace-nowrap",
               {
                 "text-primary": pathname === "/face",
                 "text-gray-400": pathname !== "/face",
@@ -66,14 +66,14 @@ export default function MobileFooter() {
                 width="1em"
                 height="1em"
                 fill="currentColor"
-                className="inline-block !fill-primary text-2xl w-auto"
+                className="inline-block text-primary text-2xl w-auto"
               />
             ) : (
               <ChildOutlinedIcon
                 width="1em"
                 height="1em"
                 fill="currentColor"
-                className="inline-block !fill-gray-400 text-2xl w-auto"
+                className="inline-block text-gray-400 text-2xl w-auto"
               />
             )}
             <span className="mt-1">顔認識</span>
@@ -95,14 +95,14 @@ export default function MobileFooter() {
                 width="1em"
                 height="1em"
                 fill="currentColor"
-                className="inline-block !fill-primary text-2xl w-auto"
+                className="inline-block text-primary text-2xl w-auto"
               />
             ) : (
               <InboxOutlinedIcon
                 width="1em"
                 height="1em"
                 fill="currentColor"
-                className="inline-block !fill-gray-400 text-2xl w-auto"
+                className="inline-block text-gray-400 text-2xl w-auto"
               />
             )}
             <span className="mt-1">チャット</span>
@@ -124,14 +124,14 @@ export default function MobileFooter() {
                 width="1em"
                 height="1em"
                 fill="currentColor"
-                className="inline-block !fill-primary text-2xl w-auto"
+                className="inline-block text-primary text-2xl w-auto"
               />
             ) : (
               <SealCertificateOutlinedIcon
                 width="1em"
                 height="1em"
                 fill="currentColor"
-                className="inline-block !fill-gray-400 text-2xl w-auto"
+                className="inline-block text-gray-400 text-2xl w-auto"
               />
             )}
             <span className="mt-1">トピック</span>
@@ -146,7 +146,7 @@ export default function MobileFooter() {
               width="1em"
               height="1em"
               fill="currentColor"
-              className="inline-block !fill-gray-400 text-2xl w-auto"
+              className="inline-block text-gray-400 text-2xl w-auto"
             />
             <span className="mt-1">検索</span>
           </button>
