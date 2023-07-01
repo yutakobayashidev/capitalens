@@ -15,6 +15,20 @@ export type Meeting = {
   kids: string | null;
   videoComments: videoComment[];
   annotations: Annotation[];
+  utterances: Utterance[];
+};
+
+export type Word = {
+  start: number;
+  end: number;
+  text: string;
+};
+
+export type Utterance = {
+  id: number;
+  start: number;
+  end: number;
+  words: Word[];
 };
 
 export type videoComment = {
