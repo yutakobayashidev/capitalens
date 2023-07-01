@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import Video from "./Video";
 import type { Metadata } from "next";
 import dayjs from "dayjs";
-import Summarize from "./Summarize";
 import { config } from "@site.config";
 import { auth } from "@/auth";
 import { Meeting } from "@src/types/meeting";
@@ -54,6 +53,11 @@ async function getMeeting(id: string) {
   const meeting = await prisma.video.findFirst({
     where: { id },
     include: {
+      utterances: {
+        include: {
+          words: true,
+        },
+      },
       videoComments: {
         include: {
           user: {
@@ -98,16 +102,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   return (
     <>
       <section className="mx-auto max-w-screen-xl px-4 md:px-8">
-        <div className="md:flex block justify-center my-7">
-          <div className="md:w-[calc(65%)] md:mr-5">
-            <Video user={session?.user} meeting={meeting} />
-          </div>
-          <div className="flex-1">
-            {meeting.apiURL && meeting.meetingURL && (
-              <Summarize user={session?.user} meeting={meeting} />
-            )}
-          </div>
-        </div>
+        <Video user={session?.user} meeting={meeting} />
       </section>
       <SetPlaceHolder
         placeholder={`${meeting.meeting_name}の最近の会議を教えてください`}

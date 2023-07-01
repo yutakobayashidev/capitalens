@@ -19,9 +19,9 @@ model Group {
   image       String?
   twitter     String?
   facebook    String?
-  wikipedia   String?            @db.Text()
+  wikipedia   String? @db.Text()
   website     String?
-  description String?            @db.Text()
+  description String? @db.Text()
   members     Member[]
 }
 
@@ -121,6 +121,7 @@ model Comment {
   @@index([userId])
 }
 
+
 model Vote {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -193,27 +194,27 @@ model Session {
 }
 
 model User {
-  id            String         @id @default(cuid())
-  name          String?
-  email         String?        @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  comments      Comment[]
-  votes         Vote[]
-  kids          Boolean        @default(false)
-  prefecture    Prefecture?    @relation(fields: [prefectureId], references: [id])
-  prefectureId  Int?
-  videoComments VideoComment[]
+  id               String         @id @default(cuid())
+  name             String?
+  email            String?        @unique
+  emailVerified    DateTime?
+  image            String?
+  accounts         Account[]
+  sessions         Session[]
+  comments         Comment[]
+  votes            Vote[]
+  kids             Boolean        @default(false)
+  prefecture       Prefecture?    @relation(fields: [prefectureId], references: [id])
+  prefectureId     Int?
+  videoComments    VideoComment[]
 
   @@index([prefectureId])
 }
 
 model Prefecture {
-  id    Int    @id @default(autoincrement())
-  name  String
-  users User[]
+  id      Int     @id @default(autoincrement())
+  name    String
+  users   User[]
 }
 
 model VerificationToken {
@@ -225,18 +226,41 @@ model VerificationToken {
 }
 
 model Video {
-  id            String         @id @default(cuid())
-  m3u8_url      String         @unique
-  page_url      String
-  date          String
-  house         House?
-  summary       String?        @db.Text()
-  meeting_name  String
-  kids          String?        @db.Text()
-  annotations   Annotation[]
-  meetingURL    String?
-  apiURL        String?
+  id           String       @id @default(cuid())
+  m3u8_url     String       @unique
+  page_url     String
+  date         String
+  house        House?
+  summary      String?      @db.Text()
+  meeting_name String
+  kids         String?      @db.Text()
+  annotations  Annotation[]
+  meetingURL   String?
+  apiURL       String?
   videoComments VideoComment[]
+  utterances Utterance[]
+}
+
+model Utterance {
+  id      Int     @id @default(autoincrement())
+  start   Float
+  end     Float
+  words   Word[]
+  meeting Video @relation(fields: [videoId], references: [id])
+  videoId String
+
+  @@index([videoId])
+}
+
+model Word {
+  id          Int       @id @default(autoincrement())
+  start       Float
+  end         Float
+  text        String
+  utterance   Utterance @relation(fields: [utteranceId], references: [id])
+  utteranceId Int
+
+  @@index([utteranceId])
 }
 
 model VideoComment {
@@ -251,6 +275,15 @@ model VideoComment {
 
   @@index([videoId])
   @@index([userId])
+}
+
+
+
+model Books {
+  id String  @id @default(cuid())
+  title String
+  date DateTime
+  isbn String
 }
 
 model Annotation {
