@@ -1,10 +1,10 @@
-import { notFound } from "next/navigation";
-import prisma from "@src/lib/prisma";
-import Form from "./Form";
-import type { Metadata } from "next";
-import { config } from "@site.config";
 import { auth } from "@auth";
-import { redirect } from "next/navigation";
+import { config } from "@site.config";
+import prisma from "@src/lib/prisma";
+import type { Metadata } from "next";
+import { notFound , redirect } from "next/navigation";
+
+import Form from "./Form";
 
 export const revalidate = 0;
 
@@ -24,21 +24,21 @@ export async function generateMetadata({
   return {
     title: member.name + "議員の情報を更新",
     description: member.description,
-    twitter: {
-      card: member.image ? "summary" : "summary_large_image",
-      title: member.name,
-      images: [ogImage],
-    },
     openGraph: {
       title: member.name,
-      siteName: config.siteRoot,
-      url: `${config.siteRoot}people/${member.id}`,
-      locale: "ja-JP",
       images: [
         {
           url: ogImage,
         },
       ],
+      locale: "ja-JP",
+      siteName: config.siteRoot,
+      url: `${config.siteRoot}people/${member.id}`,
+    },
+    twitter: {
+      title: member.name,
+      card: member.image ? "summary" : "summary_large_image",
+      images: [ogImage],
     },
   };
 }

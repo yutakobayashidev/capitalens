@@ -1,8 +1,8 @@
-import Link from "next/link";
-import { FaTwitter, FaGlobe } from "react-icons/fa";
-import { Member } from "@src/types/member";
-import { AiOutlineLink } from "react-icons/ai";
 import { getHostFromURL } from "@src/helper/utils";
+import { Member } from "@src/types/member";
+import Link from "next/link";
+import { AiOutlineLink } from "react-icons/ai";
+import { FaGlobe,FaTwitter } from "react-icons/fa";
 
 export default function Speaker({
   currentSpeaker,
@@ -12,17 +12,17 @@ export default function Speaker({
   speakerInfo: string | null;
 }) {
   return (
-    <div className="rounded-lg border mb-5 px-4 pt-6 pb-2">
-      <div className="md:flex mb-4">
+    <div className="mb-5 rounded-lg border px-4 pb-2 pt-6">
+      <div className="mb-4 md:flex">
         <img
           src={currentSpeaker.image ?? "/noimage.png"}
-          className="mr-5 rounded-lg mb-3 md:mb-0 object-cover object-center"
+          className="mb-3 mr-5 rounded-lg object-cover object-center md:mb-0"
           alt={currentSpeaker.name}
         />
         <div>
-          <h2 className="text-2xl font-bold mb-1">{currentSpeaker.name}</h2>
+          <h2 className="mb-1 text-2xl font-bold">{currentSpeaker.name}</h2>
           {currentSpeaker.group ? (
-            <div className="text-gray-500 mb-2">
+            <div className="mb-2 text-gray-500">
               {currentSpeaker.group.name +
                 "の" +
                 (currentSpeaker.house === "REPRESENTATIVES"
@@ -31,15 +31,15 @@ export default function Speaker({
                 "議員"}
             </div>
           ) : (
-            <div className="text-gray-500 mb-2">{speakerInfo}</div>
+            <div className="mb-2 text-gray-500">{speakerInfo}</div>
           )}
-          <p className="mb-3 text-sm text-gray-600 line-clamp-4">
+          <p className="mb-3 line-clamp-4 text-sm text-gray-600">
             {currentSpeaker.abstract ?? currentSpeaker.description}
           </p>
-          <div className="flex flex-wrap gap-y-2 items-center">
+          <div className="flex flex-wrap items-center gap-y-2">
             <Link
               href={`/members/${currentSpeaker.id}`}
-              className="mr-2 bg-gray-600 text-sm items-center font-semibold rounded-full py-2 px-3 text-white inline-flex"
+              className="mr-2 inline-flex items-center rounded-full bg-gray-600 px-3 py-2 text-sm font-semibold text-white"
             >
               <FaGlobe className="mr-2 text-base" />
               詳細
@@ -47,7 +47,7 @@ export default function Speaker({
             {currentSpeaker.twitter && (
               <a
                 href={"https://twitter.com/" + currentSpeaker.twitter}
-                className="bg-[#1da1f2] mr-2 text-sm items-center font-semibold rounded-full py-2 px-3 text-white inline-flex"
+                className="mr-2 inline-flex items-center rounded-full bg-[#1da1f2] px-3 py-2 text-sm font-semibold text-white"
               >
                 <FaTwitter className="mr-2 text-base" />@
                 {currentSpeaker.twitter}
@@ -56,7 +56,7 @@ export default function Speaker({
             {currentSpeaker.website && (
               <a
                 href={currentSpeaker.website}
-                className="text-sm bg-gray-400 items-center font-semibold rounded-full py-2 px-3 text-white inline-flex"
+                className="inline-flex items-center rounded-full bg-gray-400 px-3 py-2 text-sm font-semibold text-white"
               >
                 <AiOutlineLink className="mr-2 text-base" />
                 {getHostFromURL(currentSpeaker.website)}
@@ -66,10 +66,10 @@ export default function Speaker({
         </div>
       </div>
       {currentSpeaker.abstract && (
-        <div className="text-xs text-gray-500 mb-2">
+        <div className="mb-2 text-xs text-gray-500">
           {currentSpeaker.wikipedia ? (
             <a
-              className="text-primary hover:underline font-medium"
+              className="font-medium text-primary hover:underline"
               href={currentSpeaker.wikipedia}
             >
               ウィキペディアの項目
@@ -79,7 +79,7 @@ export default function Speaker({
           )}
           を
           <a
-            className="text-primary hover:underline font-medium"
+            className="font-medium text-primary hover:underline"
             href="https://creativecommons.org/licenses/by-sa/3.0/deed.ja"
           >
             Creative Commons Attribution (CC BY-SA 3.0)

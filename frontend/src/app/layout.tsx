@@ -1,15 +1,16 @@
 import "./globals.css";
-import type { Metadata } from "next";
-import cn from "classnames";
-import Header from "@src/app/_components/Header";
-import Footer from "@src/app/_components/Footer";
-import { Inter, Noto_Sans_JP } from "next/font/google";
-import BottomMenu from "@src/app/_components/BottomMenu";
-import GoogleAnalytics from "@src/app/_components/GoogleAnalytics";
-import Chatbot from "@src/app/_components/Chatbot";
-import { config } from "@site.config";
+
 import { auth } from "@auth";
+import { config } from "@site.config";
+import BottomMenu from "@src/app/_components/BottomMenu";
+import Chatbot from "@src/app/_components/Chatbot";
+import Footer from "@src/app/_components/Footer";
+import GoogleAnalytics from "@src/app/_components/GoogleAnalytics";
+import Header from "@src/app/_components/Header";
 import Toaster from "@src/app/_components/toaster";
+import cn from "classnames";
+import type { Metadata } from "next";
+import { Inter, Noto_Sans_JP } from "next/font/google";
 
 const ogImage = `${config.siteRoot}opengraph.jpg`;
 
@@ -19,29 +20,29 @@ export const metadata: Metadata = {
     template: `%s | ${config.siteMeta.title}`,
   },
   description: config.siteMeta.description,
-  twitter: {
-    card: "summary_large_image",
-    title: config.siteMeta.title,
-    images: [ogImage],
-  },
   openGraph: {
     title: config.siteMeta.title,
-    siteName: config.siteMeta.title,
-    url: config.siteRoot,
-    locale: "ja-JP",
     images: [
       {
         url: ogImage,
       },
     ],
+    locale: "ja-JP",
+    siteName: config.siteMeta.title,
+    url: config.siteRoot,
+  },
+  twitter: {
+    title: config.siteMeta.title,
+    card: "summary_large_image",
+    images: [ogImage],
   },
 };
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const notoSansJP = Noto_Sans_JP({
-  weight: ["400", "500", "700"],
   subsets: ["latin"],
   variable: "--font-noto-sans-jp",
+  weight: ["400", "500", "700"],
 });
 
 export default async function RootLayout({

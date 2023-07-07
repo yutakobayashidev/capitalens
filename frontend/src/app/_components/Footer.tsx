@@ -1,16 +1,16 @@
-import Link from "next/link";
 import { config } from "@site.config";
+import Link from "next/link";
 
 export default function Footer() {
   return (
     <footer className="py-14">
       <div className="mx-auto max-w-[1200px] px-4 md:px-8">
-        <div className="md:grid-cols-4 grid gap-10">
+        <div className="grid gap-10 md:grid-cols-4">
           <div>
             <Link className="mb-3 block text-2xl font-bold" href="/">
               {config.siteMeta.title}
             </Link>
-            <p className="text-gray-500 text-sm">国のデータを整理する</p>
+            <p className="text-sm text-gray-500">国のデータを整理する</p>
           </div>
           <nav>
             <h4 className="font-bold">プロジェクトについて</h4>

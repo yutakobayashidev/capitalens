@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
-import { allPages } from "contentlayer/generated";
-import { notFound } from "next/navigation";
 import { config } from "@site.config";
+import { allPages } from "contentlayer/generated";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { FaGithub } from "react-icons/fa";
 
 export async function generateMetadata({
@@ -21,21 +21,21 @@ export async function generateMetadata({
 
   return {
     title: page.title,
-    twitter: {
-      card: "summary_large_image",
-      title: page.title,
-      images: [ogImage],
-    },
     openGraph: {
       title: page.title,
-      siteName: config.siteMeta.title,
-      url: config.siteRoot + page._raw.sourceFileName.replace(".md", ""),
-      locale: "ja-JP",
       images: [
         {
           url: ogImage,
         },
       ],
+      locale: "ja-JP",
+      siteName: config.siteMeta.title,
+      url: config.siteRoot + page._raw.sourceFileName.replace(".md", ""),
+    },
+    twitter: {
+      title: page.title,
+      card: "summary_large_image",
+      images: [ogImage],
     },
   };
 }
@@ -52,13 +52,13 @@ export default async function Page({ params }: { params: { slug: string } }) {
   return (
     <section className="my-12">
       <div className="mx-auto max-w-screen-sm px-4 md:px-8">
-        <h1 className="font-bold mb-7 text-4xl text-center">{page.title}</h1>
-        <div className="flex items-center mb-5 p-4 text-gray-500 bg-gray-100 rounded-lg">
-          <FaGithub className="text-xl mr-2" />
+        <h1 className="mb-7 text-center text-4xl font-bold">{page.title}</h1>
+        <div className="mb-5 flex items-center rounded-lg bg-gray-100 p-4 text-gray-500">
+          <FaGithub className="mr-2 text-xl" />
           <div className="flex-1">
             {page.title}の変更履歴は
             <a
-              className="underline text-gray-600"
+              className="text-gray-600 underline"
               href={
                 config.SocialLinks.github +
                 "/commits/main/frontend/content/page/" +
@@ -71,7 +71,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
           </div>
         </div>
         <div
-          className="prose prose-a:no-underline hover:prose-a:underline prose-a:text-primary prose-neutral max-w-none"
+          className="prose prose-neutral max-w-none prose-a:text-primary prose-a:no-underline hover:prose-a:underline"
           dangerouslySetInnerHTML={{ __html: page.body.html }}
         />
       </div>

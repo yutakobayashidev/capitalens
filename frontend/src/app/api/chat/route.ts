@@ -1,9 +1,10 @@
 import { connect } from "@planetscale/database";
-import { OpenAIStream, StreamingTextResponse } from "ai";
-import { Configuration, OpenAIApi } from "openai-edge";
-import { functions, runFunction } from "./functions";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import { OpenAIStream, StreamingTextResponse } from "ai";
+import { Configuration, OpenAIApi } from "openai-edge";
+
+import { functions, runFunction } from "./functions";
 
 const pscale_config = {
   url: process.env.DATABASE_URL || "mysql://user:pass@host",
@@ -29,25 +30,25 @@ export async function POST(req: Request) {
     const ip = req.headers.get("x-forwarded-for");
 
     const ratelimit = new Ratelimit({
-      redis: new Redis({
-        url: process.env.UPSTASH_REDIS_REST_URL,
-        token: process.env.UPSTASH_REDIS_REST_TOKEN,
-      }),
       limiter: Ratelimit.slidingWindow(20, "1 d"),
+      redis: new Redis({
+        token: process.env.UPSTASH_REDIS_REST_TOKEN,
+        url: process.env.UPSTASH_REDIS_REST_URL,
+      }),
     });
 
-    const { success, limit, reset, remaining } = await ratelimit.limit(
+    const { limit, remaining, reset, success } = await ratelimit.limit(
       `capitalens_ratelimit_${ip}`
     );
 
     if (!success) {
       return new Response("Too many requests", {
-        status: 429,
         headers: {
           "X-RateLimit-Limit": limit.toString(),
           "X-RateLimit-Remaining": remaining.toString(),
           "X-RateLimit-Reset": reset.toString(),
         },
+        status: 429,
       });
     }
   }
@@ -55,10 +56,10 @@ export async function POST(req: Request) {
   const { messages } = await req.json();
 
   const initialResponse = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo-0613",
-    messages,
-    functions,
     function_call: "auto",
+    functions,
+    messages,
+    model: "gpt-3.5-turbo-0613",
   });
 
   const initialResponseJson = await initialResponse.json();
@@ -73,17 +74,17 @@ export async function POST(req: Request) {
     const functionResponse = await runFunction(name, JSON.parse(args));
 
     finalResponse = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo-0613",
-      stream: true,
       messages: [
         ...messages,
         initialResponseMessage,
         {
-          role: "function",
           name: initialResponseMessage.function_call.name,
           content: JSON.stringify(functionResponse),
+          role: "function",
         },
       ],
+      model: "gpt-3.5-turbo-0613",
+      stream: true,
     });
 
     const stream = OpenAIStream(finalResponse);

@@ -1,8 +1,7 @@
 "use client";
 
-import { Member } from "@src/types/member";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useEffect,useState } from "react";
 
 export default function Members({
   members,
@@ -29,15 +28,15 @@ export default function Members({
       <input
         placeholder="フルネーム、ひらがな、カタカナで検索"
         value={search}
-        className="w-full block resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2 mb-3"
+        className="mb-3 block w-full resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2"
         onChange={(e) => setSearch(e.target.value)}
       />
-      <div className="grid md:grid-cols-12 grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-4 md:grid-cols-12">
         {filteredMembers.map((member) => (
           <Link href={`/members/${member.id}`} key={member.id}>
             <img
               src={member.image ?? "/noimage.png"}
-              className="border rounded-full w-20 h-20 mr-3 object-cover object-center"
+              className="mr-3 h-20 w-20 rounded-full border object-cover object-center"
               alt={member.name}
             />
           </Link>

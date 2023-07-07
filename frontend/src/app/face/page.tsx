@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import FaceDetection from "@src/app/face/FaceDetection";
 import { Member } from "@src/types/member";
-import toast from "react-hot-toast";
-import PersonModal from "./PersonModal";
 import { AnimatePresence } from "framer-motion";
+import { useState } from "react";
+import toast from "react-hot-toast";
+
+import PersonModal from "./PersonModal";
 
 const useMember = () => {
   const [member, setMember] = useState<Member | null>(null);
@@ -27,11 +28,11 @@ const useMember = () => {
 
   const clearMember = () => setMember(null);
 
-  return { member, fetchMember, clearMember };
+  return { clearMember, fetchMember, member };
 };
 
 export default function Page() {
-  const { member, fetchMember, clearMember } = useMember();
+  const { clearMember, fetchMember, member } = useMember();
 
   const handleFaceDetect = async (name: string) => {
     if (name !== "unknown") {

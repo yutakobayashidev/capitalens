@@ -1,8 +1,10 @@
-import Settings from "./Settings";
 import prisma from "@src/lib/prisma";
 import type { Metadata } from "next";
-import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+
+import { auth } from "@/auth";
+
+import Settings from "./Settings";
 
 export const metadata: Metadata = {
   title: "アカウント設定",

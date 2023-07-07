@@ -1,41 +1,42 @@
 "use client";
 
-import { FaTwitter } from "react-icons/fa";
-import dayjs from "dayjs";
-import { useRef, useEffect, useState, useCallback } from "react";
-import { Member } from "@src/types/member";
-import Speaker from "./Speaker";
-import Player from "video.js/dist/types/player";
-import { useSearchParams } from "next/navigation";
 import { config } from "@site.config";
-import { type Session } from "next-auth";
-import Comments from "./Comments";
 import { Meeting } from "@src/types/meeting";
-import { options } from "./options";
+import { Member } from "@src/types/member";
+import { SearchIcon } from "@xpadev-net/designsystem-icons";
+import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import utc from "dayjs/plugin/utc";
-import Summarize from "./Summarize";
-import { SearchIcon } from "@xpadev-net/designsystem-icons";
+import { useSearchParams } from "next/navigation";
+import { type Session } from "next-auth";
+import { useCallback,useEffect, useRef, useState } from "react";
+import { FaTwitter } from "react-icons/fa";
+import Player from "video.js/dist/types/player";
+
+import Comments from "./Comments";
+import { options } from "./options";
 import VideoJSPlayer from "./Player";
+import Speaker from "./Speaker";
+import Summarize from "./Summarize";
 
 dayjs.extend(utc);
 dayjs.extend(duration);
 
 function LinkButton({
-  url,
   title,
   emoji,
+  url,
 }: {
-  url: string;
   title: string;
   emoji: string;
+  url: string;
 }) {
   return (
     <a
       href={url}
-      className="md:p-10 px-2 py-8 bg-white text-xl justify-center text-gray-800 transition-all duration-500 ease-in-out hover:shadow-md flex font-bold items-center border rounded-xl"
+      className="flex items-center justify-center rounded-xl border bg-white px-2 py-8 text-xl font-bold text-gray-800 transition-all duration-500 ease-in-out hover:shadow-md md:p-10"
     >
-      <span className="text-4xl mr-3">{emoji}</span>
+      <span className="mr-3 text-4xl">{emoji}</span>
       {title}
     </a>
   );
@@ -199,20 +200,20 @@ export default function Video({
   };
 
   return (
-    <div className="md:flex block justify-center my-7">
-      <div className="md:w-[calc(65%)] md:mr-5">
+    <div className="my-7 block justify-center md:flex">
+      <div className="md:mr-5 md:w-[calc(65%)]">
         <VideoJSPlayer
           options={options(meeting.m3u8_url)}
           onReady={handlePlayerReady}
         />
-        <div className="flex items-center justify-between my-5">
-          <h1 className="text-2xl font-bold items-center flex">
+        <div className="my-5 flex items-center justify-between">
+          <h1 className="flex items-center text-2xl font-bold">
             <span
               className={`${
                 meeting.house === "COUNCILLORS"
                   ? "bg-indigo-400"
                   : "bg-[#EA5433]"
-              } text-white rounded font-bold mr-2 text-base py-1 px-2`}
+              } mr-2 rounded px-2 py-1 text-base font-bold text-white`}
             >
               {meeting.house === "COUNCILLORS" ? "参議院" : "衆議院"}
             </span>
@@ -228,7 +229,7 @@ export default function Video({
                     TWITTER_SHORTENED_URL_LENGTH
                 )
             )}&url=${url}?t=${Math.floor(currentTime)}`}
-            className="bg-[#00acee] hidden text-sm text-white md:inline-flex items-center font-semibold px-4 py-2 rounded-full"
+            className="hidden items-center rounded-full bg-[#00acee] px-4 py-2 text-sm font-semibold text-white md:inline-flex"
           >
             <FaTwitter className="mr-2" />
             ツイートする
@@ -240,8 +241,8 @@ export default function Video({
             speakerInfo={currentSpeakerInfo}
           />
         )}
-        <div className="bg-gray-100 px-4 pt-4 pb-6 mb-5 rounded-xl">
-          <div className="flex items-center mb-3 justify-between">
+        <div className="mb-5 rounded-xl bg-gray-100 px-4 pb-6 pt-4">
+          <div className="mb-3 flex items-center justify-between">
             <div className="flex items-center text-base">
               <span className="mr-2 font-medium">
                 {dayjs(meeting.date).format("YYYY/MM/DD")}
@@ -270,7 +271,7 @@ export default function Video({
               </div>
             ))}
           </div>
-          <h2 className="text-xl font-bold mb-3">関連リンク</h2>
+          <h2 className="mb-3 text-xl font-bold">関連リンク</h2>
           <div className="grid gap-5 md:grid-cols-2">
             <LinkButton
               url={meeting.page_url}
@@ -288,22 +289,22 @@ export default function Video({
         </div>
         <Comments meeting={meeting} user={user} />
       </div>
-      <div className="flex-1 flex flex-col gap-y-5">
+      <div className="flex flex-1 flex-col gap-y-5">
         {(!!meeting.apiURL && !!meeting.meetingURL) ||
         meeting.utterances.length > 0 ? (
           <Summarize user={user} meeting={meeting} />
         ) : null}
         {meeting.utterances.length !== 0 && (
-          <div className="border rounded-xl border-gray-200 pt-2">
-            <h2 className="text-2xl font-bold my-3 px-4 gap-x-2">
+          <div className="rounded-xl border border-gray-200 pt-2">
+            <h2 className="my-3 gap-x-2 px-4 text-2xl font-bold">
               文字起こし (自動生成)
             </h2>
-            <div className="px-4 flex py-2 text-gray-600 items-center">
+            <div className="flex items-center px-4 py-2 text-gray-600">
               <SearchIcon
                 width="1em"
                 height="1em"
                 fill="currentColor"
-                className="inline-block mr-2 text-2xl"
+                className="mr-2 inline-block text-2xl"
               />
               <input
                 className="w-full bg-transparent outline-none"
@@ -313,13 +314,13 @@ export default function Video({
               />
             </div>
             <div
-              className="overflow-y-auto hidden-scrollbar h-[400px]"
+              className="hidden-scrollbar h-[400px] overflow-y-auto"
               ref={parentRef}
               onScroll={handleScroll}
             >
               {filteredWords.length === 0 ? (
-                <div className="flex justify-center items-center h-full text-center">
-                  <div className="px-4 text-gray-500 items-center">
+                <div className="flex h-full items-center justify-center text-center">
+                  <div className="items-center px-4 text-gray-500">
                     <p className="mb-3">一致する検索結果がありません</p>
                     <img
                       src="/m_03_white.png"
@@ -344,7 +345,7 @@ export default function Video({
                       }
                     }}
                   >
-                    <p className="inline-block bg-blue-100 px-2 py-0.5 text-xs text-blue-500 rounded mb-1 font-semibold">
+                    <p className="mb-1 inline-block rounded bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-500">
                       {dayjs
                         .utc(
                           dayjs

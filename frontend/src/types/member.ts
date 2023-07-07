@@ -4,18 +4,18 @@ export type Group = {
 };
 
 export type Member = {
-  name: string;
-  description: string | null;
   id: string;
+  name: string;
+  abstract: string | null;
+  birthplace: string | null;
+  description: string | null;
+  group: Group | null;
+  house: string | null;
   image: string | null;
   scannedCount: number;
-  group: Group | null;
+  twitter: string | null;
+  website: string | null;
+  wikipedia: string | null;
   win: number | null;
   youtube: string | null;
-  house: string | null;
-  twitter: string | null;
-  birthplace: string | null;
-  abstract: string | null;
-  wikipedia: string | null;
-  website: string | null;
 };

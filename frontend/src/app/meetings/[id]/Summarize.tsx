@@ -1,17 +1,17 @@
 "use client";
 
-import { SiOpenai } from "react-icons/si";
-import { useState, useEffect, useCallback } from "react";
-import { AiOutlineLink } from "react-icons/ai";
+import { isKanji,kanaToHira } from "@src/helper/utils";
 import { useKuromoji } from "@src/hooks/useKuromoji";
-import { kanaToHira, isKanji } from "@src/helper/utils";
+import { Meeting } from "@src/types/meeting";
+import { AttentionIcon } from "@xpadev-net/designsystem-icons";
+import { type Session } from "next-auth";
+import { useCallback,useEffect, useState } from "react";
+import { AiOutlineLink } from "react-icons/ai";
+import { FaMagic } from "react-icons/fa";
+import { SiOpenai } from "react-icons/si";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize from "rehype-sanitize";
-import { FaMagic } from "react-icons/fa";
-import { type Session } from "next-auth";
-import { Meeting } from "@src/types/meeting";
-import { AttentionIcon } from "@xpadev-net/designsystem-icons";
 
 export default function Summarize({
   meeting,
@@ -58,7 +58,7 @@ export default function Summarize({
     const decoder = new TextDecoder();
     let done = false;
     while (!done) {
-      const { value, done: doneReading } = await reader.read();
+      const { done: doneReading, value } = await reader.read();
       done = doneReading;
       const chunkValue = decoder.decode(value);
       if (isChecked) {
@@ -121,14 +121,14 @@ export default function Summarize({
     try {
       Summarystart(true);
       const response = await fetch("/api/summarize", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({
           id: meeting.id,
           kids: isChecked,
         }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
       });
 
       const contentType = response.headers.get("Content-Type");
@@ -175,9 +175,9 @@ export default function Summarize({
   };
 
   return (
-    <div className="border rounded-xl border-gray-200 px-5 pt-2 pb-4">
-      <h2 className="text-2xl flex items-center font-bold my-3 gap-x-2">
-        <FaMagic className="text-[#9d34da] text-lg" />
+    <div className="rounded-xl border border-gray-200 px-5 pb-4 pt-2">
+      <h2 className="my-3 flex items-center gap-x-2 text-2xl font-bold">
+        <FaMagic className="text-lg text-[#9d34da]" />
         AIによるサマリー
       </h2>
       {(isChecked
@@ -186,13 +186,13 @@ export default function Summarize({
         <button
           onClick={handleSummarize}
           disabled={start}
-          className="flex mb-3 disabled:bg-gray-200 font-bold rounded-md items-center text-white bg-[#74aa9c] px-2 py-1.5 text-sm"
+          className="mb-3 flex items-center rounded-md bg-[#74aa9c] px-2 py-1.5 text-sm font-bold text-white disabled:bg-gray-200"
         >
           <SiOpenai className="mr-2" />
           OpenAIで要約
         </button>
       )}
-      <label className="flex items-center mb-3">
+      <label className="mb-3 flex items-center">
         <input
           type="checkbox"
           className="mr-2"
@@ -202,7 +202,7 @@ export default function Summarize({
         />
         子ども向けに説明
       </label>
-      <div className="text-gray-800 leading-5">
+      <div className="leading-5 text-gray-800">
         <ReactMarkdown
           className="prose text-sm"
           rehypePlugins={[
@@ -216,19 +216,19 @@ export default function Summarize({
       {(meeting.summary || summary) && !start && (
         <button
           onClick={handleCopy}
-          className="border border-gray-200 mt-3 flex items-center rounded-full px-4 py-2 font-medium"
+          className="mt-3 flex items-center rounded-full border border-gray-200 px-4 py-2 font-medium"
         >
           {copy ? (
             "✨ コピーしました"
           ) : (
             <>
-              <AiOutlineLink className="mr-1 text-gray-400 text-2xl" />
+              <AiOutlineLink className="mr-1 text-2xl text-gray-400" />
               要約をコピーする
             </>
           )}
         </button>
       )}
-      <div className="flex items-center text-sm mt-3 text-gray-500">
+      <div className="mt-3 flex items-center text-sm text-gray-500">
         <AttentionIcon
           width="1em"
           height="1em"

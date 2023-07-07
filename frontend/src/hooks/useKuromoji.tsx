@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import * as kuromoji from "kuromoji";
+import { useEffect, useRef, useState } from "react";
 
 export function useKuromoji() {
   const [isTokenizerReady, setIsTokenizerReady] = useState(false);

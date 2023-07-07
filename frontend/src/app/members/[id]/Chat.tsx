@@ -1,14 +1,14 @@
 "use client";
 
-import { useChat } from "ai/react";
 import { Member } from "@src/types/member";
-import ReactMarkdown from "react-markdown";
-import cn from "classnames";
-import { SiOpenai } from "react-icons/si";
 import { MeOutlinedIcon } from "@xpadev-net/designsystem-icons";
-import { IoMdSend } from "react-icons/io";
+import { useChat } from "ai/react";
+import cn from "classnames";
 import { type Session } from "next-auth";
 import toast from "react-hot-toast";
+import { IoMdSend } from "react-icons/io";
+import { SiOpenai } from "react-icons/si";
+import ReactMarkdown from "react-markdown";
 
 export default function Chat({
   member,
@@ -17,35 +17,35 @@ export default function Chat({
   member: Member;
   user: Session["user"];
 }) {
-  const { messages, input, handleInputChange, handleSubmit } = useChat({
+  const { handleInputChange, handleSubmit, input, messages } = useChat({
     api: "/api/chat",
+    initialMessages: [
+      {
+        id: "1",
+        content: `あなたは${member.name}さんに関する情報のみを提供し返答するアシスタントです`,
+        role: "system",
+      },
+    ],
     onResponse: (response) => {
       if (response.status === 429) {
         toast.error("利用制限を超えました。時間を開けてお試しください。");
         return;
       }
     },
-    initialMessages: [
-      {
-        role: "system",
-        id: "1",
-        content: `あなたは${member.name}さんに関する情報のみを提供し返答するアシスタントです`,
-      },
-    ],
   });
 
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <div className="w-full rounded-md bg-gray-100 flex items-center py-[8px] md:py-2 md:pl-4 relative border shadow">
+        <div className="relative flex w-full items-center rounded-md border bg-gray-100 py-[8px] shadow md:py-2 md:pl-4">
           <input
             placeholder={member.name + "さんの最近の発言を教えて"}
             value={input}
             required={true}
-            className="m-0 outline-none w-full resize-none border-0 bg-transparent p-0 pr-10 focus:ring-0 focus-visible:ring-0 md:pr-12 pl-3 md:pl-0"
+            className="m-0 w-full resize-none border-0 bg-transparent p-0 pl-3 pr-10 outline-none focus:ring-0 focus-visible:ring-0 md:pl-0 md:pr-12"
             onChange={handleInputChange}
           />
-          <button type="submit" className="absolute p-1 rounded-md right-3 ">
+          <button type="submit" className="absolute right-3 rounded-md p-1 ">
             <span>
               <IoMdSend />
             </span>
@@ -56,7 +56,7 @@ export default function Chat({
         {messages
           .filter((m) => m.role !== "system")
           .map((m, i) => (
-            <div key={i} className="flex items-start md:-ml-12 mb-4">
+            <div key={i} className="mb-4 flex items-start md:-ml-12">
               {user && m.role === "user" ? (
                 <img
                   src={user.image ?? "/noimage.png"}
@@ -84,7 +84,7 @@ export default function Chat({
               )}
               <ReactMarkdown
                 key={m.id}
-                className="prose ml-4 flex-1 space-y-2 overflow-hidden px-1 prose-img:rounded-lg prose-img:shadow prose-a:no-underline hover:prose-a:underline prose-a:text-primary prose-neutral max-w-none"
+                className="prose prose-neutral ml-4 max-w-none flex-1 space-y-2 overflow-hidden px-1 prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-img:shadow"
               >
                 {m.content}
               </ReactMarkdown>

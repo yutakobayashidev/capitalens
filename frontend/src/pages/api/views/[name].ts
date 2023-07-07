@@ -1,5 +1,5 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@src/lib/prisma";
+import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handle(
   req: NextApiRequest,
@@ -21,9 +21,6 @@ export default async function handle(
   const name = decodeURI(req.query.name.toString());
 
   const newOrUpdatedViews = await prisma.views.upsert({
-    where: {
-      name,
-    },
     create: {
       name,
     },
@@ -31,6 +28,9 @@ export default async function handle(
       count: {
         increment: 1,
       },
+    },
+    where: {
+      name,
     },
   });
 

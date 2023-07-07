@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
-import { useAtom } from "jotai";
 import { placeholderAtom } from "@src/store/placeholder";
+import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function SetPlaceHolder({
   placeholder,

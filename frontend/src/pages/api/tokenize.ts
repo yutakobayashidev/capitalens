@@ -1,13 +1,13 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import { tokenize } from "kuromojin";
+import { NextApiRequest, NextApiResponse } from "next";
 
 type FrequencyMap = Record<string, number>;
 
 async function getSpeechText(name: string): Promise<string> {
   const endpoint = "https://kokkai.ndl.go.jp/api/1.0/speech";
   const params: Record<string, string> = {
-    speaker: name,
     recordPacking: "json",
+    speaker: name,
   };
   const url = new URL(endpoint);
   Object.entries(params).forEach(([key, value]: [string, string]) =>

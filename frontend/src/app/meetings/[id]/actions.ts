@@ -1,10 +1,10 @@
 "use server";
 
-import prisma from "@src/lib/prisma";
 import { auth } from "@auth";
+import prisma from "@src/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
 import { zact } from "zact/server";
+import { z } from "zod";
 
 export const DeleteComment = zact(z.object({ id: z.string().cuid() }))(
   async (data) => {
@@ -38,7 +38,7 @@ export const DeleteComment = zact(z.object({ id: z.string().cuid() }))(
 );
 
 export const addComment = zact(
-  z.object({ comment: z.string(), id: z.string().cuid() })
+  z.object({ id: z.string().cuid(), comment: z.string() })
 )(async (data) => {
   const session = await auth();
 
@@ -50,8 +50,8 @@ export const addComment = zact(
 
   const res = await prisma.videoComment.create({
     data: {
-      user: { connect: { id: session.user.id } },
       comment: data.comment,
+      user: { connect: { id: session.user.id } },
       video: { connect: { id: data.id } },
     },
   });

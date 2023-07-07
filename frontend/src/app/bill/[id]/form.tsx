@@ -1,28 +1,29 @@
 "use client";
 
-import { useTransition } from "react";
-import { useRef, useState } from "react";
-import { VscTriangleUp } from "react-icons/vsc";
+import "dayjs/locale/ja";
+
+import { LoginPrompt } from "@src/app/_components/Login";
 import dayjs from "dayjs";
 import { type Session } from "next-auth";
-import { LoginPrompt } from "@src/app/_components/Login";
-import { addComment, Vote } from "./actions";
-import "dayjs/locale/ja";
+import { useRef, useState,useTransition  } from "react";
 import { experimental_useFormStatus as useFormStatus } from "react-dom";
+import { VscTriangleUp } from "react-icons/vsc";
+
+import { addComment, Vote } from "./actions";
 
 dayjs.locale("ja");
 
 type Comment = {
   id: string;
-  comment: string;
-  type: string;
-  createdAt: string;
-  user: {
-    image: string;
-    name: string;
-  };
   _count: {
     votes: number;
+  };
+  comment: string;
+  createdAt: string;
+  type: string;
+  user: {
+    name: string;
+    image: string;
   };
 };
 
@@ -65,7 +66,7 @@ const Form = ({ bill, count, user }: Props) => {
           <img
             src={item.user.image}
             alt="hi"
-            className="border border-gray-300 rounded-full"
+            className="rounded-full border border-gray-300"
             height={50}
             width={50}
           />
@@ -76,7 +77,7 @@ const Form = ({ bill, count, user }: Props) => {
             </p>
           </div>
         </div>
-        <div className="flex first-letter mt-3">
+        <div className="first-letter mt-3 flex">
           <div>
             <button
               onClick={async () => {
@@ -109,8 +110,8 @@ const Form = ({ bill, count, user }: Props) => {
 
           await addComment({
             bill_id: bill.id,
-            type: selectedGroup,
             comment,
+            type: selectedGroup,
           });
 
           form.current?.reset();
@@ -129,10 +130,10 @@ const Form = ({ bill, count, user }: Props) => {
           type="text"
           disabled={pending}
           required
-          className="pl-4 pr-32 py-2 mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full border-neutral-300 rounded-md bg-gray-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+          className="mt-1 block w-full rounded-md border-neutral-300 bg-gray-100 py-2 pl-4 pr-32 text-neutral-900 focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-800 dark:text-neutral-100"
         />
         <button
-          className="flex items-center justify-center absolute right-1 top-1 px-2 py-1 font-medium h-7 bg-neutral-200 dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100 rounded w-16"
+          className="absolute right-1 top-1 flex h-7 w-16 items-center justify-center rounded bg-neutral-200 px-2 py-1 font-medium text-neutral-900 dark:bg-neutral-700 dark:text-neutral-100"
           type="submit"
           disabled={pending}
         >
@@ -147,43 +148,43 @@ const Form = ({ bill, count, user }: Props) => {
 
   return (
     <>
-      <nav className="flex justify-between mb-4 border-b mx-auto max-w-screen-md px-4 md:px-8">
+      <nav className="mx-auto mb-4 flex max-w-screen-md justify-between border-b px-4 md:px-8">
         <button
-          className={`justify-center flex items-center py-3 w-[33%] ${
+          className={`flex w-[33%] items-center justify-center py-3 ${
             selectedGroup === "AGREEMENT"
-              ? "text-blue-500 border-b pointer-events-none border-gray-500"
+              ? "pointer-events-none border-b border-gray-500 text-blue-500"
               : "text-gray-500"
           }`}
           onClick={() => handleGroupChange("AGREEMENT")}
         >
           <div className="text-lg font-bold">賛成</div>
-          <span className="bg-blue-400 font-bold text-xs ml-1 text-white rounded-full h-5 w-5 flex items-center justify-center">
+          <span className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-blue-400 text-xs font-bold text-white">
             {count.AGREEMENT}
           </span>
         </button>
         <button
-          className={`flex justify-center items-center py-3 ${
+          className={`flex items-center justify-center py-3 ${
             selectedGroup === "NEUTRAL"
-              ? "text-yellow-500 border-b pointer-events-none border-gray-500"
+              ? "pointer-events-none border-b border-gray-500 text-yellow-500"
               : "text-gray-500"
           }`}
           onClick={() => handleGroupChange("NEUTRAL")}
         >
           <div className="text-lg font-bold">どちらでもない</div>
-          <span className="text-white font-bold text-xs ml-1 rounded-full h-5 w-5 flex items-center justify-center bg-yellow-300">
+          <span className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-yellow-300 text-xs font-bold text-white">
             {count.NEUTRAL}
           </span>
         </button>
         <button
-          className={`flex justify-center items-center py-3 ${
+          className={`flex items-center justify-center py-3 ${
             selectedGroup === "OPPOSITION"
-              ? "text-red-500 border-b pointer-events-none border-gray-500"
+              ? "pointer-events-none border-b border-gray-500 text-red-500"
               : "text-gray-500"
           }`}
           onClick={() => handleGroupChange("OPPOSITION")}
         >
           <div className="text-lg font-bold">反対</div>
-          <span className="text-white font-bold text-xs ml-1 rounded-full h-5 w-5 flex items-center justify-center bg-red-400">
+          <span className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-400 text-xs font-bold text-white">
             {count.OPPOSITION}
           </span>
         </button>

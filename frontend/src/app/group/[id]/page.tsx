@@ -1,12 +1,12 @@
-import prisma from "@src/lib/prisma";
-import Link from "next/link";
-import { FaRss, FaTwitter, FaFacebook, FaWikipediaW } from "react-icons/fa";
-import { AiOutlineLink } from "react-icons/ai";
-import Article from "@src/app/group/Article";
-import { notFound } from "next/navigation";
-import Members from "@src/app/group/[id]/Members";
-import type { Metadata } from "next";
 import { config } from "@site.config";
+import Members from "@src/app/group/[id]/Members";
+import Article from "@src/app/group/Article";
+import prisma from "@src/lib/prisma";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { AiOutlineLink } from "react-icons/ai";
+import { FaFacebook, FaRss, FaTwitter, FaWikipediaW } from "react-icons/fa";
 
 export const revalidate = 3600;
 
@@ -20,10 +20,10 @@ export async function generateMetadata({
   }
 
   const group = await prisma.group.findUnique({
-    where: { id: params.id },
     include: {
       members: true,
     },
+    where: { id: params.id },
   });
 
   if (!group) {
@@ -32,25 +32,25 @@ export async function generateMetadata({
   return {
     title: group.name,
     description: group.description,
-    twitter: {
-      card: "summary",
-      title: group.name,
-      description:
-        group.description ?? group.name + "の情報をチェックしましょう",
-      images: [group.image ?? "/noimage.png"],
-    },
     openGraph: {
       title: group.name,
-      siteName: config.siteMeta.title,
-      url: `${config.siteRoot}group/${group.id}`,
       description:
         group.description ?? group.name + "の情報をチェックしましょう",
-      locale: "ja-JP",
       images: [
         {
           url: group.image ?? "/noimage.png",
         },
       ],
+      locale: "ja-JP",
+      siteName: config.siteMeta.title,
+      url: `${config.siteRoot}group/${group.id}`,
+    },
+    twitter: {
+      title: group.name,
+      card: "summary",
+      description:
+        group.description ?? group.name + "の情報をチェックしましょう",
+      images: [group.image ?? "/noimage.png"],
     },
   };
 }
@@ -75,10 +75,10 @@ export default async function Page({
   }
 
   const group = await prisma.group.findUnique({
-    where: { id: params.id },
     include: {
       members: true,
     },
+    where: { id: params.id },
   });
 
   if (!group) {
@@ -86,13 +86,6 @@ export default async function Page({
   }
 
   const timeline = await prisma.timeline.findMany({
-    where: {
-      member: {
-        group: {
-          id: params.id,
-        },
-      },
-    },
     include: {
       member: true,
     },
@@ -100,24 +93,31 @@ export default async function Page({
       isoDate: "desc",
     },
     take: 51,
+    where: {
+      member: {
+        group: {
+          id: params.id,
+        },
+      },
+    },
   });
 
   return (
     <>
-      <section className="mt-5 mb-8">
+      <section className="mb-8 mt-5">
         <div className="mx-auto max-w-screen-xl px-4 md:px-8">
-          <div className="md:flex block">
+          <div className="block md:flex">
             <div className="w-[120px]">
               <img
-                className="border rounded-2xl"
+                className="rounded-2xl border"
                 src={group.image ?? "/noimage.png"}
                 alt={group.name}
               />
             </div>
-            <div className="flex-1 md:pl-5 text-lg mt-5 md:mt-0">
+            <div className="mt-5 flex-1 text-lg md:mt-0 md:pl-5">
               <h2 className="text-2xl font-semibold">{group.name}</h2>
               <p className="mt-3">{group.description}</p>
-              <div className="flex gap-x-3 mt-2">
+              <div className="mt-2 flex gap-x-3">
                 {group.twitter && (
                   <Link
                     aria-label={`@${group.twitter}`}
@@ -156,7 +156,7 @@ export default async function Page({
                 )}
                 <Link
                   aria-label={`${group.name}議員のブログ・動画をRSSで購読する`}
-                  className="text-gray-400 text-lg"
+                  className="text-lg text-gray-400"
                   href={`/group/${group.id}/feed`}
                 >
                   <FaRss className="text-lg" />
@@ -168,12 +168,12 @@ export default async function Page({
       </section>
       <section className="mb-5">
         <div className="mx-auto max-w-screen-xl px-4 md:px-8">
-          <h2 className="md:text-4xl text-2xl font-bold mb-5">
+          <h2 className="mb-5 text-2xl font-bold md:text-4xl">
             最新の議員のブログ・動画
           </h2>
-          <div className="grid md:grid-cols-3 grid-cols-1 gap-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {timeline.length === 0 ? (
-              <p className="mb-5 text-gray-600 text-lg">見つかりませんでした</p>
+              <p className="mb-5 text-lg text-gray-600">見つかりませんでした</p>
             ) : (
               <>
                 {timeline.map((item) => (
@@ -186,8 +186,8 @@ export default async function Page({
       </section>
       <section className="mb-5">
         <div className="mx-auto max-w-screen-xl px-4 md:px-8">
-          <h2 className="md:text-4xl text-2xl font-bold mb-3">議員</h2>
-          <p className="mb-3 text-gray-600 text-lg">
+          <h2 className="mb-3 text-2xl font-bold md:text-4xl">議員</h2>
+          <p className="mb-3 text-lg text-gray-600">
             {group.members.length}人の議員が見つかりました
           </p>
           <Members members={group.members} />

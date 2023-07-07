@@ -18,7 +18,7 @@ export default function Clipboard() {
 
   return (
     <button
-      className="rounded-lg bg-white hover:shadow-md transition duration-500 border block text-center md:px-4 md:py-6 py-4 px-2"
+      className="block rounded-lg border bg-white px-2 py-4 text-center transition duration-500 hover:shadow-md md:px-4 md:py-6"
       onClick={copyLink}
     >
       <div className="flex justify-center">

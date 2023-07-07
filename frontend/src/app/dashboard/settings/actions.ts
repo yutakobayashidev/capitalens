@@ -1,7 +1,7 @@
 "use server";
 
-import prisma from "@src/lib/prisma";
 import { auth } from "@auth";
+import prisma from "@src/lib/prisma";
 
 export async function updateUser({ kids }: { kids: boolean }) {
   const session = await auth();
@@ -13,11 +13,11 @@ export async function updateUser({ kids }: { kids: boolean }) {
   }
 
   const res = await prisma.user.update({
-    where: {
-      id: session?.user.id,
-    },
     data: {
       kids: kids,
+    },
+    where: {
+      id: session?.user.id,
     },
   });
 
@@ -34,11 +34,11 @@ export async function updatePrefecture({ prefecture }: { prefecture: number }) {
   }
 
   const res = await prisma.user.update({
-    where: {
-      id: session?.user.id,
-    },
     data: {
       prefectureId: prefecture,
+    },
+    where: {
+      id: session?.user.id,
     },
   });
 

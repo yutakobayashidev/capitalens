@@ -1,9 +1,9 @@
-import Link from "next/link";
-import Topics from "@src/app/_components/Topics";
-import Meetings from "@src/app/_components/Meetings";
-import prisma from "@src/lib/prisma";
-import { FaGithub } from "react-icons/fa";
 import { config } from "@site.config";
+import Meetings from "@src/app/_components/Meetings";
+import Topics from "@src/app/_components/Topics";
+import prisma from "@src/lib/prisma";
+import Link from "next/link";
+import { FaGithub } from "react-icons/fa";
 
 export const revalidate = 3600;
 
@@ -20,12 +20,12 @@ async function fetchItemsByStatus() {
 
   const queries = groups.map((group) =>
     prisma.member.findMany({
+      take: 12,
       where: {
         group: {
           name: group,
         },
       },
-      take: 12,
     })
   );
 
@@ -42,13 +42,13 @@ async function fetchItemsByStatus() {
 
 async function getTopicViews() {
   const data = await prisma.views.findMany({
-    take: 50,
     orderBy: {
       count: "desc",
     },
     select: {
       name: true,
     },
+    take: 50,
   });
 
   return data;
@@ -114,23 +114,23 @@ export default async function Page() {
     <>
       <section className="bg-[#f9eaeb] py-12">
         <div className="mx-auto max-w-screen-xl px-4 md:px-8">
-          <h1 className="text-3xl font-bold mb-5">国のデータを整理する</h1>
-          <p className="text-lg text-gray-500 mb-3">
+          <h1 className="mb-5 text-3xl font-bold">国のデータを整理する</h1>
+          <p className="mb-3 text-lg text-gray-500">
             本プロジェクトは、国会での議論、提出された法案、国会議員の情報などを整理し、視覚的に表示することを目的としています。
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <a
-              className="bg-white rounded-full font-semibold px-4 py-2 inline-flex items-center text-base transition-all duration-500 ease-in-out hover:shadow"
+              className="inline-flex items-center rounded-full bg-white px-4 py-2 text-base font-semibold transition-all duration-500 ease-in-out hover:shadow"
               href={config.SocialLinks.github}
             >
-              <FaGithub className="text-xl mr-3 align-middle" />
+              <FaGithub className="mr-3 align-middle text-xl" />
               開発に貢献する
             </a>
             <a
-              className="bg-white font-semibold rounded-full px-4 py-2 inline-flex items-center text-base transition-all duration-500 ease-in-out hover:shadow"
+              className="inline-flex items-center rounded-full bg-white px-4 py-2 text-base font-semibold transition-all duration-500 ease-in-out hover:shadow"
               href="https://github.com/users/yutakobayashidev/projects/2"
             >
-              <span className="text-xl mr-3 align-middle inline-flex items-center w-6 h-6 justify-center">
+              <span className="mr-3 inline-flex h-6 w-6 items-center justify-center align-middle text-xl">
                 🚀
               </span>
               ロードマップ
@@ -138,10 +138,10 @@ export default async function Page() {
           </div>
         </div>
       </section>
-      <section className="py-8 bg-gray-100">
+      <section className="bg-gray-100 py-8">
         <div className="mx-auto max-w-screen-xl px-4 md:px-8">
-          <h2 className="font-bold text-2xl mb-5">政党から探す</h2>
-          <div className="grid md:grid-cols-4 grid-cols-1 gap-y-5">
+          <h2 className="mb-5 text-2xl font-bold">政党から探す</h2>
+          <div className="grid grid-cols-1 gap-y-5 md:grid-cols-4">
             {groups.map((group) => (
               <Link
                 href={`/group/${group.id}`}
@@ -149,13 +149,13 @@ export default async function Page() {
                 key={group.id}
               >
                 <img
-                  className="border rounded-2xl"
+                  className="rounded-2xl border"
                   src={group.image ?? "/noimage.png"}
                   alt={group.name}
                   width={100}
                   height={100}
                 />
-                <p className="font-bold ml-3">{group.name}</p>
+                <p className="ml-3 font-bold">{group.name}</p>
               </Link>
             ))}
           </div>
@@ -164,19 +164,19 @@ export default async function Page() {
       {Object.keys(membersByGroup).map((group) => (
         <section key={group} className="py-8">
           <div className="mx-auto max-w-screen-xl px-4 md:px-8">
-            <h2 className="font-bold text-2xl mb-5">{group}</h2>
-            <div className="flex flex-nowrap space-x-3 md:space-x-6 hidden-scrollbar overflow-x-auto">
+            <h2 className="mb-5 text-2xl font-bold">{group}</h2>
+            <div className="hidden-scrollbar flex flex-nowrap space-x-3 overflow-x-auto md:space-x-6">
               {membersByGroup[group].map((member) => (
                 <Link href={`/members/${member.id}`} key={member.id}>
-                  <div className="relative w-28 h-28 md:w-36 md:h-36 mx-auto overflow-hidden rounded-2xl">
+                  <div className="relative mx-auto h-28 w-28 overflow-hidden rounded-2xl md:h-36 md:w-36">
                     <img
                       src={member.image}
                       className="absolute inset-0 h-full w-full object-cover object-center"
                       alt={member.name}
                     />
                   </div>
-                  <div className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-center">
-                    <div className="my-3 font-bold text-xl">{member.name}</div>
+                  <div className="w-full truncate text-center">
+                    <div className="my-3 text-xl font-bold">{member.name}</div>
                     {member.house && (
                       <span className="text-sm text-gray-500">
                         {member.house == "REPRESENTATIVES"
@@ -191,45 +191,45 @@ export default async function Page() {
           </div>
         </section>
       ))}
-      <section className="py-8 bg-gray-100">
+      <section className="bg-gray-100 py-8">
         <div className="mx-auto max-w-screen-xl px-4 md:px-8">
-          <h2 className="font-bold text-2xl mb-5">注目のトピック</h2>
+          <h2 className="mb-5 text-2xl font-bold">注目のトピック</h2>
           <Topics topics={topics} />
           <Link
             href="/topics"
-            className="mt-8 text-center block text-[#0f41af] hover:underline hover:text-[#222]"
+            className="mt-8 block text-center text-[#0f41af] hover:text-[#222] hover:underline"
           >
             注目のトピックをもっと見る -&gt;
           </Link>
         </div>
       </section>
-      <section className="py-8 bg-blue-50">
+      <section className="bg-blue-50 py-8">
         <div className="mx-auto max-w-screen-xl px-4 md:px-8">
-          <h2 className="font-bold text-2xl mb-5">法案を議論する</h2>
-          <div className="grid md:grid-cols-3 grid-cols-2 gap-5">
+          <h2 className="mb-5 text-2xl font-bold">法案を議論する</h2>
+          <div className="grid grid-cols-2 gap-5 md:grid-cols-3">
             {bills.map((bill, i) => (
               <Link
                 key={i}
                 href={`/bill/${bill.id}`}
-                className="block bg-white px-6 py-4 border border-gray-200"
+                className="block border border-gray-200 bg-white px-6 py-4"
               >
-                <div className="text-5xl mb-4">⚖️</div>
-                <h2 className="text-xl font-semibold line-clamp-3 mb-5">
+                <div className="mb-4 text-5xl">⚖️</div>
+                <h2 className="mb-5 line-clamp-3 text-xl font-semibold">
                   {bill.name}
                 </h2>
-                <p className="text-gray-400 line-clamp-3">{bill.reason}</p>
+                <p className="line-clamp-3 text-gray-400">{bill.reason}</p>
                 <div className="mt-3">
-                  <span className="bg-blue-400 text-white p-1 mr-2 rounded text-sm">
+                  <span className="mr-2 rounded bg-blue-400 p-1 text-sm text-white">
                     賛成
                     <span className="ml-2 font-bold">
                       {bill.agreementCount}
                     </span>
                   </span>
-                  <span className="bg-yellow-400 text-white p-1 mr-2 rounded text-sm">
+                  <span className="mr-2 rounded bg-yellow-400 p-1 text-sm text-white">
                     どちらもでない
                     <span className="ml-2 font-bold">{bill.neutralCount}</span>
                   </span>
-                  <span className="bg-red-400 text-white py-1 px-2 mr-2 rounded text-sm">
+                  <span className="mr-2 rounded bg-red-400 px-2 py-1 text-sm text-white">
                     反対
                     <span className="ml-2 font-bold">
                       {bill.oppositionCount}
@@ -243,7 +243,7 @@ export default async function Page() {
       </section>
       <section className="py-8">
         <div className="mx-auto max-w-screen-xl px-4 md:px-8">
-          <h2 className="font-bold text-2xl mb-5">最新の議会</h2>
+          <h2 className="mb-5 text-2xl font-bold">最新の議会</h2>
           <Meetings />
         </div>
       </section>

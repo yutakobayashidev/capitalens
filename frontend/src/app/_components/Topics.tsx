@@ -11,17 +11,17 @@ interface Props {
 
 const TopicsGrid: React.FC<Props> = ({ topics }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-8">
+    <div className="grid grid-cols-1 gap-3 md:grid-cols-4 md:gap-8">
       {topics.map((view) => (
         <Link
-          className="px-6 py-4 flex items-center border bg-white rounded-md"
+          className="flex items-center rounded-md border bg-white px-6 py-4"
           href={`/topics/${view.name}`}
           key={view.name}
         >
-          <div className="p-5 rounded-full bg-[#e0efff] mr-4">
+          <div className="mr-4 rounded-full bg-[#e0efff] p-5">
             <FaHashtag className="text-3xl text-[#3ea8ff]" />
           </div>
-          <span className="font-bold text-lg">{view.name}</span>
+          <span className="text-lg font-bold">{view.name}</span>
         </Link>
       ))}
     </div>

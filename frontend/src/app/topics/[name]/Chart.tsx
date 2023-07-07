@@ -1,7 +1,7 @@
 "use client";
 
+import { Chart, ChartData,registerables } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import { Chart, registerables, ChartData } from "chart.js";
 
 Chart.register(...registerables);
 
@@ -14,13 +14,13 @@ export default function BarChart({ data }: BarChartComponentProps) {
     <Bar
       data={data}
       options={{
-        responsive: true,
         maintainAspectRatio: true,
         plugins: {
           legend: {
             display: false,
           },
         },
+        responsive: true,
       }}
     />
   );

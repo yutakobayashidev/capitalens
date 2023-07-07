@@ -1,36 +1,36 @@
 "use client";
 
-import { useState } from "react";
-import { registerAction } from "./actions";
-import { useForm } from "react-hook-form";
-import { useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MemberSchema, FormSchema } from "@src/app/members/[id]/edit/schema";
+import { FormSchema,MemberSchema } from "@src/app/members/[id]/edit/schema";
+import { useState , useTransition } from "react";
+import { useForm } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
+
+import { registerAction } from "./actions";
 
 type InputFieldProps = {
   id: string;
-  register: any;
-  placeholder: string;
   errors: any;
+  placeholder: string;
+  register: any;
 };
 
 const InputField: React.FC<InputFieldProps> = ({
   id,
-  register,
-  placeholder,
   errors,
+  placeholder,
+  register,
 }) => (
   <>
     <input
-      className="w-full block resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2 mb-3"
+      className="mb-3 block w-full resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2"
       type="text"
       id={id}
       placeholder={placeholder}
       {...register(id)}
     />
     {errors[id] && (
-      <span className="text-sm text-red-500 mb-3 block">
+      <span className="mb-3 block text-sm text-red-500">
         {errors[id]?.message}
       </span>
     )}
@@ -39,20 +39,20 @@ const InputField: React.FC<InputFieldProps> = ({
 
 type SelectFieldProps = {
   id: string;
-  register: any;
   errors: any;
   options: { label: string; value: string }[];
+  register: any;
 };
 
 const SelectField: React.FC<SelectFieldProps> = ({
   id,
-  register,
   errors,
   options,
+  register,
 }) => (
   <>
     <select
-      className="w-full appearance-none block resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2 mb-3"
+      className="mb-3 block w-full resize-none appearance-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2"
       id={id}
       {...register(id)}
     >
@@ -63,7 +63,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
       ))}
     </select>
     {errors[id] && (
-      <span className="text-sm text-red-500 mb-3 block">
+      <span className="mb-3 block text-sm text-red-500">
         {errors[id]?.message}
       </span>
     )}
@@ -71,25 +71,25 @@ const SelectField: React.FC<SelectFieldProps> = ({
 );
 
 export default function Form({
-  member,
   groups,
+  member,
 }: {
-  member: FormSchema;
   groups: {
-    name: string;
     id: string;
+    name: string;
   }[];
+  member: FormSchema;
 }) {
   const [done, setDone] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
 
   const {
-    register,
-    handleSubmit,
     formState: { errors },
+    handleSubmit,
+    register,
   } = useForm<FormSchema>({
-    resolver: zodResolver(MemberSchema),
     defaultValues: member,
+    resolver: zodResolver(MemberSchema),
   });
 
   const onSubmit = handleSubmit((data) => {
@@ -106,22 +106,22 @@ export default function Form({
     <section className="my-8">
       {done ? (
         <div className="text-center">
-          <h1 className="text-4xl mb-5 font-bold">
+          <h1 className="mb-5 text-4xl font-bold">
             開発チームに送信されました
           </h1>
-          <p className="text-gray-600 text-lg">
+          <p className="text-lg text-gray-600">
             ご協力ありがとうございます。開発チームが確認の上公開されます。
           </p>
           <img src="/undraw_Chasing_love_re_9r1c.png" alt="Chasing love" />
         </div>
       ) : (
         <div>
-          <h1 className="text-4xl font-bold text-center mb-5">
+          <h1 className="mb-5 text-center text-4xl font-bold">
             {member.name}議員の情報を更新する
           </h1>
           <form onSubmit={onSubmit}>
-            <label className="mb-2 flex font-bold items-center">
-              議員名<span className="text-red-500 font-normal ml-2">必須</span>
+            <label className="mb-2 flex items-center font-bold">
+              議員名<span className="ml-2 font-normal text-red-500">必須</span>
             </label>
             <InputField
               id="name"
@@ -129,7 +129,7 @@ export default function Form({
               placeholder="議員名を入力"
               errors={errors}
             />
-            <label className="mb-2 flex font-bold items-center">
+            <label className="mb-2 flex items-center font-bold">
               フルネーム
             </label>
             <div className="flex gap-x-4">
@@ -146,7 +146,7 @@ export default function Form({
                 errors={errors}
               />
             </div>
-            <label className="mb-2 flex font-bold items-center">ひらがな</label>
+            <label className="mb-2 flex items-center font-bold">ひらがな</label>
             <div className="flex gap-x-4">
               <InputField
                 id="firstNameHira"
@@ -161,7 +161,7 @@ export default function Form({
                 errors={errors}
               />
             </div>
-            <label className="mb-2 flex font-bold items-center">
+            <label className="mb-2 flex items-center font-bold">
               公式サイト
             </label>
             <InputField
@@ -170,16 +170,16 @@ export default function Form({
               placeholder="https://example.com"
               errors={errors}
             />
-            <label className="mb-2 flex font-bold items-center">Twitter</label>
+            <label className="mb-2 flex items-center font-bold">Twitter</label>
             <InputField
               id="twitter"
               register={register}
               placeholder="@を含めないで入力"
               errors={errors}
             />
-            <label className="mb-2 flex font-bold items-center">
+            <label className="mb-2 flex items-center font-bold">
               所属政党
-              <span className="text-red-500 font-normal ml-2">必須</span>
+              <span className="ml-2 font-normal text-red-500">必須</span>
             </label>
             <SelectField
               id="groupId"
@@ -193,8 +193,8 @@ export default function Form({
                 })),
               ]}
             />
-            <label className="mb-2 flex font-bold items-center">
-              議会<span className="text-red-500 font-normal ml-2">必須</span>
+            <label className="mb-2 flex items-center font-bold">
+              議会<span className="ml-2 font-normal text-red-500">必須</span>
             </label>
             <SelectField
               id="house"
@@ -205,15 +205,15 @@ export default function Form({
                 { label: "衆議院", value: "REPRESENTATIVES" },
               ]}
             />
-            <label className="mb-2 flex font-bold items-center">説明</label>
+            <label className="mb-2 flex items-center font-bold">説明</label>
             <TextareaAutosize
               {...register("description")}
-              className="w-full block resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2 mb-3"
+              className="mb-3 block w-full resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2"
               id="description"
             />
             <div className="flex justify-center">
               <button
-                className="text-center mt-3 text-white shadow bg-blue-500 transition-all duration-500 ease-in-out hover:shadow-md text-xl font-bold px-6 py-2 rounded-full"
+                className="mt-3 rounded-full bg-blue-500 px-6 py-2 text-center text-xl font-bold text-white shadow transition-all duration-500 ease-in-out hover:shadow-md"
                 disabled={isPending}
               >
                 送信する

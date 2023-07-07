@@ -3,31 +3,31 @@
 import { Member } from "@src/types/member";
 
 export type Meeting = {
-  house: string | null;
-  m3u8_url: string;
   id: string;
-  meeting_name: string;
-  page_url: string;
-  date: string;
-  summary: string | null;
-  meetingURL: string | null;
-  apiURL: string | null;
-  kids: string | null;
-  videoComments: videoComment[];
   annotations: Annotation[];
+  apiURL: string | null;
+  date: string;
+  house: string | null;
+  kids: string | null;
+  m3u8_url: string;
+  meeting_name: string;
+  meetingURL: string | null;
+  page_url: string;
+  summary: string | null;
   utterances: Utterance[];
+  videoComments: videoComment[];
 };
 
 export type Word = {
-  start: number;
   end: number;
+  start: number;
   text: string;
 };
 
 export type Utterance = {
   id: number;
-  start: number;
   end: number;
+  start: number;
   words: Word[];
 };
 
@@ -44,9 +44,9 @@ export type videoComment = {
 
 export type Annotation = {
   id: string;
-  start_sec: number;
-  speaker_name: string;
-  speaker_info: string;
-  time: string;
   member: Member | null;
+  speaker_info: string;
+  speaker_name: string;
+  start_sec: number;
+  time: string;
 };

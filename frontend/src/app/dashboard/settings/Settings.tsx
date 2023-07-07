@@ -1,21 +1,19 @@
 "use client";
 
+import { Dialog,Switch  } from "@headlessui/react";
 import GLogo from "@public/g-logo.svg";
-import { useState } from "react";
-import cn from "classnames";
-import { Switch } from "@headlessui/react";
 import Modal from "@src/app/_components/Modal";
-import { Dialog } from "@headlessui/react";
-import { useEffect } from "react";
-import { type Session } from "next-auth";
-import { useRouter } from "next/navigation";
 import { ArrowDownIcon } from "@xpadev-net/designsystem-icons";
-import { useTransition } from "react";
-import { updateUser, updatePrefecture, DeleteAccount } from "./actions";
+import cn from "classnames";
+import { useRouter } from "next/navigation";
+import { type Session } from "next-auth";
+import { useEffect , useState , useTransition } from "react";
+
+import { DeleteAccount,updatePrefecture, updateUser } from "./actions";
 
 export default function Settings({
-  user,
   prefectures,
+  user,
 }: {
   prefectures: { id: number; name: string }[];
   user: Session["user"];
@@ -42,10 +40,10 @@ export default function Settings({
 
   return (
     <>
-      <section className="py-8 bg-gray-100">
+      <section className="bg-gray-100 py-8">
         <div className="mx-auto max-w-screen-sm px-4 md:px-8">
-          <h1 className="text-xl font-bold mb-3">設定</h1>
-          <div className="flex text-sm gap-x-2 text-gray-500">
+          <h1 className="mb-3 text-xl font-bold">設定</h1>
+          <div className="flex gap-x-2 text-sm text-gray-500">
             <GLogo width={20} height={20} />
             {user && (
               <div>
@@ -56,15 +54,15 @@ export default function Settings({
               </div>
             )}
           </div>
-          <p className="text-lg text-gray-500 mb-3"></p>
+          <p className="mb-3 text-lg text-gray-500"></p>
         </div>
       </section>
       <div className="mx-auto max-w-screen-sm px-4 md:px-8">
         <div className="mt-4 pb-9">
-          <section className="flex items-start gap-4 py-7 xs:gap-5">
+          <section className="xs:gap-5 flex items-start gap-4 py-7">
             <div className="flex-1">
               <label className="font-bold">選挙区</label>
-              <div className="mt-2.5 text-gray-500 text-sm">
+              <div className="mt-2.5 text-sm text-gray-500">
                 住んでいる選挙区を設定することで、最適な情報が表示されます
               </div>
             </div>
@@ -80,7 +78,7 @@ export default function Settings({
 
                   setPrefecture(Number(event.target.value));
                 }}
-                className="block w-full appearance-none rounded-lg border-2 border-normal-400 bg-white py-2 pl-3 pr-8 leading-tight transition-colors hover:border-normal-500 hover:bg-normal-50 focus:border-primary focus:outline-none"
+                className="border-normal-400 hover:border-normal-500 hover:bg-normal-50 block w-full appearance-none rounded-lg border-2 bg-white py-2 pl-3 pr-8 leading-tight transition-colors focus:border-primary focus:outline-none"
               >
                 {prefectures.map((prefecture) => (
                   <option key={prefecture.id} value={prefecture.id}>
@@ -90,7 +88,7 @@ export default function Settings({
               </select>
               <div className="pointer-events-none absolute right-0 px-2">
                 <ArrowDownIcon
-                  className="text-gray-400 text-sm"
+                  className="text-sm text-gray-400"
                   width="1em"
                   height="1em"
                   fill="currentColor"
@@ -98,10 +96,10 @@ export default function Settings({
               </div>
             </div>
           </section>
-          <section className="flex items-start gap-4 py-7 xs:gap-5 border-t border-gray-200">
+          <section className="xs:gap-5 flex items-start gap-4 border-t border-gray-200 py-7">
             <div className="flex-1">
               <label className="font-bold">子ども向けに説明</label>
-              <div className="mt-2.5 text-gray-500 text-sm">
+              <div className="mt-2.5 text-sm text-gray-500">
                 AIの表示が分かりやすい言葉になり、ルビ (ふりがな)が付きます
               </div>
             </div>
@@ -131,16 +129,16 @@ export default function Settings({
               </Switch>
             )}
           </section>
-          <section className="flex items-start gap-4 py-7 xs:gap-5 border-t border-gray-200">
+          <section className="xs:gap-5 flex items-start gap-4 border-t border-gray-200 py-7">
             <div className="flex-1">
               <label className="font-bold">退会</label>
-              <div className="mt-2.5 text-gray-500 text-sm">
+              <div className="mt-2.5 text-sm text-gray-500">
                 投稿したコメントなど、すべてのコンテンツが削除されます
               </div>
             </div>
             <button
               onClick={handleModal}
-              className="border-2 rounded-xl duration-500 outline-2 outline-offset-4 leading-[1.2] hover:bg-red-50 outline-red-300 text-red-400 font-bold text-sm py-2.5 px-3"
+              className="rounded-xl border-2 px-3 py-2.5 text-sm font-bold leading-[1.2] text-red-400 outline-2 outline-offset-4 outline-red-300 duration-500 hover:bg-red-50"
             >
               退会する
             </button>
@@ -148,10 +146,10 @@ export default function Settings({
         </div>
       </div>
       <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
-        <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-10 align-middle shadow-xl transition-all">
-          <div className="text-2xl mb-3 font-bold">退会する</div>
+        <Dialog.Panel className="w-full max-w-md overflow-hidden rounded-2xl bg-white p-10 align-middle shadow-xl transition-all">
+          <div className="mb-3 text-2xl font-bold">退会する</div>
           <div>
-            <p className="leading-7 text-sm">
+            <p className="text-sm leading-7">
               本当に退会しますか？この操作は元に戻せません
             </p>
           </div>
@@ -167,11 +165,11 @@ export default function Settings({
                 router.push("/");
               });
             }}
-            className="border-2 mt-5 w-full justify-center hover:bg-red-50 outline-red-300 duration-500 outline-2 outline-offset-4 flex items-center rounded-xl text-red-400 font-bold py-2.5 px-3"
+            className="mt-5 flex w-full items-center justify-center rounded-xl border-2 px-3 py-2.5 font-bold text-red-400 outline-2 outline-offset-4 outline-red-300 duration-500 hover:bg-red-50"
           >
             {deleteStatus && (
-              <div className="flex justify-center mr-2" aria-label="読み込み中">
-                <div className="animate-spin h-3 w-3 border-2 border-gray-300 rounded-full border-t-transparent"></div>
+              <div className="mr-2 flex justify-center" aria-label="読み込み中">
+                <div className="h-3 w-3 animate-spin rounded-full border-2 border-gray-300 border-t-transparent"></div>
               </div>
             )}
             退会する

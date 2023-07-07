@@ -1,6 +1,7 @@
-import Chat from "./Chat";
 import { auth } from "@auth";
 import type { Metadata } from "next";
+
+import Chat from "./Chat";
 
 export const metadata: Metadata = {
   title: "チャット",

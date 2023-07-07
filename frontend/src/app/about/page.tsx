@@ -1,7 +1,6 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { FaGithub, FaDiscord } from "react-icons/fa";
 import { config } from "@site.config";
+import type { Metadata } from "next";
+import { FaDiscord,FaGithub } from "react-icons/fa";
 
 export const metadata: Metadata = {
   title: "このサイトについて",
@@ -12,9 +11,9 @@ export default async function Page() {
     <div>
       <header className="my-8">
         <div className="mx-auto max-w-screen-lg px-4 md:px-8">
-          <div className="block md:flex justify-between items-center">
-            <div className="xl:w-5/12 h-auto overflow-hidden rounded-lg">
-              <h1 className="font-bold text-center md:text-left mb-7 text-5xl md:text-4xl">
+          <div className="block items-center justify-between md:flex">
+            <div className="h-auto overflow-hidden rounded-lg xl:w-5/12">
+              <h1 className="mb-7 text-center text-5xl font-bold md:text-left md:text-4xl">
                 国会をもっとシンプルに
               </h1>
               <div className="prose">
@@ -26,7 +25,7 @@ export default async function Page() {
                 </p>
               </div>
             </div>
-            <div className="xl:w-5/12 h-auto overflow-hidden rounded-lg">
+            <div className="h-auto overflow-hidden rounded-lg xl:w-5/12">
               <img
                 src="/undraw_Brainstorming_re_1lmw.png"
                 alt="undraw_Brainstorming_re_1lmw"
@@ -37,27 +36,27 @@ export default async function Page() {
       </header>
       <section className="my-8">
         <div className="mx-auto max-w-screen-lg px-4 md:px-8">
-          <h2 className="text-4xl text-center font-bold mb-5">
+          <h2 className="mb-5 text-center text-4xl font-bold">
             開発に貢献する
           </h2>
-          <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             <a
               href={config.SocialLinks.github}
-              className="rounded-lg hover:bg-gray-100 transition duration-500 border block text-center md:px-2 md:py-6 py-4 px-2"
+              className="block rounded-lg border px-2 py-4 text-center transition duration-500 hover:bg-gray-100 md:px-2 md:py-6"
             >
               <div className="flex justify-center">
                 <FaGithub size={50} />
               </div>
-              <div className="mt-5 text-gray-700 font-bold text-lg">GitHub</div>
+              <div className="mt-5 text-lg font-bold text-gray-700">GitHub</div>
             </a>
             <a
               href={config.SocialLinks.discord}
-              className="rounded-lg hover:bg-gray-100 transition duration-500 border block text-center md:px-2 md:py-6 py-4 px-2"
+              className="block rounded-lg border px-2 py-4 text-center transition duration-500 hover:bg-gray-100 md:px-2 md:py-6"
             >
               <div className="flex justify-center">
                 <FaDiscord className="text-[#5865F2]" size={50} />
               </div>
-              <div className="mt-5 text-gray-700 font-bold text-lg">
+              <div className="mt-5 text-lg font-bold text-gray-700">
                 Discord
               </div>
             </a>

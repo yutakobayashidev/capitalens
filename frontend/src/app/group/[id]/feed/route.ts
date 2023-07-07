@@ -1,5 +1,5 @@
-import prisma from "@src/lib/prisma";
 import { config } from "@site.config";
+import prisma from "@src/lib/prisma";
 
 export const revalidate = 3600;
 
@@ -34,13 +34,6 @@ export async function GET(
   }
 
   const timeline = await prisma.timeline.findMany({
-    where: {
-      member: {
-        group: {
-          name: params.id,
-        },
-      },
-    },
     include: {
       member: true,
     },
@@ -48,6 +41,13 @@ export async function GET(
       isoDate: "desc",
     },
     take: 50,
+    where: {
+      member: {
+        group: {
+          name: params.id,
+        },
+      },
+    },
   });
 
   return new Response(

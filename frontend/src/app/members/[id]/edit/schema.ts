@@ -15,26 +15,18 @@ export const ParliamentaryGroupSchema = z
 export const HouseSchema = z.enum(["REPRESENTATIVES", "COUNCILLORS"]);
 
 export const MemberSchema = z.object({
-  groupId: ParliamentaryGroupSchema.nullable(),
-  house: HouseSchema.nullable(),
   id: z.string().cuid(),
   name: z
     .string()
     .nonempty({ message: "入力は必須です。" })
     .max(20, "20文字以内で入力してください。"),
-  firstName: z.string().nullable(),
-  lastName: z.string().nullable(),
-  firstNameHira: z.string().nullable(),
-  lastNameHira: z.string().nullable(),
   description: z.string().nullable(),
-  website: z
-    .union([
-      z.literal(""),
-      z
-        .string()
-        .trim()
-        .url({ message: "httpから始まる正しいURLを入力してください" }),
-    ]).nullable(),
+  firstName: z.string().nullable(),
+  firstNameHira: z.string().nullable(),
+  groupId: ParliamentaryGroupSchema.nullable(),
+  house: HouseSchema.nullable(),
+  lastName: z.string().nullable(),
+  lastNameHira: z.string().nullable(),
   twitter: z
     .union([
       z.literal(""),
@@ -46,6 +38,14 @@ export const MemberSchema = z.object({
           message:
             "ハンドルネームには、英数字またはアンダースコアのみを使用できます。",
         }),
+    ]).nullable(),
+  website: z
+    .union([
+      z.literal(""),
+      z
+        .string()
+        .trim()
+        .url({ message: "httpから始まる正しいURLを入力してください" }),
     ]).nullable(),
 });
 

@@ -1,17 +1,16 @@
-import Form from "@src/app/bill/[id]/form";
-import { FaTwitter } from "react-icons/fa";
-import { BsLine } from "react-icons/bs";
+import { auth } from "@auth";
+import { config } from "@site.config";
 import Clipboard from "@src/app/bill/[id]/Clipboard";
+import Form from "@src/app/bill/[id]/form";
 import prisma from "@src/lib/prisma";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import Link from "next/link";
-import { config } from "@site.config";
-import { auth } from "@auth";
+import { notFound } from "next/navigation";
+import { BsLine } from "react-icons/bs";
+import { FaTwitter } from "react-icons/fa";
 
 async function getBill(id: string) {
   const bill = await prisma.bill.findUnique({
-    where: { id },
     include: {
       comments: {
         include: {
@@ -30,6 +29,7 @@ async function getBill(id: string) {
         },
       },
     },
+    where: { id },
   });
 
   if (!bill) {
@@ -65,9 +65,9 @@ type ShareButtonProps = {
 
 async function getCount(id: string) {
   const count = await prisma.comment.groupBy({
+    _count: { type: true },
     by: ["type"],
     where: { billId: id },
-    _count: { type: true },
   });
 
   const initialCount: CountObject = {
@@ -94,18 +94,18 @@ function ShareSection({ bill }: ShareSectionProps) {
   return (
     <section className="bg-gray-100 py-12">
       <div className="mx-auto max-w-screen-md px-4 md:px-8">
-        <h1 className="text-center text-3xl md:text-4xl font-bold mb-5">
+        <h1 className="mb-5 text-center text-3xl font-bold md:text-4xl">
           この議論をシェアしよう
         </h1>
         <div className="grid grid-cols-3 gap-x-4">
           <ShareButton
             href={tweet}
-            icon={<FaTwitter className="text-[#1da1f2] mb-3 text-4xl" />}
+            icon={<FaTwitter className="mb-3 text-4xl text-[#1da1f2]" />}
             label="ツイートする"
           />
           <ShareButton
             href={line}
-            icon={<BsLine className="text-[#06C755] mb-3 text-4xl" />}
+            icon={<BsLine className="mb-3 text-4xl text-[#06C755]" />}
             label="シェアする"
           />
           <Clipboard />
@@ -119,7 +119,7 @@ function ShareButton({ href, icon, label }: ShareButtonProps) {
   return (
     <a
       href={href}
-      className="rounded-lg bg-white hover:shadow-md transition duration-500 border block text-center md:px-2 md:py-6 py-4 px-2"
+      className="block rounded-lg border bg-white px-2 py-4 text-center transition duration-500 hover:shadow-md md:px-2 md:py-6"
     >
       <div className="flex justify-center">{icon}</div>
       <span className="font-bold">{label}</span>
@@ -139,23 +139,23 @@ export async function generateMetadata({
   return {
     title: bill.name,
     description: bill.reason,
-    twitter: {
-      card: "summary_large_image",
-      title: bill.name,
-      description: bill.reason,
-      images: [ogImage],
-    },
     openGraph: {
       title: bill.name,
-      siteName: config.siteMeta.title,
-      url: `${config.siteRoot}bill/${bill.id}`,
       description: bill.reason,
-      locale: "ja-JP",
       images: [
         {
           url: ogImage,
         },
       ],
+      locale: "ja-JP",
+      siteName: config.siteMeta.title,
+      url: `${config.siteRoot}bill/${bill.id}`,
+    },
+    twitter: {
+      title: bill.name,
+      card: "summary_large_image",
+      description: bill.reason,
+      images: [ogImage],
     },
   };
 }
@@ -163,9 +163,9 @@ export async function generateMetadata({
 type supportedBill = {
   id: string;
   member: {
-    image: string;
     id: string;
     name: string;
+    image: string;
   };
 };
 
@@ -184,15 +184,15 @@ export default async function Page({ params }: { params: { id: string } }) {
     <>
       <section className="my-5">
         <div className="mx-auto max-w-screen-xl px-4 md:px-8">
-          <h1 className="text-3xl font-bold mb-5">{bill.name}</h1>
+          <h1 className="mb-5 text-3xl font-bold">{bill.name}</h1>
           <div className="md:flex">
             <div className="flex-1 md:mr-6">
               <Form user={session?.user} bill={bill} count={count} />
             </div>
-            <div className="flex-1 mt-5 md:mt-0">
-              <h2 className="text-2xl font-bold mb-3">提出理由</h2>
-              <p className="leading-7 mb-5">{bill.reason}</p>
-              <h2 className="text-2xl font-bold mb-3">賛成している議員</h2>
+            <div className="mt-5 flex-1 md:mt-0">
+              <h2 className="mb-3 text-2xl font-bold">提出理由</h2>
+              <p className="mb-5 leading-7">{bill.reason}</p>
+              <h2 className="mb-3 text-2xl font-bold">賛成している議員</h2>
               <div className="grid grid-cols-6">
                 {bill.supportedBills.map((item: supportedBill) => (
                   <Link
@@ -202,7 +202,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                   >
                     <img
                       src={item.member.image}
-                      className="rounded-full border border-gray-200 h-20 w-20 object-cover object-center"
+                      className="h-20 w-20 rounded-full border border-gray-200 object-cover object-center"
                       alt={item.member.name}
                     />
                   </Link>

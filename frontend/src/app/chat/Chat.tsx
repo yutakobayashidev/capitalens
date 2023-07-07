@@ -1,24 +1,24 @@
 "use client";
 
-import { useChat } from "ai/react";
-import Modal from "@src/app/_components/Modal";
-import { useState, useEffect } from "react";
 import { Dialog } from "@headlessui/react";
-import { FaMagic } from "react-icons/fa";
-import cn from "classnames";
-import ReactMarkdown from "react-markdown";
+import Modal from "@src/app/_components/Modal";
 import { MeOutlinedIcon } from "@xpadev-net/designsystem-icons";
-import { AiOutlineArrowRight } from "react-icons/ai";
-import { SiOpenai } from "react-icons/si";
+import { useChat } from "ai/react";
+import cn from "classnames";
 import { type Session } from "next-auth";
+import { useEffect,useState } from "react";
 import toast from "react-hot-toast";
+import { AiOutlineArrowRight } from "react-icons/ai";
+import { FaMagic } from "react-icons/fa";
+import { SiOpenai } from "react-icons/si";
+import ReactMarkdown from "react-markdown";
 
 export function EmptyScreen({
-  setInput,
   president,
+  setInput,
 }: {
-  setInput: (message: string) => void;
   president: string;
+  setInput: (message: string) => void;
 }) {
   const exampleMessages = [
     {
@@ -36,21 +36,21 @@ export function EmptyScreen({
   ];
 
   return (
-    <div className="p-8 border rounded-lg bg-gray-50 mb-5">
+    <div className="mb-5 rounded-lg border bg-gray-50 p-8">
       <h1 className="mb-2 text-lg font-semibold">
         新しい情報収集方法へようこそ
       </h1>
-      <p className="mb-2 leading-normal text-muted-foreground">
+      <p className="text-muted-foreground mb-2 leading-normal">
         議員の情報や、最近の国会の情報や世界銀行のデータなどを自然な言葉から調べられます。早速入力してみましょう。
       </p>
       <div className="mt-4 flex flex-col items-start space-y-2">
         {exampleMessages.map((message, index) => (
           <button
             key={index}
-            className="h-auto flex items-center text-gray-500 p-0 text-base"
+            className="flex h-auto items-center p-0 text-base text-gray-500"
             onClick={() => setInput(message.message)}
           >
-            <AiOutlineArrowRight className="mr-2 text-muted-foreground" />
+            <AiOutlineArrowRight className="text-muted-foreground mr-2" />
             {message.heading}
           </button>
         ))}
@@ -66,7 +66,7 @@ export default function Chat({
   president: string;
   user: Session["user"];
 }) {
-  const { messages, input, handleInputChange, handleSubmit, setInput } =
+  const { handleInputChange, handleSubmit, input, messages, setInput } =
     useChat({
       api: "/api/chat",
       onResponse: (response) => {
@@ -96,7 +96,7 @@ export default function Chat({
       <div className="mx-auto max-w-screen-sm px-4 md:px-8">
         {messages.length ? (
           messages.map((m, i) => (
-            <div key={i} className="flex items-start md:-ml-12 mb-4">
+            <div key={i} className="mb-4 flex items-start md:-ml-12">
               {user && m.role === "user" ? (
                 <img
                   src={user.image ?? "/noimage.png"}
@@ -122,7 +122,7 @@ export default function Chat({
                   )}
                 </div>
               )}
-              <ReactMarkdown className="prose ml-4 flex-1 space-y-2 overflow-hidden px-1 prose-img:rounded-lg prose-img:shadow prose-a:no-underline hover:prose-a:underline prose-a:text-primary prose-neutral max-w-none">
+              <ReactMarkdown className="prose prose-neutral ml-4 max-w-none flex-1 space-y-2 overflow-hidden px-1 prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-img:shadow">
                 {m.content}
               </ReactMarkdown>
             </div>
@@ -132,7 +132,7 @@ export default function Chat({
         )}
         <form onSubmit={handleSubmit}>
           <input
-            className="fixed w-full max-w-md bottom-0 border border-gray-300 rounded mb-8 shadow-xl p-2"
+            className="fixed bottom-0 mb-8 w-full max-w-md rounded border border-gray-300 p-2 shadow-xl"
             value={input}
             placeholder="AIに質問を入力"
             onChange={handleInputChange}
@@ -140,8 +140,8 @@ export default function Chat({
         </form>
       </div>
       <Modal isOpen={isModalOpen} setIsOpen={closeOnboarding}>
-        <Dialog.Panel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white p-10 align-middle shadow-xl transition-all">
-          <div className="text-2xl mb-2 font-bold flex items-center gap-x-2">
+        <Dialog.Panel className="w-full max-w-lg overflow-hidden rounded-2xl bg-white p-10 align-middle shadow-xl transition-all">
+          <div className="mb-2 flex items-center gap-x-2 text-2xl font-bold">
             <FaMagic className="text-[#9d34da]" />
             AIで言葉から情報を調べよう
           </div>

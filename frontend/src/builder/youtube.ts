@@ -1,6 +1,6 @@
-import fetch from "node-fetch";
 import { PrismaClient } from "@prisma/client";
 import dotenv from "dotenv";
+import fetch from "node-fetch";
 
 dotenv.config();
 
@@ -12,14 +12,14 @@ type Item = {
   snippet: {
     title: string;
     description: string;
+    publishedAt: string;
+    resourceId: {
+      videoId: string;
+    };
     thumbnails: {
       default: {
         url: string;
       };
-    };
-    publishedAt: string;
-    resourceId: {
-      videoId: string;
     };
   };
 };
@@ -39,17 +39,17 @@ async function getChannelId(url: string) {
 (async function () {
   try {
     const members = await prisma.member.findMany({
+      select: {
+        id: true,
+        youtube: true,
+      },
       where: {
-        youtube: {
-          not: null,
-        },
         NOT: {
           youtube: "",
         },
-      },
-      select: {
-        youtube: true,
-        id: true,
+        youtube: {
+          not: null,
+        },
       },
     });
 
@@ -102,14 +102,14 @@ async function getChannelId(url: string) {
           await prisma.timeline.createMany({
             data: res.items.map((item: Item) => ({
               title: item.snippet.title,
+              contentSnippet: item.snippet.description,
+              dateMiliSeconds: new Date(item.snippet.publishedAt).getTime(),
+              isoDate: item.snippet.publishedAt,
               link:
                 "https://www.youtube.com/watch?v=" +
                 item.snippet.resourceId.videoId,
-              isoDate: item.snippet.publishedAt,
-              dateMiliSeconds: new Date(item.snippet.publishedAt).getTime(),
-              contentSnippet: item.snippet.description,
-              ogImageURL: item.snippet.thumbnails.default.url,
               memberId: member.id,
+              ogImageURL: item.snippet.thumbnails.default.url,
             })),
           });
 

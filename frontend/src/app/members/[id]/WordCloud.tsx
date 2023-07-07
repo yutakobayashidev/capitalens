@@ -1,10 +1,10 @@
 "use client";
 
+import { DownloadIcon } from "@xpadev-net/designsystem-icons";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import D3Cloud from "react-d3-cloud";
 import useSWR from "swr";
-import { DownloadIcon } from "@xpadev-net/designsystem-icons";
-import { usePathname } from "next/navigation";
 
 interface Word {
   text: string;
@@ -62,7 +62,7 @@ export default function WordCloud({ name }: WordCloudProps) {
               onClick={async () => {
                 downloadCSV(data);
               }}
-              className="text-green-600 mt-5 text-lg flex items-center font-semibold"
+              className="mt-5 flex items-center text-lg font-semibold text-green-600"
             >
               <DownloadIcon
                 width="1em"
@@ -75,9 +75,9 @@ export default function WordCloud({ name }: WordCloudProps) {
           </div>
         </>
       ) : (
-        <div className="w-full flex items-center justify-center">
+        <div className="flex w-full items-center justify-center">
           <div className="flex justify-center">
-            <div className="animate-spin h-4 w-4 border-2 mr-2 border-blue-500 rounded-full border-t-transparent"></div>
+            <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"></div>
           </div>
           <p>WordCloudを読み込んでいます...</p>
         </div>

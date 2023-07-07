@@ -1,10 +1,10 @@
 import { connect } from "@planetscale/database";
-import { NextResponse } from "next/server";
-import { ChatOpenAI } from "langchain/chat_models/openai";
-import { loadSummarizationChain } from "langchain/chains";
-import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import { PromptTemplate } from "langchain/prompts";
 import { SpeechRecord } from "@src/types/api";
+import { loadSummarizationChain } from "langchain/chains";
+import { ChatOpenAI } from "langchain/chat_models/openai";
+import { PromptTemplate } from "langchain/prompts";
+import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
+import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 export const revalidate = true;
@@ -18,18 +18,8 @@ async function runLLMChain(text: string, kids: boolean, id: string, conn: any) {
   let finalResult = "";
 
   const chatStreaming = new ChatOpenAI({
-    modelName: "gpt-3.5-turbo-16k",
-    streaming: true,
-    maxTokens: -1,
-    temperature: 0,
-    openAIApiKey: process.env.OPENAI_API_KEY,
     callbacks: [
       {
-        async handleLLMNewToken(token) {
-          finalResult += token;
-          await writer.ready;
-          await writer.write(encoder.encode(`${token}`));
-        },
         async handleLLMEnd() {
           await writer.ready;
           await writer.close();
@@ -43,8 +33,18 @@ async function runLLMChain(text: string, kids: boolean, id: string, conn: any) {
           console.log("handleLLMError Error: ", e);
           await writer.abort(e);
         },
+        async handleLLMNewToken(token) {
+          finalResult += token;
+          await writer.ready;
+          await writer.write(encoder.encode(`${token}`));
+        },
       },
     ],
+    maxTokens: -1,
+    modelName: "gpt-3.5-turbo-16k",
+    openAIApiKey: process.env.OPENAI_API_KEY,
+    streaming: true,
+    temperature: 0,
   });
 
   const Prompt = `Instructions: Your output should use the following template:
@@ -68,8 +68,8 @@ You will summarize the proceedings of the Japanese Diet in polite, easy-to-under
   const prompt_template = kids ? KidsPrompt : Prompt;
 
   const RPROMPT = new PromptTemplate({
-    template: prompt_template,
     inputVariables: ["text"],
+    template: prompt_template,
   });
 
   const refinePromptTemplate = `あなたの仕事は最終的な要約を作ることです
@@ -84,14 +84,14 @@ You will summarize the proceedings of the Japanese Diet in polite, easy-to-under
 REFINED SUMMARY:`;
 
   const REFINE_PROMPT = new PromptTemplate({
-    template: refinePromptTemplate,
     inputVariables: ["existing_answer", "text"],
+    template: refinePromptTemplate,
   });
 
   const chain = loadSummarizationChain(chatStreaming, {
-    type: "refine",
-    refinePrompt: REFINE_PROMPT,
     questionPrompt: RPROMPT,
+    refinePrompt: REFINE_PROMPT,
+    type: "refine",
   });
 
   const textSplitter = new RecursiveCharacterTextSplitter({

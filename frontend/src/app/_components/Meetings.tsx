@@ -1,5 +1,6 @@
-import prisma from "@src/lib/prisma";
 import Meeting from "@src/app/_components/Meeting";
+import prisma from "@src/lib/prisma";
+
 import { auth } from "@/auth";
 
 export default async function Meetings() {

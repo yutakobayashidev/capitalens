@@ -13,19 +13,19 @@ export async function GET(
 
   try {
     const foundMember = await prisma.member.findFirst({
-      where: {
-        name: name,
-      },
       include: {
         group: true,
+      },
+      where: {
+        name: name,
       },
     });
 
     if (foundMember) {
       // Increment the scannedCount and update the member
       await prisma.member.update({
-        where: { id: foundMember.id },
         data: { scannedCount: { increment: 1 } },
+        where: { id: foundMember.id },
       });
 
       return NextResponse.json(foundMember);

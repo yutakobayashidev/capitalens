@@ -22,15 +22,15 @@ export const functions: {
     description:
       "Retrieve the user's information from the Member table in the database.use markdown notation to display the image if an image field is present.",
     parameters: {
-      type: "object",
       properties: {
         name: {
-          type: "string",
           description:
             "Name of Member of Parliament (full name in Chinese characters, remove spaces between last name and first name)",
+          type: "string",
         },
       },
       required: ["name"],
+      type: "object",
     },
   },
   {
@@ -38,14 +38,14 @@ export const functions: {
     description:
       "Search the World Bank for the most current population data at this time by country.",
     parameters: {
-      type: "object",
       properties: {
         country_code: {
-          type: "string",
           description: "ISO 3166-1 alpha-3 format code for country name.",
+          type: "string",
         },
       },
       required: ["country_code"],
+      type: "object",
     },
   },
   {
@@ -53,24 +53,24 @@ export const functions: {
     description:
       "Retrieve meeting and speaker information from the Japanese Diet Meeting Minutes Retrieval System search API in the order of most recent meeting date.",
     parameters: {
-      type: "object",
       properties: {
-        nameOfMeeting: {
-          type: "string",
-          description:
-            "Set the text to be included in the meeting name. For example: 東日本大震災",
-        },
         any: {
-          type: "string",
           description:
             "Specify the message to be included in the utterance. Example: 科学技術",
+          type: "string",
+        },
+        nameOfMeeting: {
+          description:
+            "Set the text to be included in the meeting name. For example: 東日本大震災",
+          type: "string",
         },
         speaker: {
-          type: "string",
           description:
             "Meetings can be searched by speaker name.Can be last name or first name; if full name, remove space between last name and first name. Example: 岸田文雄",
+          type: "string",
         },
       },
+      type: "object",
     },
   },
   {
@@ -78,19 +78,19 @@ export const functions: {
     description:
       "Retrieved from the search API of the Japanese Diet Proceedings Retrieval System, in order of newest to oldest, based on statements.",
     parameters: {
-      type: "object",
       properties: {
         any: {
-          type: "string",
           description:
             "Specify the message to be included in the utterance. Example: マイナンバー",
+          type: "string",
         },
         speaker: {
-          type: "string",
           description:
             "Meetings can be searched by speaker name.Can be last name or first name; if full name, remove space between last name and first name. Example: 岸田文雄",
+          type: "string",
         },
       },
+      type: "object",
     },
   },
 ];
@@ -112,9 +112,9 @@ async function get_population(countryCode: string) {
         country_id: datum.country.id,
         country_value: datum.country.value,
         date: datum.date,
-        value: datum.value,
         indicator_id: datum.indicator.id,
         indicator_value: datum.indicator.value,
+        value: datum.value,
       };
     });
 
@@ -139,7 +139,7 @@ async function get_member_info(name: string) {
 }
 
 async function meeting_list(args: any) {
-  const { nameOfMeeting, any, speaker } = args;
+  const { any, nameOfMeeting, speaker } = args;
 
   // TODO: なにもargsがない場合の処理を書く
 
@@ -162,8 +162,8 @@ async function meeting_list(args: any) {
     );
     return {
       info: `${record.nameOfHouse} ${record.nameOfMeeting} ${record.issue} ${record.date}`,
-      speakers,
       meetingURL: record.meetingURL,
+      speakers,
     };
   });
 
@@ -190,9 +190,9 @@ async function speech_list(args: any) {
   const newArray = json.speechRecord.map((record: any) => {
     return {
       info: `${record.nameOfHouse} ${record.nameOfMeeting} ${record.issue} ${record.date}`,
+      meetingURL: record.meetingURL,
       speech: record.speech,
       speechURL: record.speechURL,
-      meetingURL: record.meetingURL,
     };
   });
 

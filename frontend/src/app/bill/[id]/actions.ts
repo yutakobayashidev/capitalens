@@ -3,8 +3,8 @@
 import { auth } from "@auth";
 import prisma from "@src/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
 import { zact } from "zact/server";
+import { z } from "zod";
 
 export const Vote = zact(z.object({ id: z.string().cuid() }))(async (data) => {
   const session = await auth();
@@ -50,12 +50,12 @@ export const Vote = zact(z.object({ id: z.string().cuid() }))(async (data) => {
 
 export async function addComment({
   bill_id,
-  type,
   comment,
+  type,
 }: {
   bill_id: string;
-  type: any;
   comment: string;
+  type: any;
 }) {
   const session = await auth();
 
@@ -67,10 +67,10 @@ export async function addComment({
 
   const res = await prisma.comment.create({
     data: {
-      comment,
-      user: { connect: { id: session.user.id } },
-      type: type,
       bill: { connect: { id: bill_id } },
+      comment,
+      type: type,
+      user: { connect: { id: session.user.id } },
     },
   });
 

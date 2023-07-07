@@ -1,14 +1,14 @@
 import { Menu, Transition } from "@headlessui/react";
+import { videoComment } from "@src/types/meeting";
+import { ArrowDownIcon } from "@xpadev-net/designsystem-icons";
+import cn from "classnames";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { type Session } from "next-auth";
-import { ArrowDownIcon } from "@xpadev-net/designsystem-icons";
-import { Fragment } from "react";
-import { useTransition } from "react";
-import { DeleteComment } from "./actions";
-import cn from "classnames";
+import { Fragment , useTransition } from "react";
 import { FiTrash2 } from "react-icons/fi";
-import { videoComment } from "@src/types/meeting";
+
+import { DeleteComment } from "./actions";
 
 dayjs.locale("ja");
 dayjs.extend(relativeTime);
@@ -25,16 +25,16 @@ export default function Comment({
   return (
     <div className="mb-3 flex items-start" key={comment.id}>
       <img
-        className="rounded-full h-12 w-12 border border-gray-300"
+        className="h-12 w-12 rounded-full border border-gray-300"
         src={comment.user.image ?? "/noimage.png"}
         alt={comment.user.name ?? "不明なユーザー"}
       />
-      <div className="break-words flex-1 ml-3 overflow-auto">
+      <div className="ml-3 flex-1 overflow-auto break-words">
         <div className="smb-2 mb-0.5 font-bold">{comment.user.name}</div>
-        <p className="text-xs mb-1 text-gray-500">
+        <p className="mb-1 text-xs text-gray-500">
           {dayjs(comment.createdAt).fromNow()}
         </p>
-        <div className="text-gray-700 leading-7 text-sm">{comment.comment}</div>
+        <div className="text-sm leading-7 text-gray-700">{comment.comment}</div>
       </div>
       {comment.user.id === user?.id && (
         <div>

@@ -1,14 +1,15 @@
-import { useEffect, useRef } from "react";
-import Player from "video.js/dist/types/player";
-import videojs from "video.js";
 import "video.js/dist/video-js.css";
 
+import { useEffect, useRef } from "react";
+import videojs from "video.js";
+import Player from "video.js/dist/types/player";
+
 export default function VideoJSPlayer({
-  options,
   onReady,
+  options,
 }: {
-  options: any;
   onReady: (player: Player) => void;
+  options: any;
 }) {
   const videoRef = useRef<HTMLDivElement | null>(null);
   const playerRef = useRef<Player | null>(null);

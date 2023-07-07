@@ -1,13 +1,11 @@
 "use client";
 
-import Link from "next/link";
-import { formatDate } from "@src/helper/utils";
-import { FaClock } from "react-icons/fa";
+import { formatDate , isKanji,kanaToHira } from "@src/helper/utils";
 import { useKuromoji } from "@src/hooks/useKuromoji";
-import { useState, useEffect } from "react";
-import { kanaToHira, isKanji } from "@src/helper/utils";
+import Link from "next/link";
 import { type Session } from "next-auth";
-import { Meeting } from "@src/types/meeting";
+import { useEffect,useState } from "react";
+import { FaClock } from "react-icons/fa";
 
 export default function Meeting({
   meetings,
@@ -15,11 +13,11 @@ export default function Meeting({
 }: {
   meetings: {
     id: string;
+    date: string;
     house: string | null;
     kids: string | null;
-    date: string;
-    summary: string | null;
     meeting_name: string;
+    summary: string | null;
   }[];
   user: Session["user"];
 }) {
@@ -65,7 +63,7 @@ export default function Meeting({
 
   return (
     <div>
-      <label className="flex items-center mb-3">
+      <label className="mb-3 flex items-center">
         <input
           type="checkbox"
           className="mr-2"
@@ -75,21 +73,21 @@ export default function Meeting({
         />
         子ども向けに説明
       </label>
-      <div className="grid md:grid-cols-2 grid-cols-1 gap-x-4">
+      <div className="grid grid-cols-1 gap-x-4 md:grid-cols-2">
         {meetings.map((meeting) => (
           <Link
             href={`/meetings/${meeting.id}`}
-            className="mb-5 bg-gray-50 p-6 rounded-xl border border-gray-200"
+            className="mb-5 rounded-xl border border-gray-200 bg-gray-50 p-6"
             key={meeting.id}
           >
-            <h1 className="text-xl font-bold items-center flex mb-2">
+            <h1 className="mb-2 flex items-center text-xl font-bold">
               {meeting.house && (
                 <span
                   className={`${
                     meeting.house === "COUNCILLORS"
                       ? "bg-indigo-400"
                       : "bg-[#EA5433]"
-                  } text-white rounded font-bold mr-2 text-sm py-1 px-2`}
+                  } mr-2 rounded px-2 py-1 text-sm font-bold text-white`}
                 >
                   {meeting.house === "COUNCILLORS" ? "参議院" : "衆議院"}
                 </span>
@@ -99,13 +97,13 @@ export default function Meeting({
             <time
               itemProp="datePublished"
               dateTime={meeting.date}
-              className="text-sm flex items-center text-gray-500"
+              className="flex items-center text-sm text-gray-500"
             >
               <FaClock className="mr-1 text-gray-400" />
               {formatDate(meeting.date)}
             </time>
             {meeting.summary && (
-              <div className="text-sm mt-2 text-gray-500 line-clamp-4">
+              <div className="mt-2 line-clamp-4 text-sm text-gray-500">
                 {isChecked && meeting.kids ? (
                   <span
                     dangerouslySetInnerHTML={{

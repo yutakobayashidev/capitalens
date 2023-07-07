@@ -1,33 +1,33 @@
 // API Response
 
 export type Meeting = {
+  meetingRecord: MeetingRecord[];
+  nextRecordPosition: number;
   numberOfRecords: number;
   numberOfReturn: number;
   startRecord: number;
-  nextRecordPosition: number;
-  meetingRecord: MeetingRecord[];
 };
 
 export type MeetingRecord = {
-  issueID: string;
+  closing: null;
+  date: string;
   imageKind: string;
-  searchObject: number;
-  session: number;
+  issue: string;
+  issueID: string;
+  meetingURL: string;
   nameOfHouse: string;
   nameOfMeeting: string;
-  issue: string;
-  date: string;
-  closing: null;
+  pdfURL: null | string;
+  searchObject: number;
+  session: number;
   speechCount: number;
   speechRecord: SpeechRecord[];
-  meetingURL: string;
-  pdfURL: null | string;
 };
 
 export type SpeechRecord = {
-  speechID: string;
-  speechOrder: number;
   speaker: string;
   speech: string;
+  speechID: string;
+  speechOrder: number;
   speechURL: string;
 };

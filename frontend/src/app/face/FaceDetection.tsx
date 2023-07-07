@@ -1,5 +1,5 @@
-import { useRef, useState, useEffect, useCallback } from "react";
 import * as faceapi from "face-api.js";
+import { useCallback,useEffect, useRef, useState } from "react";
 import { FaCamera } from "react-icons/fa";
 
 type Props = {
@@ -73,8 +73,8 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
         .withFaceDescriptor();
 
       const displaySize = {
-        width: videoRef.current.clientWidth,
         height: videoRef.current.clientHeight,
+        width: videoRef.current.clientWidth,
       };
       faceapi.matchDimensions(canvasRef.current, displaySize);
 
@@ -176,8 +176,8 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode: isFrontCamera ? "user" : "environment",
-          width: { ideal: 640 }, // add these
           height: { ideal: 480 }, // add these
+          width: { ideal: 640 }, // add these
         },
       });
       if (stream) {
@@ -204,11 +204,11 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
             muted
             loop
             playsInline
-            className="w-full h-full"
+            className="h-full w-full"
           ></video>
           <canvas
             ref={canvasRef}
-            className="absolute top-0 left-0 w-full h-full"
+            className="absolute left-0 top-0 h-full w-full"
           />
         </div>
       ) : (
@@ -219,28 +219,28 @@ const FaceDetection: React.FC<Props> = ({ onFaceDetect }) => {
             width={400}
             alt="Vote"
           />
-          <p className="text-center mb-3">
+          <p className="mb-3 text-center">
             選挙ポスターや議員の顔をスキャンして、議員の詳細な政策や、SNSをチェックしましょう。
           </p>
           <button
-            className="bg-blue-500 flex items-center hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className="flex items-center rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
             onClick={handleRequestCameraAccess}
           >
             <FaCamera className="mr-2" />
             カメラへのアクセスをリクエスト
           </button>
-          {errorMessage && <p className="text-red-500 mt-3">{errorMessage}</p>}
+          {errorMessage && <p className="mt-3 text-red-500">{errorMessage}</p>}
         </div>
       )}
-      <div className="flex flex-col items-center space-y-4 my-5">
+      <div className="my-5 flex flex-col items-center space-y-4">
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
           onClick={handleCameraToggle}
         >
           {isFrontCamera ? "Back Camera" : "Front Camera"}
         </button>
         <button
-          className="bg-green-500 hover:bg-green-700 disabled:bg-gray-300 text-white font-bold py-2 px-4 rounded"
+          className="rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-700 disabled:bg-gray-300"
           onClick={handleNameDetect}
           disabled={!isFaceDetected} // isFaceDetectedがtrueでない場合はボタンを無効化
         >

@@ -1,20 +1,22 @@
-import dayjs from "dayjs";
 import "dayjs/locale/ja";
-import { MeetingRecord } from "@src/types/api";
-import { notFound } from "next/navigation";
-import relativeTime from "dayjs/plugin/relativeTime";
-import Timeline from "@src/app/members/[id]/Timeline";
-import { FaTwitter, FaFacebook, FaYoutube, FaWikipediaW } from "react-icons/fa";
-import Link from "next/link";
-import WordCloud from "@src/app/members/[id]/WordCloud";
-import type { Metadata } from "next";
-import { AiOutlineLink } from "react-icons/ai";
-import prisma from "@src/lib/prisma";
-import TwitterTimeline from "@src/app/members/[id]/TwitterTimeline";
-import { config } from "@site.config";
+
 import { auth } from "@auth";
-import Chat from "./Chat";
+import { config } from "@site.config";
+import Timeline from "@src/app/members/[id]/Timeline";
+import TwitterTimeline from "@src/app/members/[id]/TwitterTimeline";
+import WordCloud from "@src/app/members/[id]/WordCloud";
 import SetPlaceHolder from "@src/hooks/placeholder";
+import prisma from "@src/lib/prisma";
+import { MeetingRecord } from "@src/types/api";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { AiOutlineLink } from "react-icons/ai";
+import { FaFacebook, FaTwitter, FaWikipediaW,FaYoutube } from "react-icons/fa";
+
+import Chat from "./Chat";
 
 dayjs.locale("ja");
 dayjs.extend(relativeTime);
@@ -48,7 +50,6 @@ async function getKokkai(name: string) {
 
 async function getMember(id: string) {
   const people = await prisma.member.findUnique({
-    where: { id },
     include: {
       group: true,
       supporters: {
@@ -58,6 +59,7 @@ async function getMember(id: string) {
       },
       timelines: true,
     },
+    where: { id },
   });
 
   if (!people) {
@@ -68,9 +70,9 @@ async function getMember(id: string) {
 }
 
 type Timeline = {
-  itemType: "feed" | "kokkai";
-  date: dayjs.Dayjs;
   data: any;
+  date: dayjs.Dayjs;
+  itemType: "feed" | "kokkai";
 };
 
 export async function generateMetadata({
@@ -89,27 +91,27 @@ export async function generateMetadata({
   return {
     title: member.name,
     description: member.description,
-    twitter: {
-      card: member.image ? "summary" : "summary_large_image",
-      title: member.name,
-      description:
-        member.description ?? member.name + "議員の情報をチェックしましょう",
-      images: [ogImage],
-    },
     openGraph: {
       title: member.name,
-      siteName: config.siteRoot,
-      url: `${config.siteRoot}people/${member.id}`,
       description:
         member.abstract ??
         member.description ??
         member.name + "議員の情報をチェックしましょう",
-      locale: "ja-JP",
       images: [
         {
           url: ogImage,
         },
       ],
+      locale: "ja-JP",
+      siteName: config.siteRoot,
+      url: `${config.siteRoot}people/${member.id}`,
+    },
+    twitter: {
+      title: member.name,
+      card: member.image ? "summary" : "summary_large_image",
+      description:
+        member.description ?? member.name + "議員の情報をチェックしましょう",
+      images: [ogImage],
     },
   };
 }
@@ -124,14 +126,14 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   let combinedData: Timeline[] = [
     ...member.timelines.map((item) => ({
-      itemType: "feed" as const,
-      date: dayjs(item.isoDate),
       data: item,
+      date: dayjs(item.isoDate),
+      itemType: "feed" as const,
     })),
     ...kokkai.map((item) => ({
-      itemType: "kokkai" as const,
-      date: dayjs(item.date),
       data: item,
+      date: dayjs(item.date),
+      itemType: "kokkai" as const,
     })),
   ];
 
@@ -139,17 +141,17 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return (
     <>
-      <div className="mx-auto max-w-screen-sm px-4 md:px-8 my-12">
+      <div className="mx-auto my-12 max-w-screen-sm px-4 md:px-8">
         <section>
           <img
             alt={member.name}
-            className="rounded-2xl mx-auto h-56 w-56 object-cover object-center"
+            className="mx-auto h-56 w-56 rounded-2xl object-cover object-center"
             height={230}
             width={230}
             src={member.image ?? ""}
           />
           <div className="text-center">
-            <h1 className="mt-5 font-bold text-4xl mb-2 font-base">
+            <h1 className="font-base mb-2 mt-5 text-4xl font-bold">
               {member.name}
             </h1>
             {member.house && member.group && (
@@ -161,10 +163,10 @@ export default async function Page({ params }: { params: { id: string } }) {
               </div>
             )}
             {member.abstract ? (
-              <p className="text-gray-500 mb-2">{member.abstract}</p>
+              <p className="mb-2 text-gray-500">{member.abstract}</p>
             ) : (
               member.description && (
-                <p className="text-gray-500 mb-2">{member.description}</p>
+                <p className="mb-2 text-gray-500">{member.description}</p>
               )
             )}
           </div>
@@ -172,43 +174,43 @@ export default async function Page({ params }: { params: { id: string } }) {
           <div className="my-3 text-center">
             {member.twitter && (
               <Link
-                className="bg-[#F1F5F9] rounded-md m-2 inline-flex items-center justify-center h-10 w-10"
+                className="m-2 inline-flex h-10 w-10 items-center justify-center rounded-md bg-[#F1F5F9]"
                 href={`https://twitter.com/${member.twitter}`}
               >
-                <FaTwitter className="text-[#1da1f2] text-xl" />
+                <FaTwitter className="text-xl text-[#1da1f2]" />
               </Link>
             )}
             {member.facebook && (
               <Link
-                className="bg-[#F1F5F9] rounded-md m-2 inline-flex items-center justify-center h-10 w-10"
+                className="m-2 inline-flex h-10 w-10 items-center justify-center rounded-md bg-[#F1F5F9]"
                 href={`https://www.facebook.com/${member.facebook}`}
               >
-                <FaFacebook className="text-[#1877f2] text-xl" />
+                <FaFacebook className="text-xl text-[#1877f2]" />
               </Link>
             )}
             {member.youtube && (
               <Link
-                className="bg-[#F1F5F9] rounded-md m-2 inline-flex items-center justify-center h-10 w-10"
+                className="m-2 inline-flex h-10 w-10 items-center justify-center rounded-md bg-[#F1F5F9]"
                 href={
                   member.youtube.startsWith("UC")
                     ? `https://www.youtube.com/channel/${member.youtube}`
                     : `https://www.youtube.com/@${member.youtube}`
                 }
               >
-                <FaYoutube className="text-[#FF0000] text-xl" />
+                <FaYoutube className="text-xl text-[#FF0000]" />
               </Link>
             )}
             {member.wikipedia && (
               <a
-                className="bg-[#F1F5F9] rounded-md m-2 inline-flex items-center justify-center h-10 w-10"
+                className="m-2 inline-flex h-10 w-10 items-center justify-center rounded-md bg-[#F1F5F9]"
                 href={member.wikipedia}
               >
-                <FaWikipediaW className="text-black text-xl" />
+                <FaWikipediaW className="text-xl text-black" />
               </a>
             )}
             {member.website && (
               <a
-                className="bg-[#F1F5F9] rounded-md m-2 inline-flex items-center justify-center h-10 w-10"
+                className="m-2 inline-flex h-10 w-10 items-center justify-center rounded-md bg-[#F1F5F9]"
                 href={member.website}
               >
                 <AiOutlineLink className="text-xl text-gray-500" />
@@ -222,25 +224,25 @@ export default async function Page({ params }: { params: { id: string } }) {
           <WordCloud name={member.name} />
         </section>
         <section>
-          <h2 className="text-3xl mb-3 font-bold">詳細情報</h2>
+          <h2 className="mb-3 text-3xl font-bold">詳細情報</h2>
           {session?.user && (
             <Link
               href={`/members/${member.id}/edit`}
-              className="mb-5 text-primary block"
+              className="mb-5 block text-primary"
             >
               情報を更新する
             </Link>
           )}
           {member.group && (
-            <div className="flex items-center mb-3">
+            <div className="mb-3 flex items-center">
               {member.group.image ? (
                 <img
-                  className="w-[70px] border h-[70px] rounded-full mr-2"
+                  className="mr-2 h-[70px] w-[70px] rounded-full border"
                   alt={member.group.name}
                   src={member.group.image}
                 />
               ) : (
-                <div className="w-[70px] h-[70px] mr-2 flex justify-center items-center bg-blue-100 text-4xl rounded-full text-center">
+                <div className="mr-2 flex h-[70px] w-[70px] items-center justify-center rounded-full bg-blue-100 text-center text-4xl">
                   <span>🏛️</span>
                 </div>
               )}
@@ -248,16 +250,16 @@ export default async function Page({ params }: { params: { id: string } }) {
             </div>
           )}
           {member.birthplace && (
-            <div className="flex items-center mb-3">
-              <div className="w-[70px] h-[70px] mr-2 flex justify-center items-center bg-green-200 text-4xl rounded-full text-center">
+            <div className="mb-3 flex items-center">
+              <div className="mr-2 flex h-[70px] w-[70px] items-center justify-center rounded-full bg-green-200 text-center text-4xl">
                 <span>🌏</span>
               </div>
               <div className="font-semibold">{member.birthplace}出身</div>
             </div>
           )}
           {member.win && (
-            <div className="flex items-center mb-5">
-              <div className="w-[70px] h-[70px] mr-2 flex justify-center items-center bg-red-300 text-4xl rounded-full text-center">
+            <div className="mb-5 flex items-center">
+              <div className="mr-2 flex h-[70px] w-[70px] items-center justify-center rounded-full bg-red-300 text-center text-4xl">
                 <span>🎉</span>
               </div>
               <div className="font-semibold">{member.win}回の当選</div>
@@ -265,25 +267,25 @@ export default async function Page({ params }: { params: { id: string } }) {
           )}
         </section>
         <section>
-          <h2 className="text-3xl mb-5 font-bold">賛成している法案</h2>
+          <h2 className="mb-5 text-3xl font-bold">賛成している法案</h2>
           <div className="grid grid-cols-2 gap-5">
             {member.supporters.map((bill, i) => (
               <Link
                 key={i}
                 href={`/bill/${bill.billId}`}
-                className="block bg-white px-6 py-4 border border-gray-200"
+                className="block border border-gray-200 bg-white px-6 py-4"
               >
-                <div className="text-5xl mb-4">⚖️</div>
-                <h2 className="text-xl font-semibold line-clamp-3 mb-5">
+                <div className="mb-4 text-5xl">⚖️</div>
+                <h2 className="mb-5 line-clamp-3 text-xl font-semibold">
                   {bill.bill.name}
                 </h2>
-                <p className="text-gray-500 line-clamp-3">{bill.bill.reason}</p>
+                <p className="line-clamp-3 text-gray-500">{bill.bill.reason}</p>
               </Link>
             ))}
           </div>
         </section>
         <section className="my-10">
-          <h2 className="text-4xl font-bold mb-3">Timeline</h2>
+          <h2 className="mb-3 text-4xl font-bold">Timeline</h2>
           <p className="mb-5">
             ここでは、発言した議会や、ブログの投稿などが収集され表示されています。活動を確認してみましょう。
           </p>

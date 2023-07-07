@@ -2,12 +2,12 @@
 
 export async function loadGoogleFont({
   family,
-  weight,
   text,
+  weight,
 }: {
   family: string;
-  weight?: number;
   text?: string;
+  weight?: number;
 }) {
   const params = new URLSearchParams({
     family: `${family}${weight ? `:wght@${weight}` : ""}`,

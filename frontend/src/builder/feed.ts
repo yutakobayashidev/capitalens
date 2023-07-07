@@ -1,16 +1,16 @@
 import { PrismaClient } from "@prisma/client";
-import Parser from "rss-parser";
 import ogs from "open-graph-scraper";
+import Parser from "rss-parser";
 
 const prisma = new PrismaClient();
 const parser = new Parser();
 
 type FeedItem = {
   title: string;
-  link: string;
   contentSnippet?: string;
-  isoDate?: string;
   dateMiliSeconds: number;
+  isoDate?: string;
+  link: string;
   ogImageURL: string;
 };
 
@@ -34,7 +34,7 @@ async function fetchFeedItems(url: string) {
   if (!feed?.items?.length) return [];
 
   const feedItems = await Promise.all(
-    feed.items.map(async ({ title, contentSnippet, link, isoDate }) => {
+    feed.items.map(async ({ title, contentSnippet, isoDate, link }) => {
       let ogImageURL = null;
       try {
         ogImageURL = await getOgImageURL(link);
@@ -46,9 +46,9 @@ async function fetchFeedItems(url: string) {
       return {
         title,
         contentSnippet: contentSnippet?.replace(/\n/g, ""),
-        link,
-        isoDate,
         dateMiliSeconds: isoDate ? new Date(isoDate).getTime() : 0,
+        isoDate,
+        link,
         ogImageURL: ogImageURL,
       };
     })
@@ -58,6 +58,10 @@ async function fetchFeedItems(url: string) {
 
 (async function () {
   const members = await prisma.member.findMany({
+    select: {
+      id: true,
+      feed: true,
+    },
     where: {
       feed: {
         not: null, // Exclude records where feed is null
@@ -65,10 +69,6 @@ async function fetchFeedItems(url: string) {
       NOT: {
         feed: "", // Exclude records where feed is an empty string
       },
-    },
-    select: {
-      feed: true,
-      id: true,
     },
   });
 
@@ -80,12 +80,12 @@ async function fetchFeedItems(url: string) {
         const createManyResult = await prisma.timeline.createMany({
           data: items.map((item) => ({
             title: item.title,
-            link: item.link,
-            isoDate: item.isoDate,
-            dateMiliSeconds: item.dateMiliSeconds,
             contentSnippet: item.contentSnippet,
-            ogImageURL: item.ogImageURL,
+            dateMiliSeconds: item.dateMiliSeconds,
+            isoDate: item.isoDate,
+            link: item.link,
             memberId: member.id,
+            ogImageURL: item.ogImageURL,
           })),
         });
 

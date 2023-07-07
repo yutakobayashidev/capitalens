@@ -1,11 +1,11 @@
 "use server";
 
-import { MemberSchema } from "@src/app/members/[id]/edit/schema";
-import { zact } from "zact/server";
-import prisma from "@src/lib/prisma";
-import { hiraToKana } from "@src/helper/utils";
-import { config } from "@site.config";
 import { auth } from "@auth";
+import { config } from "@site.config";
+import { MemberSchema } from "@src/app/members/[id]/edit/schema";
+import { hiraToKana } from "@src/helper/utils";
+import prisma from "@src/lib/prisma";
+import { zact } from "zact/server";
 
 export const registerAction = zact(MemberSchema)(async (data) => {
   const session = await auth();
@@ -17,16 +17,16 @@ export const registerAction = zact(MemberSchema)(async (data) => {
   }
 
   const {
-    name,
     id,
+    name,
+    description,
+    firstName,
+    firstNameHira,
     groupId,
     house,
-    firstName,
     lastName,
-    firstNameHira,
-    twitter,
     lastNameHira,
-    description,
+    twitter,
     website,
   } = data;
 
@@ -38,11 +38,11 @@ export const registerAction = zact(MemberSchema)(async (data) => {
   const lastNameKana = hiraToKana(lastNameHira);
 
   const currentMember = await prisma.member.findUnique({
-    where: {
-      id: id,
-    },
     select: {
       group: true,
+    },
+    where: {
+      id: id,
     },
   });
 
@@ -55,39 +55,39 @@ export const registerAction = zact(MemberSchema)(async (data) => {
   }
 
   const res = await prisma.member.update({
-    where: {
-      id: id,
-    },
     data: {
       name,
-      twitter,
       description,
-      fullname,
       firstName,
-      lastName,
-      nameHira,
       firstNameHira,
-      lastNameHira,
-      nameKana,
       firstNameKana,
-      lastNameKana,
-      house,
+      fullname,
       group: groupData,
+      house,
+      lastName,
+      lastNameHira,
+      lastNameKana,
+      nameHira,
+      nameKana,
+      twitter,
       website,
+    },
+    where: {
+      id: id,
     },
   });
 
   if (res) {
     const embed = {
       title: `${name} (ID: ${id})`,
-      description,
       color: 1986741,
-      url: config.siteRoot + "members/" + id,
+      description,
       fields: [
-        { name: "Name", value: name, inline: true },
-        { name: "House", value: house, inline: true },
-        { name: "Group ID", value: groupId ?? "無所属・その他", inline: true },
+        { name: "Name", inline: true, value: name },
+        { name: "House", inline: true, value: house },
+        { name: "Group ID", inline: true, value: groupId ?? "無所属・その他" },
       ],
+      url: config.siteRoot + "members/" + id,
     };
 
     const discordData = {
@@ -98,11 +98,11 @@ export const registerAction = zact(MemberSchema)(async (data) => {
     const WEBHOOK_URL = process.env.WEBHOOK_URL as string;
 
     await fetch(WEBHOOK_URL, {
-      method: "POST",
+      body: JSON.stringify(discordData),
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(discordData),
+      method: "POST",
     });
   }
 

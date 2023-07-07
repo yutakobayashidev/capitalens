@@ -1,35 +1,35 @@
 "use client";
 
-import type { Route } from "next";
 import { Menu, Transition } from "@headlessui/react";
-import { Fragment } from "react";
 import cn from "classnames";
+import type { Route } from "next";
+import Link from "next/link";
 import type { Session } from "next-auth";
 import { signOut } from "next-auth/react";
-import Link from "next/link";
+import { Fragment } from "react";
 import { FiSettings } from "react-icons/fi";
 import { MdOutlineLogout } from "react-icons/md";
 
 type NavigationItem = {
-  icon: React.ReactElement;
   name: string;
-  href?: Route<string> | URL;
-  onClick?: () => void;
   elementType: "link" | "button";
+  href?: Route<string> | URL;
+  icon: React.ReactElement;
+  onClick?: () => void;
 };
 
 const userNavigation: NavigationItem[] = [
   {
-    icon: <FiSettings color="#93a5b1" />,
     name: "アカウント設定",
-    href: "/dashboard/settings",
     elementType: "link",
+    href: "/dashboard/settings",
+    icon: <FiSettings color="#93a5b1" />,
   },
   {
     name: "ログアウト",
+    elementType: "button",
     icon: <MdOutlineLogout color="#93a5b1" />,
     onClick: () => signOut(),
-    elementType: "button",
   },
 ];
 
@@ -39,7 +39,7 @@ export default function UserMenu({ user }: { user: Session["user"] }) {
       <div>
         <Menu.Button className="flex text-sm focus:outline-none focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
           <img
-            className="w-10 h-10 rounded-full"
+            className="h-10 w-10 rounded-full"
             src={user.image ?? "/noimage.png"}
             alt={user.name || "メニューを開く"}
           />
