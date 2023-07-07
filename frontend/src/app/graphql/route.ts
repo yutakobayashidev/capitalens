@@ -1,11 +1,12 @@
 import assert from "node:assert";
+
 import { ApolloServer } from "@apollo/server";
-import { NextResponse } from "next/server";
 import prisma from "@src/lib/prisma";
 import {
-  typeDefs as scalarTypeDefs,
   resolvers as scalarResolvers,
+  typeDefs as scalarTypeDefs,
 } from "graphql-scalars";
+import { NextResponse } from "next/server";
 
 const typeDefs = `
   type Views {
