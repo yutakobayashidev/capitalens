@@ -3,10 +3,9 @@
 import { FaTwitter } from "react-icons/fa";
 import dayjs from "dayjs";
 import { useRef, useEffect, useState, useCallback } from "react";
-import videojs from "video.js";
-import "video.js/dist/video-js.css";
 import { Member } from "@src/types/member";
 import Speaker from "./Speaker";
+import Player from "video.js/dist/types/player";
 import { useSearchParams } from "next/navigation";
 import { config } from "@site.config";
 import { type Session } from "next-auth";
@@ -17,7 +16,7 @@ import duration from "dayjs/plugin/duration";
 import utc from "dayjs/plugin/utc";
 import Summarize from "./Summarize";
 import { SearchIcon } from "@xpadev-net/designsystem-icons";
-import { useKuromoji } from "@src/hooks/useKuromoji";
+import VideoJSPlayer from "./Player";
 
 dayjs.extend(utc);
 dayjs.extend(duration);
@@ -49,7 +48,7 @@ export default function Video({
   meeting: Meeting;
   user: Session["user"];
 }) {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const playerRef = useRef<Player | null>(null);
   const wordRef = useRef<HTMLDivElement | null>(null);
   const parentRef = useRef<HTMLDivElement | null>(null);
 
@@ -120,70 +119,6 @@ export default function Video({
     [updateCurrentWord]
   );
 
-  useEffect(() => {
-    if (videoRef.current) {
-      const player = videojs(videoRef.current, options(meeting.m3u8_url));
-
-      player.on("loadedmetadata", function () {
-        if (startSec) {
-          player.currentTime(parseFloat(startSec));
-        }
-      });
-
-      player.on("timeupdate", function () {
-        setCurrentTime(player.currentTime());
-        updateCurrentTime(player.currentTime());
-        const currentTime = player.currentTime();
-        for (let i = meeting.annotations.length - 1; i >= 0; i--) {
-          let annotation = meeting.annotations[i];
-          if (currentTime >= annotation.start_sec) {
-            if (annotation.speaker_name !== (currentSpeaker?.name ?? "")) {
-              setCurrentSpeaker(annotation.member);
-              setCurrentSpeakerInfo(annotation.speaker_info);
-            }
-            break;
-          }
-        }
-      });
-
-      player.on("seeked", function () {
-        const currentTime = player.currentTime();
-        if (currentTime < meeting.annotations[0].start_sec) {
-          setCurrentSpeaker(null);
-        }
-      });
-
-      // Keyboard event listener
-      const keyDownHandler = (event: KeyboardEvent) => {
-        const skipTime = 10; // 10 seconds
-
-        // Right arrow key
-        if (event.keyCode === 39) {
-          player.currentTime(player.currentTime() + skipTime);
-        }
-        // Left arrow key
-        else if (event.keyCode === 37) {
-          player.currentTime(player.currentTime() - skipTime);
-        } else if (event.keyCode === 32) {
-          if (player.paused()) {
-            player.play();
-          } else {
-            player.pause();
-          }
-          event.preventDefault(); // This line will prevent the default action of the space key
-        }
-      };
-
-      // Add the event listener
-      window.addEventListener("keydown", keyDownHandler);
-
-      // Cleanup function
-      return () => {
-        window.removeEventListener("keydown", keyDownHandler);
-      };
-    }
-  }, [meeting, currentSpeaker, startSec, updateCurrentTime]);
-
   const MAX_TWEET_LENGTH = 140;
   const TWITTER_SHORTENED_URL_LENGTH = 23;
   const ellipsis = "...";
@@ -208,7 +143,6 @@ export default function Video({
       let offset = wordRect.top - parentRect.top - parentRect.height / 2;
       offset += parentRef.current.scrollTop; // add the current scroll position of the parent element
 
-      // Ensure the scroll offset is within the bounds
       offset = Math.max(offset, 0);
       offset = Math.min(
         offset,
@@ -229,12 +163,46 @@ export default function Video({
     );
   }, [searchQuery, meeting.utterances]);
 
+  const handlePlayerReady = (player: any) => {
+    playerRef.current = player;
+
+    player.on("timeupdate", function () {
+      const currentTime = player.currentTime();
+      setCurrentTime(currentTime);
+      updateCurrentTime(player.currentTime());
+      for (let i = meeting.annotations.length - 1; i >= 0; i--) {
+        let annotation = meeting.annotations[i];
+        if (currentTime >= annotation.start_sec) {
+          if (annotation.speaker_name !== (currentSpeaker?.name ?? "")) {
+            setCurrentSpeaker(annotation.member);
+            setCurrentSpeakerInfo(annotation.speaker_info);
+          }
+          break;
+        }
+      }
+    });
+
+    player.on("seeked", function () {
+      const currentTime = player.currentTime();
+      if (currentTime < meeting.annotations[0].start_sec) {
+        setCurrentSpeaker(null);
+      }
+    });
+
+    player.on("loadedmetadata", function () {
+      if (startSec) {
+        player.currentTime(parseFloat(startSec));
+      }
+    });
+  };
+
   return (
     <div className="md:flex block justify-center my-7">
       <div className="md:w-[calc(65%)] md:mr-5">
-        <div>
-          <video controls playsInline ref={videoRef} className="video-js" />
-        </div>
+        <VideoJSPlayer
+          options={options(meeting.m3u8_url)}
+          onReady={handlePlayerReady}
+        />
         <div className="flex items-center justify-between my-5">
           <h1 className="text-2xl font-bold items-center flex">
             <span
@@ -286,10 +254,9 @@ export default function Video({
                   className={`text-primary`}
                   data-start-sec={annotation.start_sec}
                   onClick={() => {
-                    if (videoRef.current) {
-                      const player = videojs(videoRef.current);
-                      player.currentTime(annotation.start_sec);
-                      player.play();
+                    if (playerRef.current) {
+                      playerRef.current.currentTime(annotation.start_sec);
+                      playerRef.current.play();
                     }
                   }}
                 >
@@ -369,10 +336,9 @@ export default function Video({
                     }`}
                     ref={word.text === currentWord ? wordRef : null}
                     onClick={() => {
-                      if (videoRef.current) {
-                        const player = videojs(videoRef.current);
-                        player.currentTime(word.start);
-                        player.play();
+                      if (playerRef.current) {
+                        playerRef.current.currentTime(word.start);
+                        playerRef.current.play();
                       }
                     }}
                   >
