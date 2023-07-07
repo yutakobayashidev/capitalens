@@ -28,8 +28,12 @@ jobs:
         with:
           node-version: "18.x"
 
-      - name: Install dependencies
-        uses: bahmutov/npm-install@v1
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        id: pnpm-install
+        with:
+          version: 7
+          run_install: true
 
       - name: Restore next build
         uses: actions/cache@v2
