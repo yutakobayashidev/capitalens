@@ -126,8 +126,32 @@ export async function POST(request: Request) {
   // @ts-expect-error: https://github.com/planetscale/database-js/issues/71
   if (!results.rows[0][column]) {
     // @ts-expect-error: https://github.com/planetscale/database-js/issues/71
-    if (!results.rows[0].apiURL) {
-      return NextResponse.json({ error: "error" });
+    if (!results.rows[0].apiURL | !results.rows[0].meetingURL) {
+      const query = `
+      SELECT Word.start,Word.end, Word.text
+      FROM Word
+      INNER JOIN Utterance ON Word.utteranceId = Utterance.id
+      WHERE Utterance.videoId = ?
+    `;
+
+      const params = [body.id]; // パラメータとしてビデオIDを設定します。
+
+      const results = await conn.execute(query, params);
+
+      if (results.rows.length === 0) {
+        return NextResponse.json({ error: "error" });
+      } else {
+        // @ts-expect-error: https://github.com/planetscale/database-js/issues/71
+        const text = results.rows.map((row) => row.text).join("\n");
+
+        const stream = runLLMChain(text, body.kids, body.id, conn);
+
+        return new Response(await stream, {
+          headers: {
+            "Content-Type": "text/event-stream",
+          },
+        });
+      }
     }
     // @ts-expect-error: https://github.com/planetscale/database-js/issues/71
     const res = await fetch(results.rows[0].apiURL, {

@@ -17,6 +17,7 @@ import duration from "dayjs/plugin/duration";
 import utc from "dayjs/plugin/utc";
 import Summarize from "./Summarize";
 import { SearchIcon } from "@xpadev-net/designsystem-icons";
+import { useKuromoji } from "@src/hooks/useKuromoji";
 
 dayjs.extend(utc);
 dayjs.extend(duration);
@@ -49,6 +50,9 @@ export default function Video({
   user: Session["user"];
 }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const wordRef = useRef<HTMLDivElement | null>(null);
+  const parentRef = useRef<HTMLDivElement | null>(null);
+
   const [currentSpeaker, setCurrentSpeaker] = useState<Member | null>(null);
   const [currentSpeakerInfo, setCurrentSpeakerInfo] = useState<string | null>(
     null
@@ -57,8 +61,11 @@ export default function Video({
   const searchParams = useSearchParams();
   const [currentTime, setCurrentTime] = useState<number>(0);
   const startSec = searchParams?.get("t");
-
   const [currentWord, setCurrentWord] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredWords, setFilteredWords] = useState(
+    meeting.utterances.flatMap((utterance) => utterance.words)
+  );
 
   const handleScroll = () => {
     if (wordRef.current && parentRef.current && currentWord) {
@@ -193,9 +200,6 @@ export default function Video({
     return summary;
   }
 
-  const wordRef = useRef<HTMLDivElement | null>(null);
-  const parentRef = useRef<HTMLDivElement | null>(null);
-
   useEffect(() => {
     if (wordRef.current && parentRef.current && !disableAutoScroll) {
       const wordRect = wordRef.current.getBoundingClientRect();
@@ -214,11 +218,6 @@ export default function Video({
       parentRef.current.scrollTo(0, offset);
     }
   }, [currentWord, disableAutoScroll]);
-
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filteredWords, setFilteredWords] = useState(
-    meeting.utterances.flatMap((utterance) => utterance.words)
-  );
 
   useEffect(() => {
     setFilteredWords(
@@ -320,10 +319,11 @@ export default function Video({
         </div>
         <Comments meeting={meeting} user={user} />
       </div>
-      <div className="flex-1 gap-y-5">
-        {meeting.apiURL && meeting.meetingURL && (
+      <div className="flex-1 flex flex-col gap-y-5">
+        {(!!meeting.apiURL && !!meeting.meetingURL) ||
+        meeting.utterances.length > 0 ? (
           <Summarize user={user} meeting={meeting} />
-        )}
+        ) : null}
         {meeting.utterances.length !== 0 && (
           <div className="border rounded-xl border-gray-200 pt-2">
             <h2 className="text-2xl font-bold my-3 px-4 gap-x-2">

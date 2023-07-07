@@ -171,7 +171,7 @@ export default function Summarize({
       if (summary) return summary;
       if (meeting.summary) return meeting.summary;
     }
-    return "OpenAIで要約ボタンをクリックしてください";
+    return "「OpenAIで要約」ボタンをクリックしてください";
   };
 
   return (
