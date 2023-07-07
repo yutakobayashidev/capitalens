@@ -272,10 +272,6 @@ export default function Video({
         <Comments meeting={meeting} user={user} />
       </div>
       <div className="flex flex-1 flex-col gap-y-5">
-        {(!!meeting.apiURL && !!meeting.meetingURL) ||
-        meeting.utterances.length > 0 ? (
-          <Summarize user={user} meeting={meeting} />
-        ) : null}
         {meeting.utterances.length !== 0 && (
           <Transcript
             meeting={meeting}
@@ -283,6 +279,10 @@ export default function Video({
             player={playerRef.current}
           />
         )}
+        {(!!meeting.apiURL && !!meeting.meetingURL) ||
+        meeting.utterances.length > 0 ? (
+          <Summarize user={user} meeting={meeting} />
+        ) : null}
       </div>
     </div>
   );

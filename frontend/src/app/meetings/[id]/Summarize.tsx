@@ -1,13 +1,12 @@
 "use client";
 
-import { isKanji,kanaToHira } from "@src/helper/utils";
+import { isKanji, kanaToHira } from "@src/helper/utils";
 import { useKuromoji } from "@src/hooks/useKuromoji";
 import { Meeting } from "@src/types/meeting";
 import { AttentionIcon } from "@xpadev-net/designsystem-icons";
 import { type Session } from "next-auth";
-import { useCallback,useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AiOutlineLink } from "react-icons/ai";
-import { FaMagic } from "react-icons/fa";
 import { SiOpenai } from "react-icons/si";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
@@ -177,7 +176,6 @@ export default function Summarize({
   return (
     <div className="rounded-xl border border-gray-200 px-5 pb-4 pt-2">
       <h2 className="my-3 flex items-center gap-x-2 text-2xl font-bold">
-        <FaMagic className="text-lg text-[#9d34da]" />
         AIによるサマリー
       </h2>
       {(isChecked

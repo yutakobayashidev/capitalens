@@ -40,7 +40,7 @@ export default function Transcript({
       const parentRect = parentRef.current.getBoundingClientRect();
       const offset = wordRect.top - parentRect.top;
 
-      if (Math.abs(offset) > 400) {
+      if (Math.abs(offset) > 315) {
         // Disable auto-scroll if the user scrolls beyond a 100px distance from the current word position
         setDisableAutoScroll(true);
       } else {
@@ -88,7 +88,7 @@ export default function Transcript({
         />
       </div>
       <div
-        className="hidden-scrollbar h-[400px] overflow-y-auto"
+        className="hidden-scrollbar h-[315px] overflow-y-auto"
         ref={parentRef}
         onScroll={handleScroll}
       >
