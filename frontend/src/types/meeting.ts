@@ -13,9 +13,17 @@ export type Meeting = {
   meeting_name: string;
   meetingURL: string | null;
   page_url: string;
+  questions: Question[];
   summary: string | null;
   utterances: Utterance[];
   videoComments: videoComment[];
+};
+
+type Question = {
+  id: number;
+  title: string;
+  end: number;
+  start: number;
 };
 
 export type Word = {

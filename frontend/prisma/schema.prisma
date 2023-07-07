@@ -239,6 +239,7 @@ model Video {
   apiURL       String?
   videoComments VideoComment[]
   utterances Utterance[]
+  questions    Question[]
 }
 
 model Utterance {
@@ -284,6 +285,17 @@ model Books {
   title String
   date DateTime
   isbn String
+}
+
+model Question {
+  id    Int @id @default(autoincrement())
+  title String
+  start Float
+  end  Float
+  video Video   @relation(fields: [videoId], references: [id])
+  videoId String
+
+  @@index([videoId])
 }
 
 model Annotation {
