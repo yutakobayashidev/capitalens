@@ -192,6 +192,8 @@ export default function Video({
     player.on("loadedmetadata", function () {
       if (startSec) {
         player.currentTime(parseFloat(startSec));
+      } else if (meeting.utterances[0].words[0]) {
+        player.currentTime(meeting.utterances[0].words[0].start);
       }
     });
   };
