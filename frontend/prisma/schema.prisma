@@ -258,6 +258,7 @@ model Word {
   start       Float
   end         Float
   text        String
+  speaker_id  String?
   utterance   Utterance @relation(fields: [utteranceId], references: [id])
   utteranceId Int
 
@@ -277,8 +278,6 @@ model VideoComment {
   @@index([videoId])
   @@index([userId])
 }
-
-
 
 model Books {
   id String  @id @default(cuid())

@@ -28,6 +28,7 @@ type Question = {
 
 export type Word = {
   end: number;
+  speaker_id: string;
   start: number;
   text: string;
 };

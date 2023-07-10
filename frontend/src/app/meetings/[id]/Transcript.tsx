@@ -1,5 +1,6 @@
 import { Meeting } from "@src/types/meeting";
 import { SearchIcon } from "@xpadev-net/designsystem-icons";
+import Avatar from "boring-avatars";
 import cn from "classnames";
 import dayjs from "dayjs";
 import { useEffect, useRef, useState } from "react";
@@ -20,6 +21,7 @@ export default function Transcript({
   const parentRef = useRef<HTMLDivElement | null>(null);
   const [disableAutoScroll, setDisableAutoScroll] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedSpeakerIds, setSelectedSpeakerIds] = useState<string[]>([]);
   const [filteredWords, setFilteredWords] = useState(
     meeting.utterances.flatMap((utterance) => utterance.words)
   );
@@ -31,8 +33,13 @@ export default function Transcript({
         .filter((word) =>
           word.text.toLowerCase().includes(searchQuery.toLowerCase())
         )
+        .filter(
+          (word) =>
+            !selectedSpeakerIds.length ||
+            selectedSpeakerIds.includes(word.speaker_id)
+        )
     );
-  }, [searchQuery, meeting.utterances]);
+  }, [searchQuery, meeting.utterances, selectedSpeakerIds]);
 
   const handleScroll = () => {
     if (wordRef.current && parentRef.current && currentWord) {
@@ -68,6 +75,14 @@ export default function Transcript({
     }
   }, [currentWord, disableAutoScroll]);
 
+  const speakerIds = [
+    ...new Set(
+      meeting.utterances
+        .flatMap((utterance) => utterance.words)
+        .map((word) => word.speaker_id)
+    ),
+  ];
+
   return (
     <div className="rounded-xl border border-gray-200 pt-2">
       <h2 className="my-3 gap-x-2 px-4 text-2xl font-bold">
@@ -87,6 +102,45 @@ export default function Transcript({
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
+      <div className="mt-2 px-4 py-2">
+        <div className="flex items-center gap-x-2">
+          {speakerIds.map((speakerId) => (
+            <button
+              key={speakerId}
+              className={cn(
+                "relative flex items-center rounded-full px-2 py-1",
+                selectedSpeakerIds.includes(speakerId)
+                  ? "bg-blue-300 font-semibold text-white"
+                  : "bg-gray-200 font-medium text-gray-600"
+              )}
+              onClick={() =>
+                setSelectedSpeakerIds(
+                  (prevSpeakerIds) =>
+                    prevSpeakerIds.includes(speakerId)
+                      ? prevSpeakerIds.filter((id) => id !== speakerId) // If already selected, remove the id
+                      : [...prevSpeakerIds, speakerId] // Otherwise, add the id
+                )
+              }
+            >
+              <div className="absolute left-[0px] top-[-0px]">
+                <Avatar
+                  size={32}
+                  name={speakerId}
+                  variant="beam"
+                  colors={[
+                    "#FFBD87",
+                    "#FFD791",
+                    "#F7E8A6",
+                    "#D9E8AE",
+                    "#BFE3C0",
+                  ]}
+                />
+              </div>
+              <span className="ml-7">{speakerId}</span>
+            </button>
+          ))}
+        </div>
+      </div>
       <div
         className="hidden-scrollbar h-[315px] overflow-y-auto"
         ref={parentRef}
@@ -103,7 +157,7 @@ export default function Transcript({
           filteredWords.map((word, i) => (
             <div
               key={i}
-              className={cn("p-4", {
+              className={cn("p-4 flex flex-1 items-start", {
                 "bg-gray-100": word.text === currentWord,
               })}
               ref={word.text === currentWord ? wordRef : null}
@@ -114,18 +168,39 @@ export default function Transcript({
                 }
               }}
             >
-              <p className="mb-1 inline-block rounded bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-500">
-                {dayjs
-                  .utc(
-                    dayjs
-                      .duration(
-                        dayjs().diff(dayjs().subtract(word.start, "seconds"))
+              <div className="mr-2.5">
+                <Avatar
+                  size={40}
+                  name={word.speaker_id}
+                  variant="beam"
+                  colors={[
+                    "#FFBD87",
+                    "#FFD791",
+                    "#F7E8A6",
+                    "#D9E8AE",
+                    "#BFE3C0",
+                  ]}
+                />
+              </div>
+              <div className="flex-1">
+                <div className="mb-1 flex items-center gap-x-1">
+                  <p className="font-bold">{word.speaker_id}</p>
+                  <span className="text-sm text-gray-400">
+                    {dayjs
+                      .utc(
+                        dayjs
+                          .duration(
+                            dayjs().diff(
+                              dayjs().subtract(word.start, "seconds")
+                            )
+                          )
+                          .asMilliseconds()
                       )
-                      .asMilliseconds()
-                  )
-                  .format("m:ss")}
-              </p>
-              <div>{word.text}</div>
+                      .format("m:ss")}
+                  </span>
+                </div>
+                <div>{word.text}</div>
+              </div>
             </div>
           ))
         )}
