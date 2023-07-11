@@ -66,7 +66,11 @@ async function getMeeting(id: string) {
       questions: true,
       utterances: {
         include: {
-          words: true,
+          words: {
+            include: {
+              member: true,
+            },
+          },
         },
       },
       videoComments: {

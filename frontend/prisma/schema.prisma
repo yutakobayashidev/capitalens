@@ -61,9 +61,11 @@ model Member {
   supporters    BillSupport[]
   timelines     Timeline[]
   annotations   Annotation[]
+  words         Word[]
 
   @@index([groupId])
 }
+ 
 
 model Timeline {
   id              String  @id @default(cuid())
@@ -258,10 +260,12 @@ model Word {
   start       Float
   end         Float
   text        String
-  speaker_id  String?
+  member      Member    @relation(fields: [memberId], references: [id])
+  memberId    String
   utterance   Utterance @relation(fields: [utteranceId], references: [id])
   utteranceId Int
 
+  @@index([memberId])
   @@index([utteranceId])
 }
 

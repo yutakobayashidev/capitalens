@@ -21,7 +21,9 @@ export default function Transcript({
   const parentRef = useRef<HTMLDivElement | null>(null);
   const [disableAutoScroll, setDisableAutoScroll] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedSpeakerIds, setSelectedSpeakerIds] = useState<string[]>([]);
+  const [selectedSpeakerNames, setSelectedSpeakerNames] = useState<string[]>(
+    []
+  );
   const [filteredWords, setFilteredWords] = useState(
     meeting.utterances.flatMap((utterance) => utterance.words)
   );
@@ -35,11 +37,11 @@ export default function Transcript({
         )
         .filter(
           (word) =>
-            !selectedSpeakerIds.length ||
-            selectedSpeakerIds.includes(word.speaker_id)
+            !selectedSpeakerNames.length ||
+            selectedSpeakerNames.includes(word.member.name)
         )
     );
-  }, [searchQuery, meeting.utterances, selectedSpeakerIds]);
+  }, [searchQuery, meeting.utterances, selectedSpeakerNames]);
 
   const handleScroll = () => {
     if (wordRef.current && parentRef.current && currentWord) {
@@ -75,13 +77,13 @@ export default function Transcript({
     }
   }, [currentWord, disableAutoScroll]);
 
-  const speakerIds = [
-    ...new Set(
-      meeting.utterances
-        .flatMap((utterance) => utterance.words)
-        .map((word) => word.speaker_id)
-    ),
-  ];
+  const speakers = meeting.utterances
+    .flatMap((utterance) => utterance.words)
+    .map((word) => word.member)
+    .filter(
+      (value, index, self) =>
+        self.findIndex((m) => m.name === value.name) === index
+    );
 
   return (
     <div className="rounded-xl border border-gray-200 pt-2">
@@ -104,39 +106,49 @@ export default function Transcript({
       </div>
       <div className="mt-2 px-4 py-2">
         <div className="flex items-center gap-x-2">
-          {speakerIds.map((speakerId) => (
+          {speakers.map((speaker) => (
             <button
-              key={speakerId}
+              key={speaker.name}
               className={cn(
                 "relative flex items-center rounded-full px-2 py-1",
-                selectedSpeakerIds.includes(speakerId)
+                selectedSpeakerNames.includes(speaker.name)
                   ? "bg-blue-300 font-semibold text-white"
                   : "bg-gray-200 font-medium text-gray-600"
               )}
               onClick={() =>
-                setSelectedSpeakerIds(
-                  (prevSpeakerIds) =>
-                    prevSpeakerIds.includes(speakerId)
-                      ? prevSpeakerIds.filter((id) => id !== speakerId) // If already selected, remove the id
-                      : [...prevSpeakerIds, speakerId] // Otherwise, add the id
+                setSelectedSpeakerNames(
+                  (prevSpeakerNames) =>
+                    prevSpeakerNames.includes(speaker.name)
+                      ? prevSpeakerNames.filter((name) => name !== speaker.name) // If already selected, remove the name
+                      : [...prevSpeakerNames, speaker.name] // Otherwise, add the name
                 )
               }
             >
               <div className="absolute left-[0px] top-[-0px]">
-                <Avatar
-                  size={32}
-                  name={speakerId}
-                  variant="beam"
-                  colors={[
-                    "#FFBD87",
-                    "#FFD791",
-                    "#F7E8A6",
-                    "#D9E8AE",
-                    "#BFE3C0",
-                  ]}
-                />
+                {speaker.image ? (
+                  <div className="relative h-[32px] w-[32px]">
+                    <img
+                      alt={speaker.name}
+                      src={speaker.image}
+                      className="absolute left-0 top-0 h-full w-full rounded-full border object-cover"
+                    />
+                  </div>
+                ) : (
+                  <Avatar
+                    size={32}
+                    name={speaker.name}
+                    variant="beam"
+                    colors={[
+                      "#FFBD87",
+                      "#FFD791",
+                      "#F7E8A6",
+                      "#D9E8AE",
+                      "#BFE3C0",
+                    ]}
+                  />
+                )}
               </div>
-              <span className="ml-7">{speakerId}</span>
+              <span className="ml-7">{speaker.name}</span>
             </button>
           ))}
         </div>
@@ -169,22 +181,34 @@ export default function Transcript({
               }}
             >
               <div className="mr-2.5">
-                <Avatar
-                  size={40}
-                  name={word.speaker_id}
-                  variant="beam"
-                  colors={[
-                    "#FFBD87",
-                    "#FFD791",
-                    "#F7E8A6",
-                    "#D9E8AE",
-                    "#BFE3C0",
-                  ]}
-                />
+                {word.member.image ? (
+                  <div className="relative h-[40px] w-[40px]">
+                    <img
+                      alt={word.member.name}
+                      src={word.member.image}
+                      className="absolute left-0 top-0 h-full w-full rounded-full border object-cover"
+                    />
+                  </div>
+                ) : (
+                  <Avatar
+                    size={40}
+                    name={word.speaker_id}
+                    variant="beam"
+                    colors={[
+                      "#FFBD87",
+                      "#FFD791",
+                      "#F7E8A6",
+                      "#D9E8AE",
+                      "#BFE3C0",
+                    ]}
+                  />
+                )}
               </div>
               <div className="flex-1">
                 <div className="mb-1 flex items-center gap-x-1">
-                  <p className="font-bold">{word.speaker_id}</p>
+                  <p className="font-bold">
+                    {word.member.name ? word.member.name : "不明な発話者"}
+                  </p>
                   <span className="text-sm text-gray-400">
                     {dayjs
                       .utc(
