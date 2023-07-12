@@ -51,13 +51,11 @@ export default function Video({
 }) {
   const playerRef = useRef<Player | null>(null);
   const [currentSpeaker, setCurrentSpeaker] = useState<Member | null>(null);
-  const [currentSpeakerInfo, setCurrentSpeakerInfo] = useState<string | null>(
-    null
-  );
-  const searchParams = useSearchParams();
   const [currentTime, setCurrentTime] = useState<number>(0);
-  const startSec = searchParams?.get("t");
   const [currentWord, setCurrentWord] = useState<string | null>(null);
+
+  const searchParams = useSearchParams();
+  const startSec = searchParams?.get("t");
 
   const updateCurrentWord = useCallback(
     (time: number) => {
@@ -71,6 +69,8 @@ export default function Video({
             time < meeting.utterances[i].words[j].end
           ) {
             setCurrentWord(meeting.utterances[i].words[j].text);
+            // Update the current speaker with the member from the word.
+            setCurrentSpeaker(meeting.utterances[i].words[j].member);
             found = true;
             break;
           }
@@ -80,9 +80,10 @@ export default function Video({
         }
       }
 
-      // If no word was found for the current time, unset the current word.
+      // If no word was found for the current time, unset the current word and speaker.
       if (!found) {
         setCurrentWord(null);
+        setCurrentSpeaker(null);
       }
     },
     [meeting.utterances]
@@ -112,37 +113,19 @@ export default function Video({
     return summary;
   }
 
-  const handlePlayerReady = (player: any) => {
+  const handlePlayerReady = (player: Player) => {
     playerRef.current = player;
 
     player.on("timeupdate", function () {
-      const currentTime = player.currentTime();
-      setCurrentTime(currentTime);
-      updateCurrentTime(player.currentTime());
-      for (let i = meeting.annotations.length - 1; i >= 0; i--) {
-        let annotation = meeting.annotations[i];
-        if (currentTime >= annotation.start_sec) {
-          if (annotation.speaker_name !== (currentSpeaker?.name ?? "")) {
-            setCurrentSpeaker(annotation.member);
-            setCurrentSpeakerInfo(annotation.speaker_info);
-          }
-          break;
-        }
-      }
-    });
-
-    player.on("seeked", function () {
-      const currentTime = player.currentTime();
-      if (currentTime < meeting.annotations[0].start_sec) {
-        setCurrentSpeaker(null);
-      }
+      const newTime = player.currentTime();
+      updateCurrentTime(newTime);
     });
 
     player.on("loadedmetadata", function () {
       if (startSec) {
         player.currentTime(parseFloat(startSec));
-      } else if (meeting.utterances[0].words[0]) {
-        player.currentTime(meeting.utterances[0].words[0].start);
+      } else if (meeting.utterances[0]) {
+        player.currentTime(meeting.utterances[0].start);
       }
     });
   };
@@ -183,12 +166,7 @@ export default function Video({
             ツイートする
           </a>
         </div>
-        {currentSpeaker && (
-          <Speaker
-            currentSpeaker={currentSpeaker}
-            speakerInfo={currentSpeakerInfo}
-          />
-        )}
+        {currentSpeaker && <Speaker currentSpeaker={currentSpeaker} />}
         <div className="mb-5 rounded-xl bg-gray-100 px-4 pb-6 pt-4">
           <div className="mb-3 flex items-center justify-between">
             <div className="flex items-center text-base">
@@ -197,6 +175,9 @@ export default function Video({
               </span>
             </div>
           </div>
+          <p className="mb-2 text-sm text-gray-500">
+            AI生成コンテンツの正確性は保証できませんのでご注意ください
+          </p>
           <h2 className="text-xl font-bold">発言者</h2>
           <div className="my-3">
             {meeting.annotations.map((annotation) => (

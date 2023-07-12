@@ -68,7 +68,11 @@ async function getMeeting(id: string) {
         include: {
           words: {
             include: {
-              member: true,
+              member: {
+                include: {
+                  group: true,
+                },
+              },
             },
           },
         },

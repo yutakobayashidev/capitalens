@@ -2,14 +2,12 @@ import { getHostFromURL } from "@src/helper/utils";
 import { Member } from "@src/types/member";
 import Link from "next/link";
 import { AiOutlineLink } from "react-icons/ai";
-import { FaGlobe,FaTwitter } from "react-icons/fa";
+import { FaGlobe, FaTwitter } from "react-icons/fa";
 
 export default function Speaker({
   currentSpeaker,
-  speakerInfo,
 }: {
   currentSpeaker: Member;
-  speakerInfo: string | null;
 }) {
   return (
     <div className="mb-5 rounded-lg border px-4 pb-2 pt-6">
@@ -21,7 +19,7 @@ export default function Speaker({
         />
         <div>
           <h2 className="mb-1 text-2xl font-bold">{currentSpeaker.name}</h2>
-          {currentSpeaker.group ? (
+          {currentSpeaker.group && (
             <div className="mb-2 text-gray-500">
               {currentSpeaker.group.name +
                 "の" +
@@ -30,8 +28,6 @@ export default function Speaker({
                   : "参議院") +
                 "議員"}
             </div>
-          ) : (
-            <div className="mb-2 text-gray-500">{speakerInfo}</div>
           )}
           <p className="mb-3 line-clamp-4 text-sm text-gray-600">
             {currentSpeaker.abstract ?? currentSpeaker.description}
@@ -69,7 +65,7 @@ export default function Speaker({
         <div className="mb-2 text-xs text-gray-500">
           {currentSpeaker.wikipedia ? (
             <a
-              className="font-medium text-primary hover:underline"
+              className="text-primary font-medium hover:underline"
               href={currentSpeaker.wikipedia}
             >
               ウィキペディアの項目
@@ -79,7 +75,7 @@ export default function Speaker({
           )}
           を
           <a
-            className="font-medium text-primary hover:underline"
+            className="text-primary font-medium hover:underline"
             href="https://creativecommons.org/licenses/by-sa/3.0/deed.ja"
           >
             Creative Commons Attribution (CC BY-SA 3.0)
