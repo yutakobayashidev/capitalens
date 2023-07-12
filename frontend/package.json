@@ -51,7 +51,7 @@
     "kuromoji": "^0.1.2",
     "kuromojin": "^3.0.0",
     "langchain": "^0.0.95",
-    "next": "13.4.4",
+    "next": "13.4.9",
     "next-auth": "0.0.0-manual.e65faa1c",
     "next-contentlayer": "^0.3.2",
     "node-fetch": "2.6.7",
