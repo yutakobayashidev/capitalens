@@ -38,7 +38,7 @@ export default function Transcript({
         .filter(
           (word) =>
             !selectedSpeakerNames.length ||
-            selectedSpeakerNames.includes(word.member.name)
+            (word.member && selectedSpeakerNames.includes(word.member.name))
         )
     );
   }, [searchQuery, meeting.utterances, selectedSpeakerNames]);
@@ -80,9 +80,10 @@ export default function Transcript({
   const speakers = meeting.utterances
     .flatMap((utterance) => utterance.words)
     .map((word) => word.member)
+    .filter((member) => member !== null)
     .filter(
       (value, index, self) =>
-        self.findIndex((m) => m.name === value.name) === index
+        value && self.findIndex((m) => m && m.name === value.name) === index
     );
 
   return (
@@ -106,51 +107,58 @@ export default function Transcript({
       </div>
       <div className="mt-2 px-4 py-2">
         <div className="flex items-center gap-x-2">
-          {speakers.map((speaker) => (
-            <button
-              key={speaker.name}
-              className={cn(
-                "relative flex items-center rounded-full px-2 py-1",
-                selectedSpeakerNames.includes(speaker.name)
-                  ? "bg-blue-300 font-semibold text-white"
-                  : "bg-gray-200 font-medium text-gray-600"
-              )}
-              onClick={() =>
-                setSelectedSpeakerNames(
-                  (prevSpeakerNames) =>
-                    prevSpeakerNames.includes(speaker.name)
-                      ? prevSpeakerNames.filter((name) => name !== speaker.name) // If already selected, remove the name
-                      : [...prevSpeakerNames, speaker.name] // Otherwise, add the name
-                )
-              }
-            >
-              <div className="absolute left-[0px] top-[-0px]">
-                {speaker.image ? (
-                  <div className="relative h-[32px] w-[32px]">
-                    <img
-                      alt={speaker.name}
-                      src={speaker.image}
-                      className="absolute left-0 top-0 h-full w-full rounded-full border object-cover"
-                    />
-                  </div>
-                ) : (
-                  <Avatar
-                    size={32}
-                    name={speaker.name}
-                    variant="beam"
-                    colors={[
-                      "#FFBD87",
-                      "#FFD791",
-                      "#F7E8A6",
-                      "#D9E8AE",
-                      "#BFE3C0",
-                    ]}
-                  />
+          {speakers.map((speaker) => {
+            if (!speaker) {
+              return null;
+            }
+            return (
+              <button
+                key={speaker.name}
+                className={cn(
+                  "relative flex items-center rounded-full px-2 py-1",
+                  selectedSpeakerNames.includes(speaker.name)
+                    ? "bg-blue-300 font-semibold text-white"
+                    : "bg-gray-200 font-medium text-gray-600"
                 )}
-              </div>
-              <span className="ml-7">{speaker.name}</span>
-            </button>
-          ))}
+                onClick={() =>
+                  setSelectedSpeakerNames(
+                    (prevSpeakerNames) =>
+                      prevSpeakerNames.includes(speaker.name)
+                        ? prevSpeakerNames.filter(
+                            (name) => name !== speaker.name
+                          ) // If already selected, remove the name
+                        : [...prevSpeakerNames, speaker.name] // Otherwise, add the name
+                  )
+                }
+              >
+                <div className="absolute left-[0px] top-[-0px]">
+                  {speaker.image ? (
+                    <div className="relative h-[32px] w-[32px]">
+                      <img
+                        alt={speaker.name}
+                        src={speaker.image}
+                        className="absolute left-0 top-0 h-full w-full rounded-full border object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <Avatar
+                      size={32}
+                      name={speaker.name}
+                      variant="beam"
+                      colors={[
+                        "#FFBD87",
+                        "#FFD791",
+                        "#F7E8A6",
+                        "#D9E8AE",
+                        "#BFE3C0",
+                      ]}
+                    />
+                  )}
+                </div>
+                <span className="ml-7">{speaker.name}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
       <div
@@ -181,7 +189,7 @@ export default function Transcript({
               }}
             >
               <div className="mr-2.5">
-                {word.member.image ? (
+                {word.member && word.member.image ? (
                   <div className="relative h-[40px] w-[40px]">
                     <img
                       alt={word.member.name}
@@ -207,7 +215,7 @@ export default function Transcript({
               <div className="flex-1">
                 <div className="mb-1 flex items-center gap-x-1">
                   <p className="font-bold">
-                    {word.member.name ? word.member.name : "不明な発話者"}
+                    {word.member ? word.member.name : "不明な発話者"}
                   </p>
                   <span className="text-sm text-gray-400">
                     {dayjs

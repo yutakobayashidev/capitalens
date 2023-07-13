@@ -260,8 +260,8 @@ model Word {
   start       Float
   end         Float
   text        String
-  member      Member    @relation(fields: [memberId], references: [id])
-  memberId    String
+  member      Member?    @relation(fields: [memberId], references: [id])
+  memberId    String?
   utterance   Utterance @relation(fields: [utteranceId], references: [id])
   utteranceId Int
 
