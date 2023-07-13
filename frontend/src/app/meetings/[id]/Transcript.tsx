@@ -200,7 +200,6 @@ export default function Transcript({
                 ) : (
                   <Avatar
                     size={40}
-                    name={word.speaker_id}
                     variant="beam"
                     colors={[
                       "#FFBD87",
