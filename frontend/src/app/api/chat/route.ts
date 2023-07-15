@@ -13,7 +13,7 @@ const apiConfig = new Configuration({
 
 const openai = new OpenAIApi(apiConfig);
 
-export const redis = new Redis({
+const redis = new Redis({
   token: process.env.UPSTASH_REDIS_REST_TOKEN || "",
   url: process.env.UPSTASH_REDIS_REST_URL || "",
 });
