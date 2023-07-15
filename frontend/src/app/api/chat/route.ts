@@ -52,7 +52,7 @@ export async function POST(req: Request) {
   const cached = await await redis.get(key);
 
   if (cached) {
-    return new Response(cached as string);
+    return new Response(cached as any);
   }
 
   const response = await openai.createChatCompletion({
