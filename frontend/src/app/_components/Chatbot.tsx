@@ -8,7 +8,7 @@ import {
 } from "@xpadev-net/designsystem-icons";
 import { useChat } from "ai/react";
 import cn from "classnames";
-import { AnimatePresence,motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useAtom } from "jotai";
 import { type Session } from "next-auth";
 import { useState } from "react";
@@ -32,16 +32,22 @@ export default function Chatbot({ user }: { user: Session["user"] }) {
     setIsOpen(!isOpen);
   };
 
-  const { handleInputChange, handleSubmit, input, isLoading, messages } =
-    useChat({
-      api: "/api/chat",
-      onResponse: (response) => {
-        if (response.status === 429) {
-          toast.error("利用制限を超えました。時間を開けてお試しください。");
-          return;
-        }
-      },
-    });
+  const {
+    handleInputChange,
+    handleSubmit,
+    input,
+    isLoading,
+    messages,
+    setInput,
+  } = useChat({
+    api: "/api/chat",
+    onResponse: (response) => {
+      if (response.status === 429) {
+        toast.error("利用制限を超えました。時間を開けてお試しください。");
+        return;
+      }
+    },
+  });
 
   return (
     <div className="fixed bottom-[0] right-[30px] hidden w-[380px] rounded-t-2xl border border-gray-200 bg-white px-5 py-3 shadow-2xl md:block">
@@ -108,7 +114,7 @@ export default function Chatbot({ user }: { user: Session["user"] }) {
                         )}
                       </div>
                     )}
-                    <ReactMarkdown className="prose prose-neutral ml-4 max-w-none flex-1 space-y-2 overflow-hidden px-1 prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-img:shadow">
+                    <ReactMarkdown className="prose prose-neutral prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-img:shadow ml-4 max-w-none flex-1 space-y-2 overflow-hidden px-1">
                       {m.content}
                     </ReactMarkdown>
                   </div>
@@ -135,8 +141,8 @@ export default function Chatbot({ user }: { user: Session["user"] }) {
                 onChange={handleInputChange}
                 onKeyDown={(e) => {
                   if (e.key === "Tab") {
-                    e.preventDefault(); // This prevents the normal Tab key behaviour
-                    handleInputChange({ target: { value: placeholder } }); // Here, placeholder is the content you want to insert
+                    e.preventDefault();
+                    setInput(placeholder);
                   }
                 }}
                 className="w-full resize-none border-0 bg-transparent p-0 pl-3 pr-10 outline-none focus:ring-0 focus-visible:ring-0 md:pl-0 md:pr-12"
