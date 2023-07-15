@@ -13,6 +13,11 @@ const apiConfig = new Configuration({
 
 const openai = new OpenAIApi(apiConfig);
 
+export const redis = new Redis({
+  token: process.env.UPSTASH_REDIS_REST_TOKEN || "",
+  url: process.env.UPSTASH_REDIS_REST_URL || "",
+});
+
 export async function POST(req: Request) {
   if (
     process.env.NODE_ENV != "development" &&
@@ -23,10 +28,7 @@ export async function POST(req: Request) {
 
     const ratelimit = new Ratelimit({
       limiter: Ratelimit.slidingWindow(20, "1 d"),
-      redis: new Redis({
-        token: process.env.UPSTASH_REDIS_REST_TOKEN,
-        url: process.env.UPSTASH_REDIS_REST_URL,
-      }),
+      redis: redis,
     });
 
     const { limit, remaining, reset, success } = await ratelimit.limit(
@@ -46,6 +48,12 @@ export async function POST(req: Request) {
   }
 
   const { messages } = await req.json();
+  const key = JSON.stringify(messages);
+  const cached = await await redis.get(key);
+
+  if (cached) {
+    return new Response(cached as string);
+  }
 
   const response = await openai.createChatCompletion({
     functions,
@@ -69,6 +77,11 @@ export async function POST(req: Request) {
         model: "gpt-3.5-turbo-0613",
         stream: true,
       });
+    },
+    async onCompletion(completion) {
+      // Cache the response
+      await redis.set(key, completion);
+      await redis.expire(key, 60 * 60);
     },
   });
 
