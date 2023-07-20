@@ -1,6 +1,7 @@
 "use client";
 
 import { SearchIcon } from "@xpadev-net/designsystem-icons";
+import { Route } from "next";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, useState } from "react";
@@ -47,7 +48,7 @@ export default function Search() {
                 ? "border-gray-500"
                 : "border-transparent text-gray-400"
             }`}
-            href={`/search/?q=${search}&source=members`}
+            href={`/search/?q=${search}&source=members` as Route}
           >
             <span>国会議員</span>
           </Link>
@@ -57,7 +58,7 @@ export default function Search() {
                 ? "border-gray-500"
                 : "border-transparent text-gray-400"
             }`}
-            href={`/search/?q=${search}&source=meetings`}
+            href={`/search/?q=${search}&source=meetings` as Route}
           >
             <span>会議</span>
           </Link>

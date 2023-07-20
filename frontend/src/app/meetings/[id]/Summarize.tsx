@@ -196,7 +196,7 @@ export default function Summarize({
         <Switch
           checked={isChecked}
           onChange={setIsChecked}
-          className={`relative block h-[25px] w-[60px] rounded-full bg-cyan-500`}
+          className="relative block h-[25px] w-[60px] rounded-full bg-cyan-500"
         >
           <div
             className={`absolute flex items-center justify-center ${

@@ -3,17 +3,15 @@ import { fontFamily } from "tailwindcss/defaultTheme";
 
 export default {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
+  plugins: [require("@tailwindcss/typography")],
   theme: {
     extend: {
-      height: {
-        screen: "100dvh",
-      },
       borderRadius: {
         "4xl": "1.8rem",
       },
       colors: {
-        primary: "#1E50B5",
         "black-rgba": "rgba(0, 0, 0, 0.2)",
+        primary: "#1E50B5",
       },
       fontFamily: {
         inter: ["var(--font-inter)"],
@@ -24,7 +22,9 @@ export default {
           ...fontFamily.sans,
         ],
       },
+      height: {
+        screen: "100dvh",
+      },
     },
   },
-  plugins: [require("@tailwindcss/typography")],
 } satisfies Config;
