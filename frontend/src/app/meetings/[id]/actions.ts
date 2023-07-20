@@ -37,7 +37,7 @@ export const DeleteComment = zact(z.object({ id: z.string().cuid() }))(
   }
 );
 
-export const addComment = zact(
+export const createComment = zact(
   z.object({ id: z.string().cuid(), comment: z.string() })
 )(async (data) => {
   const session = await auth();

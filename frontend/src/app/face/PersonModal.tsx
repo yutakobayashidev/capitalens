@@ -2,7 +2,7 @@ import { Member } from "@src/types/member";
 import { motion, transform, useMotionValue } from "framer-motion";
 import Link from "next/link";
 import { useRef } from "react";
-import { FaGlobe,FaTwitter } from "react-icons/fa";
+import { FaGlobe, FaTwitter } from "react-icons/fa";
 
 interface PersonModalProps {
   member: Member;
@@ -81,7 +81,7 @@ const PersonModal: React.FC<PersonModalProps> = ({ member, onClose }) => {
         dragConstraints={{ top: 0 }}
         drag="y"
         style={{ x: "-50%" }}
-        className="content xs:p-8 fixed bottom-0 left-[50%] z-50 flex w-full max-w-[480px] flex-col rounded-t-4xl bg-white px-5 py-7 before:absolute before:left-[50%] before:top-[10px] before:h-[4px] before:w-[60px] before:-translate-x-1/2 before:bg-gray-200"
+        className="xs:p-8 rounded-t-4xl fixed bottom-0 left-[50%] z-50 flex w-full max-w-[480px] flex-col bg-white px-5 py-7 before:absolute before:left-[50%] before:top-[10px] before:h-[4px] before:w-[60px] before:-translate-x-1/2 before:bg-gray-200"
       >
         <h2 className="mb-5 text-center text-2xl font-bold">
           <span className="mr-1">{member.name}</span>議員の情報

@@ -1,3 +1,4 @@
+import { auth } from "@auth";
 import { config } from "@site.config";
 import Meetings from "@src/app/_components/Meetings";
 import Topics from "@src/app/_components/Topics";
@@ -54,17 +55,6 @@ async function getTopicViews() {
   return data;
 }
 
-async function meeting_list() {
-  const res = await fetch(
-    "https://kokkai.ndl.go.jp/api/meeting?from=2023-05-01&recordPacking=json",
-    {
-      next: { revalidate: 3600 },
-    }
-  );
-
-  return res.json();
-}
-
 async function getBillWithCommentCounts() {
   const bills = await prisma.bill.findMany({
     include: {
@@ -102,12 +92,22 @@ export default async function Page() {
   const topicsPromise = getTopicViews();
   const billPromise = getBillWithCommentCounts();
   const groupsPromise = prisma.group.findMany();
-
+  const meetingsPromise = prisma.video.findMany({
+    orderBy: [
+      {
+        date: "desc",
+      },
+    ],
+  });
   const membersByGroup = await fetchItemsByStatus();
-  const [topics, bills, groups] = await Promise.all([
+  const sessionPromise = auth();
+
+  const [topics, bills, groups, meetings, session] = await Promise.all([
     topicsPromise,
     billPromise,
     groupsPromise,
+    meetingsPromise,
+    sessionPromise,
   ]);
 
   return (
@@ -244,7 +244,7 @@ export default async function Page() {
       <section className="py-8">
         <div className="mx-auto max-w-screen-xl px-4 md:px-8">
           <h2 className="mb-5 text-2xl font-bold">最新の議会</h2>
-          <Meetings />
+          <Meetings user={session?.user} meetings={meetings} />
         </div>
       </section>
     </>

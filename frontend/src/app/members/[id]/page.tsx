@@ -3,7 +3,6 @@ import "dayjs/locale/ja";
 import { auth } from "@auth";
 import { config } from "@site.config";
 import Timeline from "@src/app/members/[id]/Timeline";
-import TwitterTimeline from "@src/app/members/[id]/TwitterTimeline";
 import WordCloud from "@src/app/members/[id]/WordCloud";
 import SetPlaceHolder from "@src/hooks/placeholder";
 import prisma from "@src/lib/prisma";
@@ -14,7 +13,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AiOutlineLink } from "react-icons/ai";
-import { FaFacebook, FaTwitter, FaWikipediaW,FaYoutube } from "react-icons/fa";
+import { FaFacebook, FaTwitter, FaWikipediaW, FaYoutube } from "react-icons/fa";
 
 import Chat from "./Chat";
 
@@ -141,98 +140,95 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return (
     <>
-      <div className="mx-auto my-12 max-w-screen-sm px-4 md:px-8">
+      <div className="mx-auto mt-16 w-full max-w-screen-lg px-4 md:px-8">
         <section>
-          <img
-            alt={member.name}
-            className="mx-auto h-56 w-56 rounded-2xl object-cover object-center"
-            height={230}
-            width={230}
-            src={member.image ?? ""}
-          />
-          <div className="text-center">
-            <h1 className="font-base mb-2 mt-5 text-4xl font-bold">
-              {member.name}
-            </h1>
-            {member.house && member.group && (
-              <div className="mb-4 font-bold text-gray-600">
-                {member.group.name +
-                  "の" +
-                  (member.house === "REPRESENTATIVES" ? "衆議院" : "参議院") +
-                  "議員"}
+          <div className="mb-5 items-start text-center md:flex md:text-left">
+            <img
+              alt={member.name}
+              className="mx-auto mb-5 h-56 w-56 rounded-2xl object-cover object-center md:mb-0 md:mr-8"
+              height={230}
+              width={230}
+              src={member.image ?? ""}
+            />
+            <div>
+              <div className="mb-2 inline-flex items-center gap-x-3">
+                <h1 className="text-4xl font-bold">{member.name}</h1>
+                {session?.user && (
+                  <Link
+                    href={`/members/${member.id}/edit`}
+                    className="text-primary block"
+                  >
+                    更新
+                  </Link>
+                )}
               </div>
-            )}
-            {member.abstract ? (
-              <p className="mb-2 text-gray-500">{member.abstract}</p>
-            ) : (
-              member.description && (
-                <p className="mb-2 text-gray-500">{member.description}</p>
-              )
-            )}
+              {member.house && member.group && (
+                <div className="mb-2 font-bold text-gray-600">
+                  {member.group.name +
+                    "の" +
+                    (member.house === "REPRESENTATIVES" ? "衆議院" : "参議院") +
+                    "議員"}
+                </div>
+              )}
+              {member.abstract ? (
+                <p className="mb-2 text-gray-500">{member.abstract}</p>
+              ) : (
+                member.description && (
+                  <p className="mb-2 text-gray-500">{member.description}</p>
+                )
+              )}
+              <div>
+                {member.twitter && (
+                  <Link
+                    className="m-2 inline-flex h-10 w-10 items-center justify-center rounded-md bg-[#F1F5F9]"
+                    href={`https://twitter.com/${member.twitter}`}
+                  >
+                    <FaTwitter className="text-xl text-[#1da1f2]" />
+                  </Link>
+                )}
+                {member.facebook && (
+                  <Link
+                    className="m-2 inline-flex h-10 w-10 items-center justify-center rounded-md bg-[#F1F5F9]"
+                    href={`https://www.facebook.com/${member.facebook}`}
+                  >
+                    <FaFacebook className="text-xl text-[#1877f2]" />
+                  </Link>
+                )}
+                {member.youtube && (
+                  <Link
+                    className="m-2 inline-flex h-10 w-10 items-center justify-center rounded-md bg-[#F1F5F9]"
+                    href={
+                      member.youtube.startsWith("UC")
+                        ? `https://www.youtube.com/channel/${member.youtube}`
+                        : `https://www.youtube.com/@${member.youtube}`
+                    }
+                  >
+                    <FaYoutube className="text-xl text-[#FF0000]" />
+                  </Link>
+                )}
+                {member.wikipedia && (
+                  <a
+                    className="m-2 inline-flex h-10 w-10 items-center justify-center rounded-md bg-[#F1F5F9]"
+                    href={member.wikipedia}
+                  >
+                    <FaWikipediaW className="text-xl text-black" />
+                  </a>
+                )}
+                {member.website && (
+                  <a
+                    className="m-2 inline-flex h-10 w-10 items-center justify-center rounded-md bg-[#F1F5F9]"
+                    href={member.website}
+                  >
+                    <AiOutlineLink className="text-xl text-gray-500" />
+                  </a>
+                )}
+              </div>
+            </div>
           </div>
-          <Chat user={session?.user} member={member} />
-          <div className="my-3 text-center">
-            {member.twitter && (
-              <Link
-                className="m-2 inline-flex h-10 w-10 items-center justify-center rounded-md bg-[#F1F5F9]"
-                href={`https://twitter.com/${member.twitter}`}
-              >
-                <FaTwitter className="text-xl text-[#1da1f2]" />
-              </Link>
-            )}
-            {member.facebook && (
-              <Link
-                className="m-2 inline-flex h-10 w-10 items-center justify-center rounded-md bg-[#F1F5F9]"
-                href={`https://www.facebook.com/${member.facebook}`}
-              >
-                <FaFacebook className="text-xl text-[#1877f2]" />
-              </Link>
-            )}
-            {member.youtube && (
-              <Link
-                className="m-2 inline-flex h-10 w-10 items-center justify-center rounded-md bg-[#F1F5F9]"
-                href={
-                  member.youtube.startsWith("UC")
-                    ? `https://www.youtube.com/channel/${member.youtube}`
-                    : `https://www.youtube.com/@${member.youtube}`
-                }
-              >
-                <FaYoutube className="text-xl text-[#FF0000]" />
-              </Link>
-            )}
-            {member.wikipedia && (
-              <a
-                className="m-2 inline-flex h-10 w-10 items-center justify-center rounded-md bg-[#F1F5F9]"
-                href={member.wikipedia}
-              >
-                <FaWikipediaW className="text-xl text-black" />
-              </a>
-            )}
-            {member.website && (
-              <a
-                className="m-2 inline-flex h-10 w-10 items-center justify-center rounded-md bg-[#F1F5F9]"
-                href={member.website}
-              >
-                <AiOutlineLink className="text-xl text-gray-500" />
-              </a>
-            )}
-          </div>
-          {member.twitter && <TwitterTimeline username={member.twitter} />}
-        </section>
-        <section className="my-10">
-          <h2 className="text-center text-4xl font-bold">WordCloud</h2>
-          <WordCloud name={member.name} />
         </section>
         <section>
           <h2 className="mb-3 text-3xl font-bold">詳細情報</h2>
-          {session?.user && (
-            <Link
-              href={`/members/${member.id}/edit`}
-              className="mb-5 block text-primary"
-            >
-              情報を更新する
-            </Link>
-          )}
+          <Chat user={session?.user} member={member} />
           {member.group && (
             <div className="mb-3 flex items-center">
               {member.group.image ? (
@@ -266,30 +262,38 @@ export default async function Page({ params }: { params: { id: string } }) {
             </div>
           )}
         </section>
-        <section>
-          <h2 className="mb-5 text-3xl font-bold">賛成している法案</h2>
-          <div className="grid grid-cols-2 gap-5">
-            {member.supporters.map((bill, i) => (
-              <Link
-                key={i}
-                href={`/bill/${bill.billId}`}
-                className="block border border-gray-200 bg-white px-6 py-4"
-              >
-                <div className="mb-4 text-5xl">⚖️</div>
-                <h2 className="mb-5 line-clamp-3 text-xl font-semibold">
-                  {bill.bill.name}
-                </h2>
-                <p className="line-clamp-3 text-gray-500">{bill.bill.reason}</p>
-              </Link>
-            ))}
-          </div>
-        </section>
+        {member.supporters.length !== 0 && (
+          <section>
+            <h2 className="mb-5 text-3xl font-bold">賛成している法律案</h2>
+            <div className="grid grid-cols-2 gap-5">
+              {member.supporters.map((bill, i) => (
+                <Link
+                  key={i}
+                  href={`/bill/${bill.billId}`}
+                  className="block border border-gray-200 bg-white px-6 py-4"
+                >
+                  <div className="mb-4 text-5xl">⚖️</div>
+                  <h2 className="mb-5 line-clamp-3 text-xl font-semibold">
+                    {bill.bill.name}
+                  </h2>
+                  <p className="line-clamp-3 text-gray-500">
+                    {bill.bill.reason}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
         <section className="my-10">
-          <h2 className="mb-3 text-4xl font-bold">Timeline</h2>
+          <h2 className="mb-3 text-4xl font-bold">タイムライン</h2>
           <p className="mb-5">
             ここでは、発言した議会や、ブログの投稿などが収集され表示されています。活動を確認してみましょう。
           </p>
           <Timeline member={member} combinedData={combinedData} />
+        </section>
+        <section className="my-10">
+          <h2 className="text-center text-4xl font-bold">WordCloud</h2>
+          <WordCloud name={member.name} />
         </section>
       </div>
       <SetPlaceHolder

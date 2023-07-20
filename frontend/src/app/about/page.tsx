@@ -1,6 +1,6 @@
 import { config } from "@site.config";
 import type { Metadata } from "next";
-import { FaDiscord,FaGithub } from "react-icons/fa";
+import { FaDiscord, FaGithub } from "react-icons/fa";
 
 export const metadata: Metadata = {
   title: "このサイトについて",

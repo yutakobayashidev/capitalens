@@ -1,15 +1,15 @@
 "use client";
 
-import { Dialog,Switch  } from "@headlessui/react";
+import { Dialog, Switch } from "@headlessui/react";
 import GLogo from "@public/g-logo.svg";
 import Modal from "@src/app/_components/Modal";
 import { ArrowDownIcon } from "@xpadev-net/designsystem-icons";
 import cn from "classnames";
 import { useRouter } from "next/navigation";
 import { type Session } from "next-auth";
-import { useEffect , useState , useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 
-import { DeleteAccount,updatePrefecture, updateUser } from "./actions";
+import { DeleteAccount, updatePrefecture, updateUser } from "./actions";
 
 export default function Settings({
   prefectures,
@@ -78,7 +78,7 @@ export default function Settings({
 
                   setPrefecture(Number(event.target.value));
                 }}
-                className="border-normal-400 hover:border-normal-500 hover:bg-normal-50 block w-full appearance-none rounded-lg border-2 bg-white py-2 pl-3 pr-8 leading-tight transition-colors focus:border-primary focus:outline-none"
+                className="border-normal-400 hover:border-normal-500 hover:bg-normal-50 focus:border-primary block w-full appearance-none rounded-lg border-2 bg-white py-2 pl-3 pr-8 leading-tight transition-colors focus:outline-none"
               >
                 {prefectures.map((prefecture) => (
                   <option key={prefecture.id} value={prefecture.id}>
@@ -114,7 +114,7 @@ export default function Settings({
                   });
                 }}
                 className={cn(
-                  kids ? "bg-primary" : "bg-blue-500",
+                  kids ? "bg-primary" : "bg-gray-400",
                   "relative inline-flex h-[38px] w-[74px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75"
                 )}
               >

@@ -1,10 +1,13 @@
+"use client";
+
 import { LoginPrompt } from "@src/app/_components/Login";
 import { Meeting } from "@src/types/meeting";
 import { type Session } from "next-auth";
 import { useRef } from "react";
+import { experimental_useFormStatus as useFormStatus } from "react-dom";
 import TextareaAutosize from "react-textarea-autosize";
 
-import { addComment } from "./actions";
+import { createComment } from "./actions";
 import Comment from "./Comment";
 
 export default function Comments({
@@ -15,6 +18,7 @@ export default function Comments({
   user: Session["user"];
 }) {
   const form = useRef<HTMLFormElement>(null);
+  const { pending } = useFormStatus();
 
   return (
     <div>
@@ -26,7 +30,7 @@ export default function Comments({
 
           if (typeof comment !== "string") return;
 
-          await addComment({ id: meeting.id, comment });
+          await createComment({ id: meeting.id, comment });
 
           form.current?.reset();
         }}
@@ -42,8 +46,9 @@ export default function Comments({
               className="mb-3 block w-full resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2"
             />
             <button
+              disabled={pending}
               type="submit"
-              className="rounded-md bg-blue-500 px-3 py-2 font-bold text-white"
+              className="rounded-md bg-blue-500 px-3 py-2 font-bold text-white disabled:bg-gray-400"
             >
               コメントを送信
             </button>

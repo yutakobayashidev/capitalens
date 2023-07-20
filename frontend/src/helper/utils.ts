@@ -46,3 +46,19 @@ export function hiraToKana(str: string | null) {
     return String.fromCharCode(match.charCodeAt(0) + 0x60);
   });
 }
+
+export const convertSecondsToTime = (secs: number): string => {
+  secs = Math.floor(secs);
+  let hours: number | string = Math.floor(secs / 3600);
+  let minutes: number | string = Math.floor(
+    (secs - (hours as number) * 3600) / 60
+  );
+  let seconds: number | string =
+    secs - (hours as number) * 3600 - (minutes as number) * 60;
+  if (hours < 10) hours = "" + hours;
+  if (minutes < 10) minutes = "" + minutes;
+  if (seconds < 10) seconds = "0" + seconds;
+  return hours === "0"
+    ? `${minutes}:${seconds}`
+    : `${hours}:${minutes}:${seconds}`;
+};

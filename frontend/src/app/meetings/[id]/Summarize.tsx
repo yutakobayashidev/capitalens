@@ -1,12 +1,14 @@
 "use client";
 
+import { Switch } from "@headlessui/react";
 import { isKanji, kanaToHira } from "@src/helper/utils";
 import { useKuromoji } from "@src/hooks/useKuromoji";
 import { Meeting } from "@src/types/meeting";
-import { AttentionIcon } from "@xpadev-net/designsystem-icons";
+import { ChildOutlinedIcon } from "@xpadev-net/designsystem-icons";
+import cn from "classnames";
 import { type Session } from "next-auth";
 import { useCallback, useEffect, useState } from "react";
-import { AiOutlineLink } from "react-icons/ai";
+import { FiCopy } from "react-icons/fi";
 import { SiOpenai } from "react-icons/si";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
@@ -191,14 +193,19 @@ export default function Summarize({
         </button>
       )}
       <label className="mb-3 flex items-center">
-        <input
-          type="checkbox"
-          className="mr-2"
+        <Switch
           checked={isChecked}
-          disabled={!isTokenizerReady}
-          onChange={() => setIsChecked(!isChecked)}
-        />
-        子ども向けに説明
+          onChange={setIsChecked}
+          className={`relative block h-[25px] w-[60px] rounded-full bg-cyan-500`}
+        >
+          <div
+            className={`absolute flex items-center justify-center ${
+              isChecked ? "left-[30px]" : "left-0"
+            } top-1/2 block h-8 w-8 -translate-y-1/2 rounded-full bg-white shadow-md transition-all duration-200`}
+          >
+            <ChildOutlinedIcon className="fill-cyan-500" />
+          </div>
+        </Switch>
       </label>
       <div className="leading-5 text-gray-800">
         <ReactMarkdown
@@ -211,31 +218,26 @@ export default function Summarize({
           {displayText()}
         </ReactMarkdown>
       </div>
-      {(meeting.summary || summary) && !start && (
-        <button
-          onClick={handleCopy}
-          className="mt-3 flex items-center rounded-full border border-gray-200 px-4 py-2 font-medium"
-        >
-          {copy ? (
-            "✨ コピーしました"
-          ) : (
-            <>
-              <AiOutlineLink className="mr-1 text-2xl text-gray-400" />
-              要約をコピーする
-            </>
-          )}
-        </button>
-      )}
-      <div className="mt-3 flex items-center text-sm text-gray-500">
-        <AttentionIcon
-          width="1em"
-          height="1em"
-          fill="currentColor"
-          className="text-xl text-red-400"
-        />
-        <div className="ml-1 text-xs">
-          AIによる要約は間違いを含む可能性があります
-        </div>
+      <div className="mt-5 flex justify-end">
+        {(meeting.summary || summary) && !start && (
+          <button
+            onClick={handleCopy}
+            disabled={copy}
+            className={cn(
+              "flex items-center rounded-full border-gray-200 px-3 py-2 text-sm font-medium text-gray-400 duration-100 ease-out",
+              !copy && "hover:bg-gray-100"
+            )}
+          >
+            {copy ? (
+              "✨ コピーしました"
+            ) : (
+              <>
+                <FiCopy className="mr-1" />
+                要約をコピー
+              </>
+            )}
+          </button>
+        )}
       </div>
     </div>
   );

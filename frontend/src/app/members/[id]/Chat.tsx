@@ -37,9 +37,9 @@ export default function Chat({
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <div className="relative flex w-full items-center rounded-md border bg-gray-100 py-[8px] shadow md:py-2 md:pl-4">
+        <div className="relative inline-flex w-full items-center rounded-md border bg-gray-100 py-[8px] shadow md:py-2 md:pl-4">
           <input
-            placeholder={member.name + "さんの最近の発言を教えて"}
+            placeholder={member.name + "議員について何でも聞いてみましょう"}
             value={input}
             required={true}
             className="m-0 w-full resize-none border-0 bg-transparent p-0 pl-3 pr-10 outline-none focus:ring-0 focus-visible:ring-0 md:pl-0 md:pr-12"
@@ -84,7 +84,7 @@ export default function Chat({
               )}
               <ReactMarkdown
                 key={m.id}
-                className="prose prose-neutral ml-4 max-w-none flex-1 space-y-2 overflow-hidden px-1 prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-img:shadow"
+                className="prose prose-neutral prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-img:shadow ml-4 max-w-none flex-1 space-y-2 overflow-hidden px-1"
               >
                 {m.content}
               </ReactMarkdown>

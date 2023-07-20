@@ -1,8 +1,10 @@
 "use client";
 
 import { config } from "@site.config";
+import { convertSecondsToTime } from "@src/helper/utils";
 import { Meeting } from "@src/types/meeting";
 import { Member } from "@src/types/member";
+import cn from "classnames";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import utc from "dayjs/plugin/utc";
@@ -42,6 +44,25 @@ function LinkButton({
   );
 }
 
+// Moved these constants and functions outside the component to declutter the component itself.
+const MAX_TWEET_LENGTH = 140;
+const TWITTER_SHORTENED_URL_LENGTH = 23;
+const ellipsis = "...";
+
+const truncateSummary = (summary: string, maxChars: number): string =>
+  summary.length > maxChars
+    ? summary.slice(0, maxChars - ellipsis.length) + ellipsis
+    : summary;
+
+const formatSeconds = (secs: number) => {
+  const hours = Math.floor(secs / 3600);
+  const minutes = Math.floor((secs % 3600) / 60);
+  const result = [];
+  if (hours > 0) result.push(`${hours}時間`);
+  if (minutes > 0) result.push(`${minutes}分`);
+  return result.join("");
+};
+
 export default function Video({
   meeting,
   user,
@@ -57,11 +78,14 @@ export default function Video({
   const searchParams = useSearchParams();
   const startSec = searchParams?.get("t");
 
+  const baseText = `${meeting.house === "COUNCILLORS" ? "参議院" : "衆議院"} ${
+    meeting.meeting_name
+  }\n\n`;
+  const url = `${config.siteRoot}meetings/${meeting.id}`;
+
   const updateCurrentWord = useCallback(
     (time: number) => {
       let found = false;
-
-      // Find the word in the utterances.
       for (let i = 0; i < meeting.utterances.length; i++) {
         for (let j = 0; j < meeting.utterances[i].words.length; j++) {
           if (
@@ -69,18 +93,13 @@ export default function Video({
             time < meeting.utterances[i].words[j].end
           ) {
             setCurrentWord(meeting.utterances[i].words[j].text);
-            // Update the current speaker with the member from the word.
             setCurrentSpeaker(meeting.utterances[i].words[j].member);
             found = true;
             break;
           }
         }
-        if (found) {
-          break;
-        }
+        if (found) break;
       }
-
-      // If no word was found for the current time, unset the current word and speaker.
       if (!found) {
         setCurrentWord(null);
         setCurrentSpeaker(null);
@@ -89,44 +108,28 @@ export default function Video({
     [meeting.utterances]
   );
 
-  const updateCurrentTime = useCallback(
-    (time: number) => {
-      setCurrentTime(time);
-      updateCurrentWord(time);
-    },
-    [updateCurrentWord]
-  );
-
-  const MAX_TWEET_LENGTH = 140;
-  const TWITTER_SHORTENED_URL_LENGTH = 23;
-  const ellipsis = "...";
-  const baseText = `${meeting.house === "COUNCILLORS" ? "参議院" : "衆議院"} ${
-    meeting.meeting_name
-  }\n\n`;
-  const url = `${config.siteRoot}meetings/${meeting.id}`;
-
-  function truncateSummary(summary: string, maxChars: number): string {
-    if (summary.length > maxChars) {
-      return summary.slice(0, maxChars - ellipsis.length) + ellipsis;
-    }
-
-    return summary;
-  }
-
   const handlePlayerReady = (player: Player) => {
     playerRef.current = player;
-
     player.on("timeupdate", function () {
       const newTime = player.currentTime();
-      updateCurrentTime(newTime);
-    });
-
-    player.on("loadedmetadata", function () {
-      if (startSec) {
-        player.currentTime(parseFloat(startSec));
-      } else if (meeting.utterances[0]) {
-        player.currentTime(meeting.utterances[0].start);
+      setCurrentTime(newTime);
+      if (meeting.utterances.length === 0) {
+        for (let i = meeting.annotations.length - 1; i >= 0; i--) {
+          let annotation = meeting.annotations[i];
+          if (newTime >= annotation.start_sec) {
+            if (annotation.speaker_name !== (currentSpeaker?.name ?? ""))
+              setCurrentSpeaker(annotation.member);
+            break;
+          }
+        }
+      } else {
+        updateCurrentWord(newTime);
       }
+    });
+    player.on("loadedmetadata", function () {
+      if (startSec) player.currentTime(parseFloat(startSec));
+      else if (meeting.utterances[0])
+        player.currentTime(meeting.utterances[0].start);
     });
   };
 
@@ -140,11 +143,11 @@ export default function Video({
         <div className="my-5 flex items-center justify-between">
           <h1 className="flex items-center text-2xl font-bold">
             <span
-              className={`${
-                meeting.house === "COUNCILLORS"
-                  ? "bg-indigo-400"
-                  : "bg-[#EA5433]"
-              } mr-2 rounded px-2 py-1 text-base font-bold text-white`}
+              className={cn({
+                "bg-[#EA5433]": meeting.house !== "COUNCILLORS",
+                "bg-indigo-400": meeting.house === "COUNCILLORS",
+                "mr-2 rounded px-2 py-1 text-base font-bold text-white": true,
+              })}
             >
               {meeting.house === "COUNCILLORS" ? "参議院" : "衆議院"}
             </span>
@@ -170,14 +173,22 @@ export default function Video({
         <div className="mb-5 rounded-xl bg-gray-100 px-4 pb-6 pt-4">
           <div className="mb-3 flex items-center justify-between">
             <div className="flex items-center text-base">
-              <span className="mr-2 font-medium">
+              <span className="font-medium">
                 {dayjs(meeting.date).format("YYYY/MM/DD")}
               </span>
+              {meeting.utterances.length !== 0 && (
+                <>
+                  <span>・</span>
+                  <span>
+                    {formatSeconds(
+                      meeting.utterances[meeting.utterances.length - 1].end -
+                        meeting.utterances[0].start
+                    )}
+                  </span>
+                </>
+              )}
             </div>
           </div>
-          <p className="mb-2 text-sm text-gray-500">
-            AI生成コンテンツの正確性は保証できませんのでご注意ください
-          </p>
           <h2 className="text-xl font-bold">発言者</h2>
           <div className="my-3">
             {meeting.annotations.map((annotation) => (
@@ -192,7 +203,7 @@ export default function Video({
                     }
                   }}
                 >
-                  {annotation.time}
+                  {convertSecondsToTime(annotation.start_sec)}
                 </button>
                 <p className="ml-2">
                   {annotation.speaker_name} ({annotation.speaker_info})
@@ -216,17 +227,7 @@ export default function Video({
                         }
                       }}
                     >
-                      {dayjs
-                        .utc(
-                          dayjs
-                            .duration(
-                              dayjs().diff(
-                                dayjs().subtract(question.start, "seconds")
-                              )
-                            )
-                            .asMilliseconds()
-                        )
-                        .format("m:ss")}
+                      {convertSecondsToTime(question.start)}
                     </button>
                     <p className="ml-2">{question.title}</p>
                   </div>
@@ -252,7 +253,7 @@ export default function Video({
         </div>
         <Comments meeting={meeting} user={user} />
       </div>
-      <div className="flex flex-1 flex-col gap-y-5">
+      <div className="flex flex-col gap-y-5 md:w-[calc(35%)]">
         {meeting.utterances.length !== 0 && (
           <Transcript
             meeting={meeting}

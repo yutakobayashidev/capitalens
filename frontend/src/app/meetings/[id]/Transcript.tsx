@@ -1,8 +1,8 @@
+import { convertSecondsToTime } from "@src/helper/utils";
 import { Meeting } from "@src/types/meeting";
 import { SearchIcon } from "@xpadev-net/designsystem-icons";
 import Avatar from "boring-avatars";
 import cn from "classnames";
-import dayjs from "dayjs";
 import { useEffect, useRef, useState } from "react";
 import Player from "video.js/dist/types/player";
 
@@ -105,61 +105,57 @@ export default function Transcript({
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
-      <div className="mt-2 px-4 py-2">
-        <div className="flex items-center gap-x-2">
-          {speakers.map((speaker) => {
-            if (!speaker) {
-              return null;
-            }
-            return (
-              <button
-                key={speaker.name}
-                className={cn(
-                  "relative flex items-center rounded-full px-2 py-1",
-                  selectedSpeakerNames.includes(speaker.name)
-                    ? "bg-blue-300 font-semibold text-white"
-                    : "bg-gray-200 font-medium text-gray-600"
-                )}
-                onClick={() =>
-                  setSelectedSpeakerNames(
-                    (prevSpeakerNames) =>
-                      prevSpeakerNames.includes(speaker.name)
-                        ? prevSpeakerNames.filter(
-                            (name) => name !== speaker.name
-                          ) // If already selected, remove the name
-                        : [...prevSpeakerNames, speaker.name] // Otherwise, add the name
-                  )
-                }
-              >
-                <div className="absolute left-[0px] top-[-0px]">
-                  {speaker.image ? (
-                    <div className="relative h-[32px] w-[32px]">
-                      <img
-                        alt={speaker.name}
-                        src={speaker.image}
-                        className="absolute left-0 top-0 h-full w-full rounded-full border object-cover"
-                      />
-                    </div>
-                  ) : (
-                    <Avatar
-                      size={32}
-                      name={speaker.name}
-                      variant="beam"
-                      colors={[
-                        "#FFBD87",
-                        "#FFD791",
-                        "#F7E8A6",
-                        "#D9E8AE",
-                        "#BFE3C0",
-                      ]}
+      <div className="mt-2 flex items-center gap-x-2 overflow-x-auto whitespace-nowrap px-4 py-2">
+        {speakers.map((speaker) => {
+          if (!speaker) {
+            return null;
+          }
+          return (
+            <button
+              key={speaker.name}
+              className={cn(
+                "relative flex items-center rounded-full px-2 py-1",
+                selectedSpeakerNames.includes(speaker.name)
+                  ? "bg-blue-300 font-semibold text-white"
+                  : "bg-gray-200 font-medium text-gray-600"
+              )}
+              onClick={() =>
+                setSelectedSpeakerNames(
+                  (prevSpeakerNames) =>
+                    prevSpeakerNames.includes(speaker.name)
+                      ? prevSpeakerNames.filter((name) => name !== speaker.name) // If already selected, remove the name
+                      : [...prevSpeakerNames, speaker.name] // Otherwise, add the name
+                )
+              }
+            >
+              <div className="absolute left-[0px] top-[-0px]">
+                {speaker.image ? (
+                  <div className="relative h-[32px] w-[32px]">
+                    <img
+                      alt={speaker.name}
+                      src={speaker.image}
+                      className="absolute left-0 top-0 h-full w-full rounded-full border object-cover"
                     />
-                  )}
-                </div>
-                <span className="ml-7">{speaker.name}</span>
-              </button>
-            );
-          })}
-        </div>
+                  </div>
+                ) : (
+                  <Avatar
+                    size={32}
+                    name={speaker.name}
+                    variant="beam"
+                    colors={[
+                      "#FFBD87",
+                      "#FFD791",
+                      "#F7E8A6",
+                      "#D9E8AE",
+                      "#BFE3C0",
+                    ]}
+                  />
+                )}
+              </div>
+              <span className="ml-7">{speaker.name}</span>
+            </button>
+          );
+        })}
       </div>
       <div
         className="hidden-scrollbar h-[315px] overflow-y-auto"
@@ -217,17 +213,7 @@ export default function Transcript({
                     {word.member ? word.member.name : "不明な発話者"}
                   </p>
                   <span className="text-sm text-gray-400">
-                    {dayjs
-                      .utc(
-                        dayjs
-                          .duration(
-                            dayjs().diff(
-                              dayjs().subtract(word.start, "seconds")
-                            )
-                          )
-                          .asMilliseconds()
-                      )
-                      .format("m:ss")}
+                    {convertSecondsToTime(word.start)}
                   </span>
                 </div>
                 <div>{word.text}</div>

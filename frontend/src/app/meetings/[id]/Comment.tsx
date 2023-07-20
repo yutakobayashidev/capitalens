@@ -5,7 +5,7 @@ import cn from "classnames";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { type Session } from "next-auth";
-import { Fragment , useTransition } from "react";
+import { Fragment, useTransition } from "react";
 import { FiTrash2 } from "react-icons/fi";
 
 import { DeleteComment } from "./actions";
