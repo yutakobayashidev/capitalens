@@ -7,10 +7,22 @@ import { hiraToKana } from "@src/helper/utils";
 import prisma from "@src/lib/prisma";
 import { zact } from "zact/server";
 
-export const registerAction = zact(MemberSchema)(async (data) => {
+export const updateMember = zact(MemberSchema)(async (data) => {
   const session = await auth();
 
   if (!session) {
+    return {
+      error: "Unauthorized",
+    };
+  }
+
+  const now = new Date();
+  const twoWeeksInMilliseconds = 2 * 7 * 24 * 60 * 60 * 1000;
+
+  if (
+    now.getTime() - new Date(session.user.createdAt).getTime() <
+    twoWeeksInMilliseconds
+  ) {
     return {
       error: "Unauthorized",
     };

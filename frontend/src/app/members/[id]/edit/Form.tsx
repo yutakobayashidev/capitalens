@@ -1,12 +1,16 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormSchema,MemberSchema } from "@src/app/members/[id]/edit/schema";
-import { useState , useTransition } from "react";
+import { FormSchema, MemberSchema } from "@src/app/members/[id]/edit/schema";
+import { Route } from "next";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Session } from "next-auth";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
 
-import { registerAction } from "./actions";
+import { updateMember } from "./actions";
 
 type InputFieldProps = {
   id: string;
@@ -73,15 +77,18 @@ const SelectField: React.FC<SelectFieldProps> = ({
 export default function Form({
   groups,
   member,
+  user,
 }: {
   groups: {
     id: string;
     name: string;
   }[];
   member: FormSchema;
+  user: Session["user"];
 }) {
   const [done, setDone] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
+  const pathname = usePathname();
 
   const {
     formState: { errors },
@@ -94,7 +101,7 @@ export default function Form({
 
   const onSubmit = handleSubmit((data) => {
     startTransition(async () => {
-      const response = await registerAction(data);
+      const response = await updateMember(data);
 
       if (response) {
         setDone(true);
@@ -102,8 +109,11 @@ export default function Form({
     });
   });
 
+  const now = new Date();
+  const twoWeeksInMilliseconds = 2 * 7 * 24 * 60 * 60 * 1000;
+
   return (
-    <section className="my-8">
+    <>
       {done ? (
         <div className="text-center">
           <h1 className="mb-5 text-4xl font-bold">
@@ -113,7 +123,54 @@ export default function Form({
             ご協力ありがとうございます。開発チームが確認の上公開されます。
           </p>
           <img src="/undraw_Chasing_love_re_9r1c.png" alt="Chasing love" />
+          {pathname ? (
+            <Link
+              href={pathname.replace("/edit", "") as Route}
+              className="mb-10 inline-block rounded-md border border-gray-100 bg-white px-4 py-2 font-semibold text-gray-700 shadow transition duration-500 hover:shadow-md"
+            >
+              議員ページに戻る -&gt;
+            </Link>
+          ) : (
+            <Link
+              href="/"
+              className="mb-10 inline-block rounded-md border border-gray-100 bg-white px-4 py-2 font-semibold text-gray-700 shadow transition duration-500 hover:shadow-md"
+            >
+              ホームに戻る -&gt;
+            </Link>
+          )}
         </div>
+      ) : now.getTime() - new Date(user.createdAt).getTime() <
+        twoWeeksInMilliseconds ? (
+        <>
+          <h1 className="text-center text-8xl font-bold">Sorry...</h1>
+          <div className="text-center">
+            <img
+              src="/undraw_Synchronize_re_4irq.png"
+              alt="Synchronize"
+              width="432"
+              className="mx-auto mb-4"
+              height="308"
+            />
+            <p className="mb-3 text-lg text-gray-600">
+              安全のため、議員情報を更新するにはアカウント作成から2週間以上経過している必要があります
+            </p>
+            {pathname ? (
+              <Link
+                href={pathname.replace("/edit", "") as Route}
+                className="mb-10 inline-block rounded-md border border-gray-100 bg-white px-4 py-2 font-semibold text-gray-700 shadow transition duration-500 hover:shadow-md"
+              >
+                議員ページに戻る -&gt;
+              </Link>
+            ) : (
+              <Link
+                href="/"
+                className="mb-10 inline-block rounded-md border border-gray-100 bg-white px-4 py-2 font-semibold text-gray-700 shadow transition duration-500 hover:shadow-md"
+              >
+                ホームに戻る -&gt;
+              </Link>
+            )}
+          </div>
+        </>
       ) : (
         <div>
           <h1 className="mb-5 text-center text-4xl font-bold">
@@ -121,7 +178,8 @@ export default function Form({
           </h1>
           <form onSubmit={onSubmit}>
             <label className="mb-2 flex items-center font-bold">
-              議員名<span className="ml-2 font-normal text-red-500">必須</span>
+              議員名
+              <span className="ml-2 font-normal text-red-500">必須</span>
             </label>
             <InputField
               id="name"
@@ -222,6 +280,6 @@ export default function Form({
           </form>
         </div>
       )}
-    </section>
+    </>
   );
 }

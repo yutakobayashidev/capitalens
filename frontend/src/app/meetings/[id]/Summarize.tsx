@@ -196,14 +196,18 @@ export default function Summarize({
         <Switch
           checked={isChecked}
           onChange={setIsChecked}
-          className="relative block h-[25px] w-[60px] rounded-full bg-cyan-500"
+          className={`relative block h-[25px] w-[60px] rounded-full ${
+            isChecked ? "bg-cyan-500" : "bg-gray-300"
+          }`}
         >
           <div
             className={`absolute flex items-center justify-center ${
               isChecked ? "left-[30px]" : "left-0"
             } top-1/2 block h-8 w-8 -translate-y-1/2 rounded-full bg-white shadow-md transition-all duration-200`}
           >
-            <ChildOutlinedIcon className="fill-cyan-500" />
+            <ChildOutlinedIcon
+              className={isChecked ? "fill-cyan-500" : "fill-gray-300"}
+            />
           </div>
         </Switch>
       </label>

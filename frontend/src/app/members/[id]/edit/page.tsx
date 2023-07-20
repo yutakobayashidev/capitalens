@@ -2,7 +2,7 @@ import { auth } from "@auth";
 import { config } from "@site.config";
 import prisma from "@src/lib/prisma";
 import type { Metadata } from "next";
-import { notFound , redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import Form from "./Form";
 
@@ -71,8 +71,10 @@ export default async function Page({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 md:px-8">
-      <Form member={member} groups={groups} />
-    </div>
+    <section className="my-12">
+      <div className="mx-auto max-w-2xl px-4 md:px-8">
+        <Form user={session?.user} member={member} groups={groups} />
+      </div>
+    </section>
   );
 }
