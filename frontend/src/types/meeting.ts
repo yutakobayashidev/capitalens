@@ -23,6 +23,7 @@ type Question = {
   id: number;
   title: string;
   end: number;
+  member: Member | null;
   start: number;
 };
 

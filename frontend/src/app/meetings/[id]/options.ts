@@ -1,9 +1,10 @@
 export const options = (m3u8_url: string) => {
   return {
-    autoplay: false,
+    autoplay: true,
     controls: true,
     fluid: true,
     language: "ja",
+    muted: true,
     playbackRates: [0.5, 1, 1.5, 2],
     playsinline: true,
     responsive: true,

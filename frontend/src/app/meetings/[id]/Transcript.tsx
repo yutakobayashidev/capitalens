@@ -166,7 +166,6 @@ export default function Transcript({
           <div className="flex h-full items-center justify-center text-center">
             <div className="items-center px-4 text-gray-500">
               <p className="mb-3">一致する検索結果がありません</p>
-              <img src="/m_03_white.png" height={100} width={400} alt="Alert" />
             </div>
           </div>
         ) : (

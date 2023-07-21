@@ -6,7 +6,6 @@ import Timeline from "@src/app/members/[id]/Timeline";
 import WordCloud from "@src/app/members/[id]/WordCloud";
 import SetPlaceHolder from "@src/hooks/placeholder";
 import prisma from "@src/lib/prisma";
-import { MeetingRecord } from "@src/types/api";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { Metadata } from "next";
@@ -22,35 +21,23 @@ dayjs.extend(relativeTime);
 
 export const revalidate = 3600;
 
-async function getKokkai(name: string) {
-  const res = await fetch(
-    `https://kokkai.ndl.go.jp/api/meeting_list?speaker=${name}&recordPacking=json`
-  );
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-
-  const data = await res.json();
-
-  // Modify each meeting record to include a speech count for the specified name
-  data.meetingRecord.forEach((record: MeetingRecord) => {
-    let speechCount = 0;
-    record.speechRecord.forEach((speech) => {
-      if (speech.speaker === name) {
-        speechCount++;
-      }
-    });
-    record.speechCount = speechCount; // Add a new field to hold the speech count
-  });
-
-  return data.meetingRecord as MeetingRecord[];
-}
-
 async function getMember(id: string) {
   const people = await prisma.member.findUnique({
     include: {
+      _count: {
+        select: { words: true },
+      },
+      annotations: {
+        include: {
+          video: true,
+        },
+      },
       group: true,
+      questions: {
+        include: {
+          video: true,
+        },
+      },
       supporters: {
         include: {
           bill: true,
@@ -65,7 +52,38 @@ async function getMember(id: string) {
     notFound();
   }
 
-  return people;
+  const videoIdsFromAnnotations = people.annotations.map((a) => a.video.id);
+  const videoIdsFromQuestions = people.questions.map((q) => q.video.id);
+
+  const allVideoIds = [...videoIdsFromAnnotations, ...videoIdsFromQuestions];
+
+  const uniqueVideoIds = [...new Set(allVideoIds)];
+
+  const videoGroups = uniqueVideoIds.map((videoId) => {
+    const relatedAnnotations = people.annotations.filter(
+      (a) => a.video.id === videoId
+    );
+    const relatedQuestions = people.questions.filter(
+      (q) => q.video.id === videoId
+    );
+
+    // Assuming all relatedAnnotations and relatedQuestions for the same videoId have the same video object.
+    const videoObject = relatedAnnotations[0]
+      ? relatedAnnotations[0].video
+      : relatedQuestions[0].video;
+
+    // Merge video object with related annotations and questions.
+    const videoGroup = {
+      ...videoObject,
+      annotations:
+        relatedAnnotations.length > 0 ? relatedAnnotations : undefined,
+      questions: relatedQuestions.length > 0 ? relatedQuestions : undefined,
+    };
+
+    return videoGroup;
+  });
+
+  return { ...people, videoGroups };
 }
 
 type Timeline = {
@@ -81,21 +99,21 @@ export async function generateMetadata({
 }): Promise<Metadata | undefined> {
   const member = await getMember(params.id);
 
-  if (!member) {
-    notFound();
-  }
+  if (!member) notFound();
 
   const ogImage = member.image ?? `${config.siteRoot}opengraph.jpg`;
+  const title = member.name;
+  const description =
+    member.abstract ??
+    member.description ??
+    `${member.name}議員の情報をチェックしましょう`;
 
   return {
-    title: member.name,
-    description: member.description,
+    title,
+    description,
     openGraph: {
-      title: member.name,
-      description:
-        member.abstract ??
-        member.description ??
-        member.name + "議員の情報をチェックしましょう",
+      title,
+      description,
       images: [
         {
           url: ogImage,
@@ -106,22 +124,19 @@ export async function generateMetadata({
       url: `${config.siteRoot}people/${member.id}`,
     },
     twitter: {
-      title: member.name,
+      title,
       card: member.image ? "summary" : "summary_large_image",
-      description:
-        member.description ?? member.name + "議員の情報をチェックしましょう",
+      description,
       images: [ogImage],
     },
   };
 }
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const member = await getMember(params.id);
-
-  const kokkaiPromise = getKokkai(member.name);
+  const memberPromise = getMember(params.id);
   const sessionPromise = auth();
 
-  const [kokkai, session] = await Promise.all([kokkaiPromise, sessionPromise]);
+  const [member, session] = await Promise.all([memberPromise, sessionPromise]);
 
   let combinedData: Timeline[] = [
     ...member.timelines.map((item) => ({
@@ -129,7 +144,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       date: dayjs(item.isoDate),
       itemType: "feed" as const,
     })),
-    ...kokkai.map((item) => ({
+    ...member.videoGroups.map((item) => ({
       data: item,
       date: dayjs(item.date),
       itemType: "kokkai" as const,
@@ -286,9 +301,6 @@ export default async function Page({ params }: { params: { id: string } }) {
         )}
         <section className="my-10">
           <h2 className="mb-3 text-4xl font-bold">タイムライン</h2>
-          <p className="mb-5">
-            ここでは、発言した議会や、ブログの投稿などが収集され表示されています。活動を確認してみましょう。
-          </p>
           <Timeline member={member} combinedData={combinedData} />
         </section>
         <section className="my-10">

@@ -229,7 +229,10 @@ export default function Video({
                     >
                       {convertSecondsToTime(question.start)}
                     </button>
-                    <p className="ml-2">{question.title}</p>
+                    <p className="ml-2">
+                      {question.title}{" "}
+                      {question.member ? `(${question.member.name})` : null}
+                    </p>
                   </div>
                 ))}
               </div>

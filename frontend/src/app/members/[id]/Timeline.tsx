@@ -1,12 +1,14 @@
 import {
+  convertSecondsToTime,
   formatDate,
   getFaviconSrcFromHostname,
   getHostFromURL,
   getHostFromURLProtocol,
 } from "@src/helper/utils";
-import { MeetingRecord } from "@src/types/api";
+import { Meeting } from "@src/types/meeting";
 import { Member } from "@src/types/member";
 import { Dayjs } from "dayjs";
+import Link from "next/link";
 
 type TimelineItem = {
   data: any;
@@ -90,33 +92,66 @@ function Feed({ data, member }: { data: Feed; member: Member }) {
   );
 }
 
-function Kokkai({ data, member }: { data: MeetingRecord; member: Member }) {
-  const { date, issue, meetingURL, nameOfHouse, nameOfMeeting, speechCount } =
-    data;
+function Kokkai({
+  data,
+  member,
+}: {
+  data: Meeting;
+  member: Member & {
+    _count: {
+      words: number;
+    };
+  };
+}) {
+  const { id, date, house, meeting_name, questions } = data;
 
   return (
     <div className="relative mb-10 pl-[20px]">
       <BulletPoint />
       <div className="text-xs text-gray-500">
         <span className="mr-2 text-base">🏛️</span>
-        <span>国会での発言</span>
+        <span>国会</span>
         <time className="ml-2">{formatDate(date)}</time>
       </div>
-      <div className="mb-2 mt-3 flex items-center text-xl md:text-2xl">
-        <a href={meetingURL} className="font-bold leading-10">
+      <div className="mb-2 mt-3 items-center text-xl md:text-2xl">
+        <Link href={`/meetings/${id}`} className="mb-2 flex items-center">
           <span
             className={`${
-              nameOfHouse === "参議院" ? "bg-indigo-400" : "bg-[#EA5433]"
-            } mr-2 rounded-md px-2 py-1.5 text-lg font-bold text-white`}
+              house === "COUNCILLORS" ? "bg-indigo-400" : "bg-[#EA5433]"
+            } mr-2 rounded px-2 py-1 text-base font-bold text-white`}
           >
-            {nameOfHouse}
+            {house === "COUNCILLORS" ? "参議院" : "衆議院 "}
           </span>
-          {nameOfMeeting} {issue}
-        </a>
+          <span className="font-bold">{meeting_name}</span>
+        </Link>
+        <p className="mb-3 line-clamp-2 text-sm text-gray-500">
+          {questions ? (
+            <>
+              {member.name}さんは{questions.length}回質問しました
+            </>
+          ) : (
+            <>
+              {member.name}議員は{member._count.words}回発言しました
+            </>
+          )}
+        </p>
+        {questions && (
+          <div className="grid gap-2 md:grid-cols-3">
+            {questions.map((question) => (
+              <Link
+                href={`/meetings/${id}?t=${question.start}`}
+                className="mb-2 line-clamp-3 inline-block rounded-md border bg-gray-100 px-4 py-3 text-sm font-semibold leading-6 text-gray-500"
+                key={question.id}
+              >
+                <span className="mr-2 text-gray-600">
+                  {convertSecondsToTime(question.start)}
+                </span>
+                {question.title}
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
-      <p className="line-clamp-2 text-sm text-gray-600">
-        {member.name}さんは{speechCount}回発言しました
-      </p>
     </div>
   );
 }
@@ -126,22 +161,27 @@ export default function Timeline({
   member,
 }: {
   combinedData: TimelineItem[];
-  member: Member;
+  member: Member & {
+    _count: {
+      words: number;
+    };
+  };
 }) {
+  if (combinedData.length === 0) {
+    return (
+      <div className="mx-auto flex max-w-md  justify-center text-center font-bold text-gray-400 md:text-lg">
+        🧐国会での活動や記事が見つかると表示されます
+      </div>
+    );
+  }
   return (
     <div className="border-l-2 py-3">
       {combinedData.map((item, i) => {
         switch (item.itemType) {
           case "feed":
-            return <Feed member={member} key={i} data={item.data as Feed} />;
+            return <Feed member={member} key={i} data={item.data} />;
           case "kokkai":
-            return (
-              <Kokkai
-                key={i}
-                data={item.data as MeetingRecord}
-                member={member}
-              />
-            );
+            return <Kokkai key={i} data={item.data} member={member} />;
         }
       })}
     </div>

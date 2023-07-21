@@ -19,9 +19,9 @@ model Group {
   image       String?
   twitter     String?
   facebook    String?
-  wikipedia   String? @db.Text()
+  wikipedia   String?            @db.Text()
   website     String?
-  description String? @db.Text()
+  description String?            @db.Text()
   members     Member[]
 }
 
@@ -60,12 +60,12 @@ model Member {
   updatedAt     DateTime            @updatedAt
   supporters    BillSupport[]
   timelines     Timeline[]
+  questions     Question[]
   annotations   Annotation[]
   words         Word[]
 
   @@index([groupId])
 }
- 
 
 model Timeline {
   id              String  @id @default(cuid())
@@ -122,7 +122,6 @@ model Comment {
   @@index([billId])
   @@index([userId])
 }
-
 
 model Vote {
   id        String   @id @default(cuid())
@@ -196,29 +195,29 @@ model Session {
 }
 
 model User {
-  id               String         @id @default(cuid())
-  name             String?
-  email            String?        @unique
-  emailVerified    DateTime?
-  image            String?
-  accounts         Account[]
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime @updatedAt
-  sessions         Session[]
-  comments         Comment[]
-  votes            Vote[]
-  kids             Boolean        @default(false)
-  prefecture       Prefecture?    @relation(fields: [prefectureId], references: [id])
-  prefectureId     Int?
-  videoComments    VideoComment[]
+  id            String         @id @default(cuid())
+  name          String?
+  email         String?        @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  sessions      Session[]
+  comments      Comment[]
+  votes         Vote[]
+  kids          Boolean        @default(false)
+  prefecture    Prefecture?    @relation(fields: [prefectureId], references: [id])
+  prefectureId  Int?
+  videoComments VideoComment[]
 
   @@index([prefectureId])
 }
 
 model Prefecture {
-  id      Int     @id @default(autoincrement())
-  name    String
-  users   User[]
+  id    Int    @id @default(autoincrement())
+  name  String
+  users User[]
 }
 
 model VerificationToken {
@@ -230,28 +229,28 @@ model VerificationToken {
 }
 
 model Video {
-  id           String       @id @default(cuid())
-  m3u8_url     String       @unique
-  page_url     String
-  date         String
-  house        House?
-  summary      String?      @db.Text()
-  meeting_name String
-  kids         String?      @db.Text()
-  annotations  Annotation[]
-  meetingURL   String?
-  apiURL       String?
+  id            String         @id @default(cuid())
+  m3u8_url      String         @unique
+  page_url      String
+  date          String
+  house         House?
+  summary       String?        @db.Text()
+  meeting_name  String
+  kids          String?        @db.Text()
+  annotations   Annotation[]
+  meetingURL    String?
+  apiURL        String?
   videoComments VideoComment[]
-  utterances Utterance[]
-  questions    Question[]
+  utterances    Utterance[]
+  questions     Question[]
 }
 
 model Utterance {
-  id      Int     @id @default(autoincrement())
+  id      Int    @id @default(autoincrement())
   start   Float
   end     Float
   words   Word[]
-  meeting Video @relation(fields: [videoId], references: [id])
+  meeting Video  @relation(fields: [videoId], references: [id])
   videoId String
 
   @@index([videoId])
@@ -262,7 +261,7 @@ model Word {
   start       Float
   end         Float
   text        String
-  member      Member?    @relation(fields: [memberId], references: [id])
+  member      Member?   @relation(fields: [memberId], references: [id])
   memberId    String?
   utterance   Utterance @relation(fields: [utteranceId], references: [id])
   utteranceId Int
@@ -286,21 +285,24 @@ model VideoComment {
 }
 
 model Books {
-  id String  @id @default(cuid())
+  id    String   @id @default(cuid())
   title String
-  date DateTime
-  isbn String
+  date  DateTime
+  isbn  String
 }
 
 model Question {
-  id    Int @id @default(autoincrement())
-  title String
-  start Float
-  end  Float
-  video Video   @relation(fields: [videoId], references: [id])
-  videoId String
+  id       Int    @id @default(autoincrement())
+  title    String
+  start    Float
+  end      Float
+  video    Video  @relation(fields: [videoId], references: [id])
+  videoId  String
+  member   Member? @relation(fields: [memberId], references: [id])
+  memberId String?
 
   @@index([videoId])
+  @@index([memberId])
 }
 
 model Annotation {
@@ -309,7 +311,6 @@ model Annotation {
   video        Video   @relation(fields: [videoId], references: [m3u8_url]) // Add this line to define relation
   videoId      String
   start_sec    Float
-  time         String
   end_sec      Float?
   speaker_info String
   member       Member? @relation(fields: [memberId], references: [id])

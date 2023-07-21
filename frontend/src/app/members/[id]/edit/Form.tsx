@@ -1,9 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import Button from "@src/app/_components/Button";
 import { FormSchema, MemberSchema } from "@src/app/members/[id]/edit/schema";
-import { Route } from "next";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Session } from "next-auth";
 import { useState, useTransition } from "react";
@@ -124,19 +123,12 @@ export default function Form({
           </p>
           <img src="/undraw_Chasing_love_re_9r1c.png" alt="Chasing love" />
           {pathname ? (
-            <Link
-              href={pathname.replace("/edit", "") as Route}
-              className="mb-10 inline-block rounded-md border border-gray-100 bg-white px-4 py-2 font-semibold text-gray-700 shadow transition duration-500 hover:shadow-md"
-            >
-              議員ページに戻る -&gt;
-            </Link>
+            <Button
+              title="議員ページに戻る ->"
+              pathname={pathname.replace("/edit", "")}
+            />
           ) : (
-            <Link
-              href="/"
-              className="mb-10 inline-block rounded-md border border-gray-100 bg-white px-4 py-2 font-semibold text-gray-700 shadow transition duration-500 hover:shadow-md"
-            >
-              ホームに戻る -&gt;
-            </Link>
+            <Button title="ホームに戻る ->" pathname="/" />
           )}
         </div>
       ) : now.getTime() - new Date(user.createdAt).getTime() <
@@ -155,19 +147,12 @@ export default function Form({
               安全のため、議員情報を更新するにはアカウント作成から2週間以上経過している必要があります
             </p>
             {pathname ? (
-              <Link
-                href={pathname.replace("/edit", "") as Route}
-                className="mb-10 inline-block rounded-md border border-gray-100 bg-white px-4 py-2 font-semibold text-gray-700 shadow transition duration-500 hover:shadow-md"
-              >
-                議員ページに戻る -&gt;
-              </Link>
+              <Button
+                title="議員ページに戻る ->"
+                pathname={pathname.replace("/edit", "")}
+              />
             ) : (
-              <Link
-                href="/"
-                className="mb-10 inline-block rounded-md border border-gray-100 bg-white px-4 py-2 font-semibold text-gray-700 shadow transition duration-500 hover:shadow-md"
-              >
-                ホームに戻る -&gt;
-              </Link>
+              <Button title="ホームに戻る ->" pathname="/" />
             )}
           </div>
         </>

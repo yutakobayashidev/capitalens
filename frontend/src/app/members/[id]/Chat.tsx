@@ -56,7 +56,7 @@ export default function Chat({
         {messages
           .filter((m) => m.role !== "system")
           .map((m, i) => (
-            <div key={i} className="mb-4 flex items-start md:-ml-12">
+            <div key={i} className="mb-4 flex items-start">
               {user && m.role === "user" ? (
                 <img
                   src={user.image ?? "/noimage.png"}

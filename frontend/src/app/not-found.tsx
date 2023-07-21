@@ -1,5 +1,6 @@
 import { Metadata } from "next";
-import Link from "next/link";
+
+import Button from "./_components/Button";
 
 export const metadata: Metadata = {
   title: "404 Not Found",
@@ -18,12 +19,7 @@ export default function Page() {
             className="mx-auto mb-4"
             height="308"
           />
-          <Link
-            href="/"
-            className="mb-10 inline-block rounded-md border border-gray-100 bg-white px-4 py-2 font-semibold text-gray-700 shadow transition duration-500 hover:shadow-md"
-          >
-            ホームに戻る -&gt;
-          </Link>
+          <Button title="ホームに戻る ->" pathname="/" />
         </div>
       </div>
     </div>
