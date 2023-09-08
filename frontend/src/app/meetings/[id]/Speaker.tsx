@@ -2,7 +2,7 @@ import { getHostFromURL } from "@src/helper/utils";
 import { Member } from "@src/types/member";
 import Link from "next/link";
 import { AiOutlineLink } from "react-icons/ai";
-import { FaGlobe, FaTwitter } from "react-icons/fa";
+import { FaGlobe } from "react-icons/fa";
 
 export default function Speaker({
   currentSpeaker,
@@ -35,7 +35,7 @@ export default function Speaker({
           <div className="flex flex-wrap items-center gap-y-2">
             <Link
               href={`/members/${currentSpeaker.id}`}
-              className="mr-2 inline-flex items-center rounded-full bg-gray-600 px-3 py-2 text-sm font-semibold text-white"
+              className="mr-2 inline-flex items-center rounded-full bg-blue-400 px-3 py-2 text-sm font-semibold text-white"
             >
               <FaGlobe className="mr-2 text-base" />
               詳細
@@ -43,10 +43,17 @@ export default function Speaker({
             {currentSpeaker.twitter && (
               <a
                 href={"https://twitter.com/" + currentSpeaker.twitter}
-                className="mr-2 inline-flex items-center rounded-full bg-[#1da1f2] px-3 py-2 text-sm font-semibold text-white"
+                className="mr-2 inline-flex items-center rounded-full bg-gray-900 px-3 py-2 text-sm font-semibold text-white"
               >
-                <FaTwitter className="mr-2 text-base" />@
-                {currentSpeaker.twitter}
+                <svg
+                  aria-label="X formerly known as Twitter"
+                  fill="currentColor"
+                  className="mx-auto mr-2 h-4 w-4"
+                  viewBox="0 0 22 20"
+                >
+                  <path d="M16.99 0H20.298L13.071 8.26L21.573 19.5H14.916L9.702 12.683L3.736 19.5H0.426L8.156 10.665L0 0H6.826L11.539 6.231L16.99 0ZM15.829 17.52H17.662L5.83 1.876H3.863L15.829 17.52Z"></path>
+                </svg>
+                @{currentSpeaker.twitter}
               </a>
             )}
             {currentSpeaker.website && (
@@ -54,7 +61,10 @@ export default function Speaker({
                 href={currentSpeaker.website}
                 className="inline-flex items-center rounded-full bg-gray-400 px-3 py-2 text-sm font-semibold text-white"
               >
-                <AiOutlineLink className="mr-2 text-base" />
+                <AiOutlineLink
+                  aria-label="Web site"
+                  className="mr-2 text-base"
+                />
                 {getHostFromURL(currentSpeaker.website)}
               </a>
             )}

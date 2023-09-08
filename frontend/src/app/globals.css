@@ -2,6 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .vjs-marker[data-color] {
+    background: var(--marker-color, red);
+  }
+
+  .vjs-marker[data-color="blue"] {
+    --marker-color: blue;
+  }
+
+  .vjs-marker[data-color="yellow"] {
+    --marker-color: yellow;
+  }
+
+  .vjs-marker[data-color="green"] {
+    --marker-color: green;
+  }
+
+  .vjs-marker {
+    position: absolute;
+    background: red;
+    width: 5px;
+    height: 110%;
+    top: -5%;
+    z-index: 2;
+    margin-left: -3px;
+  }
+
+  .vjs-marker:hover span {
+    opacity: 1;
+  }
+
+  .vjs-marker span {
+    position: absolute;
+    bottom: 15px;
+    opacity: 0;
+    width: 150px;
+    margin-left: -20px;
+    z-index: 90;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 8px;
+    font-size: 10px;
+  }
+}
 @layer utilities {
   .hidden-scrollbar {
     -ms-overflow-style: none; /* IE, Edge 対応 */

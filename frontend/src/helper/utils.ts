@@ -55,10 +55,20 @@ export const convertSecondsToTime = (secs: number): string => {
   );
   let seconds: number | string =
     secs - (hours as number) * 3600 - (minutes as number) * 60;
-  if (hours < 10) hours = "" + hours;
-  if (minutes < 10) minutes = "" + minutes;
+
+  if (minutes < 10) minutes = "0" + minutes;
   if (seconds < 10) seconds = "0" + seconds;
-  return hours === "0"
-    ? `${minutes}:${seconds}`
-    : `${hours}:${minutes}:${seconds}`;
+
+  return hours > 0 ? `${hours}:${minutes}:${seconds}` : `${minutes}:${seconds}`;
 };
+
+export const twoWeeksInMilliseconds = 2 * 7 * 24 * 60 * 60 * 1000;
+
+export function hasDurationPassedSinceCreation(
+  createdAt: Date | string,
+  durationInMilliseconds: number
+): boolean {
+  const now = new Date();
+  const elapsedTime = now.getTime() - new Date(createdAt).getTime();
+  return elapsedTime >= durationInMilliseconds;
+}

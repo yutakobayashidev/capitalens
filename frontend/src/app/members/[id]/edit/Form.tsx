@@ -2,76 +2,22 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Button from "@src/app/_components/Button";
-import { FormSchema, MemberSchema } from "@src/app/members/[id]/edit/schema";
+import {
+  InputField,
+  SelectField,
+  TextareaField,
+} from "@src/app/_components/Form";
+import {
+  hasDurationPassedSinceCreation,
+  twoWeeksInMilliseconds,
+} from "@src/helper/utils";
+import { FormSchema, MemberSchema } from "@src/schema/member";
 import { usePathname } from "next/navigation";
 import { Session } from "next-auth";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
-import TextareaAutosize from "react-textarea-autosize";
 
 import { updateMember } from "./actions";
-
-type InputFieldProps = {
-  id: string;
-  errors: any;
-  placeholder: string;
-  register: any;
-};
-
-const InputField: React.FC<InputFieldProps> = ({
-  id,
-  errors,
-  placeholder,
-  register,
-}) => (
-  <>
-    <input
-      className="mb-3 block w-full resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2"
-      type="text"
-      id={id}
-      placeholder={placeholder}
-      {...register(id)}
-    />
-    {errors[id] && (
-      <span className="mb-3 block text-sm text-red-500">
-        {errors[id]?.message}
-      </span>
-    )}
-  </>
-);
-
-type SelectFieldProps = {
-  id: string;
-  errors: any;
-  options: { label: string; value: string }[];
-  register: any;
-};
-
-const SelectField: React.FC<SelectFieldProps> = ({
-  id,
-  errors,
-  options,
-  register,
-}) => (
-  <>
-    <select
-      className="mb-3 block w-full resize-none appearance-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2"
-      id={id}
-      {...register(id)}
-    >
-      {options.map((option, i) => (
-        <option key={i} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </select>
-    {errors[id] && (
-      <span className="mb-3 block text-sm text-red-500">
-        {errors[id]?.message}
-      </span>
-    )}
-  </>
-);
 
 export default function Form({
   groups,
@@ -108,9 +54,6 @@ export default function Form({
     });
   });
 
-  const now = new Date();
-  const twoWeeksInMilliseconds = 2 * 7 * 24 * 60 * 60 * 1000;
-
   return (
     <>
       {done ? (
@@ -131,8 +74,10 @@ export default function Form({
             <Button title="ホームに戻る ->" pathname="/" />
           )}
         </div>
-      ) : now.getTime() - new Date(user.createdAt).getTime() <
-        twoWeeksInMilliseconds ? (
+      ) : !hasDurationPassedSinceCreation(
+          user.createdAt,
+          twoWeeksInMilliseconds
+        ) ? (
         <>
           <h1 className="text-center text-8xl font-bold">Sorry...</h1>
           <div className="text-center">
@@ -249,14 +194,15 @@ export default function Form({
               ]}
             />
             <label className="mb-2 flex items-center font-bold">説明</label>
-            <TextareaAutosize
-              {...register("description")}
-              className="mb-3 block w-full resize-none rounded-md border-2 border-gray-100 bg-gray-50 px-4 py-2"
+            <TextareaField
               id="description"
+              errors={errors}
+              placeholder="議員の情報を入力..."
+              register={register}
             />
             <div className="flex justify-center">
               <button
-                className="mt-3 rounded-full bg-blue-500 px-6 py-2 text-center text-xl font-bold text-white shadow transition-all duration-500 ease-in-out hover:shadow-md"
+                className="bg-primary mt-3 rounded-full px-6 py-2 text-center text-xl font-bold text-white shadow transition-all duration-500 ease-in-out hover:shadow-md"
                 disabled={isPending}
               >
                 送信する

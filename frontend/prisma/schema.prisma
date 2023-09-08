@@ -241,8 +241,18 @@ model Video {
   meetingURL    String?
   apiURL        String?
   videoComments VideoComment[]
+  notes         Note[]
   utterances    Utterance[]
   questions     Question[]
+}
+
+model Note {
+    id            String         @id @default(cuid())
+    start         Float
+    end           Float
+    text          String
+    meeting Video  @relation(fields: [videoId], references: [id])
+    videoId String
 }
 
 model Utterance {

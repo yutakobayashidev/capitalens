@@ -12,6 +12,11 @@ export type Meeting = {
   m3u8_url: string;
   meeting_name: string;
   meetingURL: string | null;
+  notes: {
+    end: number;
+    start: number;
+    text: string;
+  }[];
   page_url: string;
   questions: Question[];
   summary: string | null;

@@ -1,7 +1,10 @@
 "use client";
 
-import { config } from "@site.config";
-import { convertSecondsToTime } from "@src/helper/utils";
+import Notes from "@src/app/_components/Notes";
+import {
+  hasDurationPassedSinceCreation,
+  twoWeeksInMilliseconds,
+} from "@src/helper/utils";
 import { Meeting } from "@src/types/meeting";
 import { Member } from "@src/types/member";
 import cn from "classnames";
@@ -10,57 +13,43 @@ import duration from "dayjs/plugin/duration";
 import utc from "dayjs/plugin/utc";
 import { useSearchParams } from "next/navigation";
 import { type Session } from "next-auth";
-import { useCallback, useRef, useState } from "react";
-import { FaTwitter } from "react-icons/fa";
-import Player from "video.js/dist/types/player";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { FaPencilAlt, FaShare } from "react-icons/fa";
+import type Player from "video.js/dist/types/player";
 
 import Comments from "./Comments";
+import Description from "./Description";
+import NoteModal from "./NoteModal";
 import { options } from "./options";
 import VideoJSPlayer from "./Player";
+import ShareModal from "./ShareModal";
 import Speaker from "./Speaker";
 import Summarize from "./Summarize";
 import Transcript from "./Transcript";
+import { useShareTimeInput } from "./useShareTimeInput";
+
+type Note = {
+  end: number;
+  start: number;
+  text: string;
+};
+
+type Marker = {
+  color: string | null;
+  label: string;
+  time: number;
+};
 
 dayjs.extend(utc);
 dayjs.extend(duration);
 
-function LinkButton({
-  title,
-  emoji,
-  url,
-}: {
-  title: string;
-  emoji: string;
-  url: string;
-}) {
-  return (
-    <a
-      href={url}
-      className="flex items-center justify-center rounded-xl border bg-white px-2 py-8 text-xl font-bold text-gray-800 transition-all duration-500 ease-in-out hover:shadow-md md:p-10"
-    >
-      <span className="mr-3 text-4xl">{emoji}</span>
-      {title}
-    </a>
-  );
-}
-
-// Moved these constants and functions outside the component to declutter the component itself.
-const MAX_TWEET_LENGTH = 140;
-const TWITTER_SHORTENED_URL_LENGTH = 23;
-const ellipsis = "...";
-
-const truncateSummary = (summary: string, maxChars: number): string =>
-  summary.length > maxChars
-    ? summary.slice(0, maxChars - ellipsis.length) + ellipsis
-    : summary;
-
-const formatSeconds = (secs: number) => {
-  const hours = Math.floor(secs / 3600);
-  const minutes = Math.floor((secs % 3600) / 60);
-  const result = [];
-  if (hours > 0) result.push(`${hours}時間`);
-  if (minutes > 0) result.push(`${minutes}分`);
-  return result.join("");
+export const convertTimeToSeconds = (time: string): number => {
+  const parts = time.split(":").reverse();
+  let seconds = 0;
+  parts.forEach((part, index) => {
+    seconds += parseInt(part, 10) * Math.pow(60, index);
+  });
+  return seconds;
 };
 
 export default function Video({
@@ -72,16 +61,54 @@ export default function Video({
 }) {
   const playerRef = useRef<Player | null>(null);
   const [currentSpeaker, setCurrentSpeaker] = useState<Member | null>(null);
+  const [currentNote, setCurrentNote] = useState<Note | null>(null); // 追加
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [currentWord, setCurrentWord] = useState<string | null>(null);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareOpen] = useState(false);
   const searchParams = useSearchParams();
   const startSec = searchParams?.get("t");
+  const endSec = searchParams?.get("e");
 
-  const baseText = `${meeting.house === "COUNCILLORS" ? "参議院" : "衆議院"} ${
-    meeting.meeting_name
-  }\n\n`;
-  const url = `${config.siteRoot}meetings/${meeting.id}`;
+  useEffect(() => {
+    const newTime = playerRef.current?.currentTime();
+
+    if (typeof newTime === "undefined") return;
+
+    const matchedNote = meeting.notes.find(
+      (note) => newTime >= note.start && newTime <= note.end
+    );
+
+    if (matchedNote) {
+      setCurrentNote(matchedNote);
+    } else {
+      setCurrentNote(null);
+    }
+  }, [meeting.notes]);
+
+  const {
+    currentShareTime,
+    handleBlur,
+    handleChange,
+    initializeInputValue,
+    inputValue,
+  } = useShareTimeInput(currentTime);
+
+  const {
+    currentShareTime: StartTime,
+    handleBlur: startBluer,
+    handleChange: startChange,
+    initializeInputValue: initializeStartInputValue,
+    inputValue: inputStartInputValue,
+  } = useShareTimeInput(currentTime);
+
+  const {
+    currentShareTime: EndTime,
+    handleBlur: endBluer,
+    handleChange: endChange,
+    initializeInputValue: initializeEndInputValue,
+    inputValue: inputEndInputValue,
+  } = useShareTimeInput(currentTime);
 
   const updateCurrentWord = useCallback(
     (time: number) => {
@@ -108,167 +135,215 @@ export default function Video({
     [meeting.utterances]
   );
 
+  const handleTimeUpdate = (player: Player) => {
+    const newTime = player.currentTime();
+
+    if (typeof newTime === "undefined") return;
+
+    setCurrentTime(newTime);
+
+    const matchedNote = meeting.notes.find(
+      (note) => newTime >= note.start && newTime <= note.end
+    );
+
+    if (matchedNote) {
+      setCurrentNote(matchedNote); // 時間範囲内にある場合、そのtext情報を格納
+    } else {
+      setCurrentNote(null); // 時間範囲外にある場合、nullに戻す
+    }
+    if (meeting.utterances.length === 0) {
+      for (let i = meeting.annotations.length - 1; i >= 0; i--) {
+        let annotation = meeting.annotations[i];
+        if (newTime >= annotation.start_sec) {
+          if (annotation.speaker_name !== (currentSpeaker?.name ?? ""))
+            setCurrentSpeaker(annotation.member);
+          break;
+        }
+      }
+    } else {
+      updateCurrentWord(newTime);
+    }
+  };
+
+  const handleLoadedMetadata = (player: Player) => {
+    // @ts-expect-error
+    const p = player.controlBar.progressControl.children_[0].el_;
+
+    const createMarkers = () => {
+      const questionMarkers = meeting.questions.map((question) => ({
+        color: "blue",
+        label: question.title,
+        time: question.start,
+      }));
+
+      const timeMarkers: Marker[] = [];
+
+      if (startSec) {
+        timeMarkers.push({
+          color: "yellow",
+          label: "開始",
+          time: parseFloat(startSec),
+        });
+      }
+
+      if (endSec) {
+        timeMarkers.push({
+          color: "yellow",
+          label: "終了",
+          time: parseFloat(endSec),
+        });
+      }
+
+      return [...questionMarkers, ...timeMarkers];
+    };
+
+    createMarkers().forEach((marker) => {
+      const total = player.duration();
+      if (typeof total === "undefined") return;
+
+      const left = (marker.time / total) * 100 + "%";
+      const el = document.createElement("div");
+      el.className = "vjs-marker";
+      el.style.left = left;
+      el.dataset.time = marker.time.toString();
+      if (marker.color) el.dataset.color = marker.color;
+
+      el.innerHTML = `<span>${marker.label}</span>`;
+      el.addEventListener("click", () => player.currentTime(marker.time));
+      p.append(el);
+    });
+
+    if (startSec) {
+      player.currentTime(parseFloat(startSec));
+    } else if (meeting.utterances[0]) {
+      player.currentTime(meeting.utterances[0].start);
+    }
+  };
+
   const handlePlayerReady = (player: Player) => {
     playerRef.current = player;
-    player.on("timeupdate", function () {
-      const newTime = player.currentTime();
-      setCurrentTime(newTime);
-      if (meeting.utterances.length === 0) {
-        for (let i = meeting.annotations.length - 1; i >= 0; i--) {
-          let annotation = meeting.annotations[i];
-          if (newTime >= annotation.start_sec) {
-            if (annotation.speaker_name !== (currentSpeaker?.name ?? ""))
-              setCurrentSpeaker(annotation.member);
-            break;
-          }
-        }
-      } else {
-        updateCurrentWord(newTime);
-      }
-    });
-    player.on("loadedmetadata", function () {
-      if (startSec) player.currentTime(parseFloat(startSec));
-      else if (meeting.utterances[0])
-        player.currentTime(meeting.utterances[0].start);
-    });
+    player.on("timeupdate", () => handleTimeUpdate(player));
+    player.on("loadedmetadata", () => handleLoadedMetadata(player));
+  };
+
+  const handleModal = () => {
+    setIsModalOpen(!isModalOpen);
+    initializeStartInputValue(currentTime);
+    initializeEndInputValue(currentTime + 10);
+  };
+
+  const handleShare = () => {
+    initializeInputValue(currentTime);
+    setIsShareOpen(!isShareModalOpen);
   };
 
   return (
-    <div className="my-7 block justify-center md:flex">
-      <div className="md:mr-5 md:w-[calc(65%)]">
-        <VideoJSPlayer
-          options={options(meeting.m3u8_url)}
-          onReady={handlePlayerReady}
-        />
-        <div className="my-5 flex items-center justify-between">
-          <h1 className="flex items-center text-2xl font-bold">
-            <span
-              className={cn({
-                "bg-[#EA5433]": meeting.house !== "COUNCILLORS",
-                "bg-indigo-400": meeting.house === "COUNCILLORS",
-                "mr-2 rounded px-2 py-1 text-base font-bold text-white": true,
-              })}
-            >
-              {meeting.house === "COUNCILLORS" ? "参議院" : "衆議院"}
-            </span>
-            {meeting.meeting_name}
-          </h1>
-          <a
-            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-              baseText +
-                truncateSummary(
-                  meeting.summary ? meeting.summary : "",
-                  MAX_TWEET_LENGTH -
-                    baseText.length -
-                    TWITTER_SHORTENED_URL_LENGTH
-                )
-            )}&url=${url}?t=${Math.floor(currentTime)}`}
-            className="hidden items-center rounded-full bg-[#00acee] px-4 py-2 text-sm font-semibold text-white md:inline-flex"
-          >
-            <FaTwitter className="mr-2" />
-            ツイートする
-          </a>
-        </div>
-        {currentSpeaker && <Speaker currentSpeaker={currentSpeaker} />}
-        <div className="mb-5 rounded-xl bg-gray-100 px-4 pb-6 pt-4">
-          <div className="mb-3 flex items-center justify-between">
-            <div className="flex items-center text-base">
-              <span className="font-medium">
-                {dayjs(meeting.date).format("YYYY/MM/DD")}
+    <>
+      <div className="my-7 block justify-center md:flex">
+        <div className="space-y-5 md:mr-5 md:w-[calc(65%)]">
+          <VideoJSPlayer
+            options={options(meeting.m3u8_url)}
+            onReady={handlePlayerReady}
+          />
+          {currentNote && <Notes note={currentNote} />}
+          <div className="flex items-center justify-between overflow-x-auto">
+            <h1 className="flex items-center text-2xl font-bold">
+              <span
+                className={cn({
+                  "bg-[#EA5433]": meeting.house !== "COUNCILLORS",
+                  "bg-indigo-400": meeting.house === "COUNCILLORS",
+                  "mr-2 rounded px-2 py-1 text-base font-bold text-white": true,
+                })}
+              >
+                {meeting.house === "COUNCILLORS" ? "参議院" : "衆議院"}
               </span>
-              {meeting.utterances.length !== 0 && (
-                <>
-                  <span>・</span>
-                  <span>
-                    {formatSeconds(
-                      meeting.utterances[meeting.utterances.length - 1].end -
-                        meeting.utterances[0].start
-                    )}
-                  </span>
-                </>
-              )}
+              {meeting.meeting_name}
+            </h1>
+            <div className="hidden items-center gap-x-3 md:flex">
+              <button
+                onClick={handleShare}
+                className="flex items-center rounded-full border px-4 py-2 transition-all duration-300 ease-in-out hover:bg-gray-200"
+              >
+                <FaShare className="mr-2  text-lg" />
+                シェア
+              </button>
+              {user &&
+                hasDurationPassedSinceCreation(
+                  user.createdAt,
+                  twoWeeksInMilliseconds
+                ) && (
+                  <button
+                    onClick={handleModal}
+                    className="flex items-center rounded-full border px-4 py-2 transition-all duration-300 ease-in-out hover:bg-gray-200"
+                  >
+                    <FaPencilAlt className="mr-2  text-lg" />
+                    ノートを作成
+                  </button>
+                )}
             </div>
           </div>
-          <h2 className="text-xl font-bold">発言者</h2>
-          <div className="my-3">
-            {meeting.annotations.map((annotation) => (
-              <div className="mb-0.5 flex" key={annotation.id}>
+          <div className="flex items-center gap-x-3 md:hidden">
+            <button
+              onClick={handleShare}
+              className="flex items-center rounded-full border px-4 py-2 transition-all duration-300 ease-in-out hover:bg-gray-200"
+            >
+              <FaShare className="mr-2  text-lg" />
+              シェア
+            </button>
+            {user &&
+              hasDurationPassedSinceCreation(
+                user.createdAt,
+                twoWeeksInMilliseconds
+              ) && (
                 <button
-                  className="text-primary"
-                  data-start-sec={annotation.start_sec}
-                  onClick={() => {
-                    if (playerRef.current) {
-                      playerRef.current.currentTime(annotation.start_sec);
-                      playerRef.current.play();
-                    }
-                  }}
+                  onClick={handleModal}
+                  className="flex items-center rounded-full border px-4 py-2 transition-all duration-300 ease-in-out hover:bg-gray-200"
                 >
-                  {convertSecondsToTime(annotation.start_sec)}
+                  <FaPencilAlt className="mr-2  text-lg" />
+                  ノートを作成
                 </button>
-                <p className="ml-2">
-                  {annotation.speaker_name} ({annotation.speaker_info})
-                </p>
-              </div>
-            ))}
+              )}
           </div>
-          {meeting.questions.length !== 0 && (
-            <>
-              <h2 className="text-xl font-bold">ハイライト</h2>
-              <div className="my-3">
-                {meeting.questions.map((question) => (
-                  <div className="mb-0.5 flex items-start" key={question.id}>
-                    <button
-                      className="text-primary"
-                      data-start-sec={question.start}
-                      onClick={() => {
-                        if (playerRef.current) {
-                          playerRef.current.currentTime(question.start);
-                          playerRef.current.play();
-                        }
-                      }}
-                    >
-                      {convertSecondsToTime(question.start)}
-                    </button>
-                    <p className="ml-2">
-                      {question.title}{" "}
-                      {question.member ? `(${question.member.name})` : null}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-          <h2 className="mb-3 text-xl font-bold">関連リンク</h2>
-          <div className="grid gap-5 md:grid-cols-2">
-            <LinkButton
-              url={meeting.page_url}
-              emoji="📺"
-              title="インターネット審議中継"
-            />
-            {meeting.meetingURL && (
-              <LinkButton
-                emoji="📝"
-                url={meeting.meetingURL}
-                title="国会会議録検索システム"
-              />
-            )}
-          </div>
+          {currentSpeaker && <Speaker currentSpeaker={currentSpeaker} />}
+          <Description meeting={meeting} player={playerRef.current} />
+          <Comments meeting={meeting} user={user} />
         </div>
-        <Comments meeting={meeting} user={user} />
+        <div className="flex flex-col gap-y-5 md:w-[calc(35%)]">
+          {meeting.utterances.length !== 0 && (
+            <Transcript
+              meeting={meeting}
+              currentWord={currentWord}
+              player={playerRef.current}
+            />
+          )}
+          {(!!meeting.apiURL && !!meeting.meetingURL) ||
+          meeting.utterances.length > 0 ? (
+            <Summarize user={user} meeting={meeting} />
+          ) : null}
+        </div>
       </div>
-      <div className="flex flex-col gap-y-5 md:w-[calc(35%)]">
-        {meeting.utterances.length !== 0 && (
-          <Transcript
-            meeting={meeting}
-            currentWord={currentWord}
-            player={playerRef.current}
-          />
-        )}
-        {(!!meeting.apiURL && !!meeting.meetingURL) ||
-        meeting.utterances.length > 0 ? (
-          <Summarize user={user} meeting={meeting} />
-        ) : null}
-      </div>
-    </div>
+      <ShareModal
+        currentShareTime={currentShareTime}
+        handleBlur={handleBlur}
+        handleChange={handleChange}
+        inputValue={inputValue}
+        isShareModalOpen={isShareModalOpen}
+        meeting={meeting}
+        setIsShareOpen={setIsShareOpen}
+      />
+      <NoteModal
+        endBluer={endBluer}
+        endChange={endChange}
+        EndTime={EndTime}
+        inputEndInputValue={inputEndInputValue}
+        inputStartInputValue={inputStartInputValue}
+        isOpen={isModalOpen}
+        meeting={meeting}
+        setIsOpen={setIsModalOpen}
+        startBluer={startBluer}
+        startChange={startChange}
+        StartTime={StartTime}
+      />
+    </>
   );
 }

@@ -2,9 +2,13 @@
 
 import { auth } from "@auth";
 import { config } from "@site.config";
-import { MemberSchema } from "@src/app/members/[id]/edit/schema";
-import { hiraToKana } from "@src/helper/utils";
+import {
+  hasDurationPassedSinceCreation,
+  hiraToKana,
+  twoWeeksInMilliseconds,
+} from "@src/helper/utils";
 import prisma from "@src/lib/prisma";
+import { MemberSchema } from "@src/schema/member";
 import { zact } from "zact/server";
 
 export const updateMember = zact(MemberSchema)(async (data) => {
@@ -16,12 +20,11 @@ export const updateMember = zact(MemberSchema)(async (data) => {
     };
   }
 
-  const now = new Date();
-  const twoWeeksInMilliseconds = 2 * 7 * 24 * 60 * 60 * 1000;
-
   if (
-    now.getTime() - new Date(session.user.createdAt).getTime() <
-    twoWeeksInMilliseconds
+    !hasDurationPassedSinceCreation(
+      session.user.createdAt,
+      twoWeeksInMilliseconds
+    )
   ) {
     return {
       error: "Unauthorized",

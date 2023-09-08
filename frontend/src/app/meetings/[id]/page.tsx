@@ -63,6 +63,7 @@ async function getMeeting(id: string) {
           },
         },
       },
+      notes: true,
       questions: {
         include: {
           member: true,
