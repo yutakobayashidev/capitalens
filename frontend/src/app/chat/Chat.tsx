@@ -6,12 +6,12 @@ import { MeOutlinedIcon } from "@xpadev-net/designsystem-icons";
 import { useChat } from "ai/react";
 import cn from "classnames";
 import { type Session } from "next-auth";
-import { useEffect,useState } from "react";
-import toast from "react-hot-toast";
+import { useEffect, useState } from "react";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import { FaMagic } from "react-icons/fa";
 import { SiOpenai } from "react-icons/si";
 import ReactMarkdown from "react-markdown";
+import { toast } from "sonner";
 
 export function EmptyScreen({
   president,
@@ -122,7 +122,7 @@ export default function Chat({
                   )}
                 </div>
               )}
-              <ReactMarkdown className="prose prose-neutral ml-4 max-w-none flex-1 space-y-2 overflow-hidden px-1 prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-img:shadow">
+              <ReactMarkdown className="prose prose-neutral prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-img:shadow ml-4 max-w-none flex-1 space-y-2 overflow-hidden px-1">
                 {m.content}
               </ReactMarkdown>
             </div>

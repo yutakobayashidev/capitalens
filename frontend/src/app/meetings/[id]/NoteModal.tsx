@@ -5,8 +5,8 @@ import Modal from "@src/app/_components/Modal";
 import { Meeting } from "@src/types/meeting";
 import { FocusEvent } from "react";
 import { experimental_useFormStatus as useFormStatus } from "react-dom";
-import toast from "react-hot-toast";
 import TextareaAutosize from "react-textarea-autosize";
+import { toast } from "sonner";
 
 import { createNote } from "./actions";
 

@@ -3,10 +3,10 @@ import { config } from "@site.config";
 import Modal from "@src/app/_components/Modal";
 import { Meeting } from "@src/types/meeting";
 import { FC, ReactNode, useState } from "react";
-import toast from "react-hot-toast";
 import { BsLine } from "react-icons/bs";
 import { FaFacebook } from "react-icons/fa";
 import { SiHatenabookmark } from "react-icons/si";
+import { toast } from "sonner";
 
 interface ShareButtonProps {
   bgColor: string;

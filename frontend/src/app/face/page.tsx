@@ -4,7 +4,7 @@ import FaceDetection from "@src/app/face/FaceDetection";
 import { Member } from "@src/types/member";
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 import PersonModal from "./PersonModal";
 

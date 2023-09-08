@@ -5,10 +5,10 @@ import { MeOutlinedIcon } from "@xpadev-net/designsystem-icons";
 import { useChat } from "ai/react";
 import cn from "classnames";
 import { type Session } from "next-auth";
-import toast from "react-hot-toast";
 import { IoMdSend } from "react-icons/io";
 import { SiOpenai } from "react-icons/si";
 import ReactMarkdown from "react-markdown";
+import { toast } from "sonner";
 
 export default function Chat({
   member,

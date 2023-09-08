@@ -73,13 +73,13 @@ export default async function RootLayout({
         <meta name="theme-color" content="#1E50B5" />
       </head>
       <body>
-        <Toaster />
         <Header />
         {children}
         <Footer />
         <BottomMenu />
         <Chatbot user={session?.user} />
         <GoogleAnalytics />
+        <Toaster />
       </body>
     </html>
   );

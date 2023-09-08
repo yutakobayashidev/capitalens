@@ -12,11 +12,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useAtom } from "jotai";
 import { type Session } from "next-auth";
 import { useState } from "react";
-import toast from "react-hot-toast";
 import { FaMagic } from "react-icons/fa";
 import { IoMdSend } from "react-icons/io";
 import { SiOpenai } from "react-icons/si";
 import ReactMarkdown from "react-markdown";
+import { toast } from "sonner";
 
 export default function Chatbot({ user }: { user: Session["user"] }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,7 +43,7 @@ export default function Chatbot({ user }: { user: Session["user"] }) {
     api: "/api/chat",
     onResponse: (response) => {
       if (response.status === 429) {
-        toast.error("利用制限を超えました。時間を開けてお試しください。");
+        toast("利用制限を超えました。時間を開けてお試しください。");
         return;
       }
     },

@@ -1,7 +1,7 @@
 "use client";
 
-import { Toaster as DefaultToaster } from "react-hot-toast";
+import { Toaster as DefaultToaster } from "sonner";
 
 export default function Toaster() {
-  return <DefaultToaster position="bottom-center" />;
+  return <DefaultToaster />;
 }
