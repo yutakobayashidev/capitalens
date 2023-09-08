@@ -251,8 +251,10 @@ model Note {
     start         Float
     end           Float
     text          String
-    meeting Video  @relation(fields: [videoId], references: [id])
+    meeting        Video  @relation(fields: [videoId], references: [id])
     videoId String
+
+    @@index([videoId])
 }
 
 model Utterance {

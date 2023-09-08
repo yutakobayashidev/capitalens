@@ -27,17 +27,25 @@ export default function VideoJSPlayer({
           userActions: {
             hotkeys: function (event: KeyboardEvent) {
               const skipTime = 10;
-              if (event.code === "ArrowRight") {
-                player.currentTime(player.currentTime() + skipTime);
-              } else if (event.code === "ArrowLeft") {
-                player.currentTime(player.currentTime() - skipTime);
-              } else if (event.code === "Space") {
-                if (player.paused()) {
-                  player.play();
-                } else {
-                  player.pause();
+
+              if (player) {
+                const currentTime = player.currentTime();
+
+                if (event.code === "Space") {
+                  event.preventDefault();
+                  if (player.paused()) {
+                    player.play();
+                  } else {
+                    player.pause();
+                  }
                 }
-                event.preventDefault();
+                if (currentTime !== undefined) {
+                  if (event.code === "ArrowRight") {
+                    player.currentTime(currentTime + skipTime);
+                  } else if (event.code === "ArrowLeft") {
+                    player.currentTime(currentTime - skipTime);
+                  }
+                }
               }
             },
           },
