@@ -1,17 +1,15 @@
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { OpenAIStream, StreamingTextResponse } from "ai";
-import { Configuration, OpenAIApi } from "openai-edge";
+import { OpenAI } from "openai";
 
 import { functions, runFunction } from "./functions";
 
 export const runtime = "edge";
 
-const apiConfig = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY!,
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
 });
-
-const openai = new OpenAIApi(apiConfig);
 
 const redis = new Redis({
   token: process.env.UPSTASH_REDIS_REST_TOKEN || "",
@@ -55,7 +53,8 @@ export async function POST(req: Request) {
     return new Response(cached as any);
   }
 
-  const response = await openai.createChatCompletion({
+  const initialResponse = await openai.chat.completions.create({
+    function_call: "auto",
     functions,
     messages,
     model: "gpt-3.5-turbo-0613",
@@ -63,7 +62,7 @@ export async function POST(req: Request) {
     temperature: 0,
   });
 
-  const stream = OpenAIStream(response, {
+  const stream = OpenAIStream(initialResponse, {
     experimental_onFunctionCall: async (
       { name, arguments: args },
       createFunctionCallMessages
@@ -71,8 +70,7 @@ export async function POST(req: Request) {
       const functionResponse = await runFunction(name, args);
 
       const newMessages = createFunctionCallMessages(functionResponse);
-      return openai.createChatCompletion({
-        functions,
+      return openai.chat.completions.create({
         messages: [...messages, ...newMessages],
         model: "gpt-3.5-turbo-0613",
         stream: true,

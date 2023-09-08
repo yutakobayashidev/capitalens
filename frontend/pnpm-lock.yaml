@@ -139,9 +139,6 @@ dependencies:
   openai:
     specifier: ^4.5.0
     version: 4.5.0(encoding@0.1.13)
-  openai-edge:
-    specifier: ^1.2.2
-    version: 1.2.2
   react:
     specifier: 18.2.0
     version: 18.2.0
@@ -14870,11 +14867,6 @@ packages:
       define-lazy-prop: 3.0.0
       is-inside-container: 1.0.0
       is-wsl: 2.2.0
-
-  /openai-edge@1.2.2:
-    resolution: {integrity: sha512-C3/Ao9Hkx5uBPv9YFBpX/x59XMPgPUU4dyGg/0J2sOJ7O9D98kD+lfdOc7v/60oYo5xzMGct80uFkYLH+X2qgw==}
-    engines: {node: '>=18'}
-    dev: false
 
   /openai@3.3.0:
     resolution: {integrity: sha512-uqxI/Au+aPRnsaQRe8CojU0eCR7I0mBiKjD3sNMzY6DaC1ZVrc85u98mtJW6voDug8fgGN+DIZmTDxTthxb7dQ==}
