@@ -43,7 +43,7 @@ export default function Chatbot({ user }: { user: Session["user"] }) {
     api: "/api/chat",
     onResponse: (response) => {
       if (response.status === 429) {
-        toast("利用制限を超えました。時間を開けてお試しください。");
+        toast.error("利用制限を超えました。時間を開けてお試しください。");
         return;
       }
     },
