@@ -1,11 +1,5 @@
-import { connect } from "@planetscale/database";
+import { conn } from "@src/lib/planetscale";
 import { ChatCompletionCreateParams } from "openai/resources/chat";
-
-const pscale_config = {
-  url: process.env.DATABASE_URL || "mysql://user:pass@host",
-};
-
-const conn = process.env.DATABASE_URL ? connect(pscale_config) : null;
 
 export const functions: ChatCompletionCreateParams.Function[] = [
   {

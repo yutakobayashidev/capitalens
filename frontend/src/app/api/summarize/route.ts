@@ -1,4 +1,4 @@
-import { connect } from "@planetscale/database";
+import { conn } from "@src/lib/planetscale";
 import { SpeechRecord } from "@src/types/api";
 import { loadSummarizationChain } from "langchain/chains";
 import { ChatOpenAI } from "langchain/chat_models/openai";
@@ -105,12 +105,6 @@ REFINED SUMMARY:`;
   });
   return stream.readable;
 }
-
-const pscale_config = {
-  url: process.env.DATABASE_URL || "mysql://user:pass@host",
-};
-
-const conn = process.env.DATABASE_URL ? connect(pscale_config) : null;
 
 export async function POST(request: Request) {
   if (!conn) return null;
