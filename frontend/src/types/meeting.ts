@@ -35,6 +35,7 @@ type Question = {
 export type Word = {
   end: number;
   member: Member | null;
+  speaker: string | null;
   start: number;
   text: string;
 };
@@ -63,5 +64,4 @@ export type Annotation = {
   speaker_info: string;
   speaker_name: string;
   start_sec: number;
-  time: string;
 };

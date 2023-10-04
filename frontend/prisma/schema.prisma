@@ -273,6 +273,7 @@ model Word {
   start       Float
   end         Float
   text        String
+  speaker     String?
   member      Member?   @relation(fields: [memberId], references: [id])
   memberId    String?
   utterance   Utterance @relation(fields: [utteranceId], references: [id])

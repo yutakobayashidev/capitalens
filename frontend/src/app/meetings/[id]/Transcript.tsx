@@ -1,5 +1,5 @@
 import { convertSecondsToTime } from "@src/helper/utils";
-import { Meeting } from "@src/types/meeting";
+import { Meeting, Word } from "@src/types/meeting";
 import { SearchIcon } from "@xpadev-net/designsystem-icons";
 import Avatar from "boring-avatars";
 import cn from "classnames";
@@ -11,6 +11,63 @@ type TranscriptProps = {
   meeting: Meeting;
   player: Player | null;
 };
+
+function Word({
+  currentWord,
+  player,
+  word,
+  wordRef,
+}: {
+  currentWord: string | null;
+  player: Player | null;
+  word: Word;
+  wordRef: React.Ref<HTMLDivElement>;
+}) {
+  return (
+    <div
+      className={cn("p-4 flex flex-1 items-start", {
+        "bg-gray-100": word.text === currentWord,
+      })}
+      ref={word.text === currentWord ? wordRef : null}
+      onClick={() => {
+        if (player) {
+          player.currentTime(word.start);
+          player.play();
+        }
+      }}
+    >
+      <div className="mr-2.5">
+        {word.member && word.member.image ? (
+          <div className="relative h-[40px] w-[40px]">
+            <img
+              alt={word.member.name}
+              src={word.member.image}
+              className="absolute left-0 top-0 h-full w-full rounded-full border object-cover"
+            />
+          </div>
+        ) : (
+          <Avatar
+            size={40}
+            name={word.speaker || "不明な話者"}
+            variant="beam"
+            colors={["#FFBD87", "#FFD791", "#F7E8A6", "#D9E8AE", "#BFE3C0"]}
+          />
+        )}
+      </div>
+      <div className="flex-1">
+        <div className="mb-1 flex items-center gap-x-1">
+          <p className="font-bold">
+            {word.member ? word.member.name : word.speaker}
+          </p>
+          <span className="text-sm text-gray-400">
+            {convertSecondsToTime(word.start)}
+          </span>
+        </div>
+        <div>{word.text}</div>
+      </div>
+    </div>
+  );
+}
 
 export default function Transcript({
   currentWord,
@@ -38,7 +95,8 @@ export default function Transcript({
         .filter(
           (word) =>
             !selectedSpeakerNames.length ||
-            (word.member && selectedSpeakerNames.includes(word.member.name))
+            (word.member && selectedSpeakerNames.includes(word.member.name)) ||
+            (word.speaker && selectedSpeakerNames.includes(word.speaker))
         )
     );
   }, [searchQuery, meeting.utterances, selectedSpeakerNames]);
@@ -79,8 +137,7 @@ export default function Transcript({
 
   const speakers = meeting.utterances
     .flatMap((utterance) => utterance.words)
-    .map((word) => word.member)
-    .filter((member) => member !== null)
+    .map((word) => word.member || { name: word.speaker, image: null })
     .filter(
       (value, index, self) =>
         value && self.findIndex((m) => m && m.name === value.name) === index
@@ -100,16 +157,19 @@ export default function Transcript({
         />
         <input
           className="w-full bg-transparent outline-none"
-          placeholder="文字起こしを検索"
+          placeholder="文字起こしを検索..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
       <div className="mt-2 flex items-center gap-x-2 overflow-x-auto whitespace-nowrap px-4 py-2">
         {speakers.map((speaker) => {
-          if (!speaker) {
+          if (!speaker || !speaker.name) {
             return null;
           }
+
+          const speakerName = speaker.name; // Ensure speaker.name is not null here
+
           return (
             <button
               key={speaker.name}
@@ -120,12 +180,15 @@ export default function Transcript({
                   : "bg-gray-200 font-medium text-gray-600"
               )}
               onClick={() =>
-                setSelectedSpeakerNames(
-                  (prevSpeakerNames) =>
-                    prevSpeakerNames.includes(speaker.name)
-                      ? prevSpeakerNames.filter((name) => name !== speaker.name) // If already selected, remove the name
-                      : [...prevSpeakerNames, speaker.name] // Otherwise, add the name
-                )
+                setSelectedSpeakerNames((prevSpeakerNames) => {
+                  if (prevSpeakerNames.includes(speakerName)) {
+                    return prevSpeakerNames.filter(
+                      (name) => name !== speakerName
+                    ); // If already selected, remove the name
+                  } else {
+                    return [...prevSpeakerNames, speakerName]; // Add the name
+                  }
+                })
               }
             >
               <div className="absolute left-[0px] top-[-0px]">
@@ -170,54 +233,13 @@ export default function Transcript({
           </div>
         ) : (
           filteredWords.map((word, i) => (
-            <div
+            <Word
               key={i}
-              className={cn("p-4 flex flex-1 items-start", {
-                "bg-gray-100": word.text === currentWord,
-              })}
-              ref={word.text === currentWord ? wordRef : null}
-              onClick={() => {
-                if (player) {
-                  player.currentTime(word.start);
-                  player.play();
-                }
-              }}
-            >
-              <div className="mr-2.5">
-                {word.member && word.member.image ? (
-                  <div className="relative h-[40px] w-[40px]">
-                    <img
-                      alt={word.member.name}
-                      src={word.member.image}
-                      className="absolute left-0 top-0 h-full w-full rounded-full border object-cover"
-                    />
-                  </div>
-                ) : (
-                  <Avatar
-                    size={40}
-                    variant="beam"
-                    colors={[
-                      "#FFBD87",
-                      "#FFD791",
-                      "#F7E8A6",
-                      "#D9E8AE",
-                      "#BFE3C0",
-                    ]}
-                  />
-                )}
-              </div>
-              <div className="flex-1">
-                <div className="mb-1 flex items-center gap-x-1">
-                  <p className="font-bold">
-                    {word.member ? word.member.name : "不明な発話者"}
-                  </p>
-                  <span className="text-sm text-gray-400">
-                    {convertSecondsToTime(word.start)}
-                  </span>
-                </div>
-                <div>{word.text}</div>
-              </div>
-            </div>
+              player={player}
+              word={word}
+              wordRef={wordRef}
+              currentWord={currentWord}
+            />
           ))
         )}
       </div>
