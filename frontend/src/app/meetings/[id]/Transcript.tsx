@@ -57,7 +57,11 @@ function Word({
       <div className="flex-1">
         <div className="mb-1 flex items-center gap-x-1">
           <p className="font-bold">
-            {word.member ? word.member.name : word.speaker}
+            {word.member
+              ? word.member.name
+              : word.speaker
+              ? word.speaker
+              : "不明な話者"}
           </p>
           <span className="text-sm text-gray-400">
             {convertSecondsToTime(word.start)}
