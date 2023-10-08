@@ -1,0 +1,35 @@
+services:
+  mysql:
+    image: mysql:8.1
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - 3306:3306
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 1s
+      retries: 30
+  frontend:
+    depends_on:
+      mysql:
+        condition: service_healthy
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    volumes:
+      - type: bind
+        source: ./
+        target: /app
+    platform: linux/amd64
+    command: sh -c "bun run prisma-init && bun run dev"
+    restart: always
+    ports:
+      - 3000:3000
+
+volumes:
+  mysql_data:
+    driver: local
