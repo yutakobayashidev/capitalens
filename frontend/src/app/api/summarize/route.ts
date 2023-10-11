@@ -107,8 +107,6 @@ REFINED SUMMARY:`;
 }
 
 export async function POST(request: Request) {
-  if (!conn) return null;
-
   const body = await request.json();
 
   const query = "SELECT * FROM Video WHERE id = ? LIMIT 1";
