@@ -121,7 +121,6 @@ export async function POST(req: Request) {
       allDataAppends.push(appendData);
 
       return openai.chat.completions.create({
-        functions,
         messages: [...messages, ...newMessages],
         model: "gpt-3.5-turbo-0613",
         stream: true,
