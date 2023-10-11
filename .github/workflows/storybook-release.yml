@@ -25,7 +25,7 @@ jobs:
         working-directory: ./frontend
 
       - name: Build storybook
-        run: bun run build-storybook -o ./dist/storybook
+        run: bun run prisma generate && bun run build-storybook -o ./dist/storybook
         working-directory: ./frontend
 
       - name: Create dist/frontend directory
