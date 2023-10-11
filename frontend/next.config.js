@@ -28,9 +28,6 @@ const nextConfig = withPWA({
     });
     return config;
   },
-  images: {
-    disableStaticImages: true,
-  },
   reactStrictMode: true,
   swcMinify: true,
 });

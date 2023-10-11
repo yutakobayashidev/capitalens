@@ -39,7 +39,7 @@
     "@upstash/ratelimit": "^0.4.3",
     "@upstash/redis": "^1.21.0",
     "@vercel/kv": "^0.2.2",
-    "@vidstack/react": "^0.6.13",
+    "@vidstack/react": "1.1.11",
     "@xpadev-net/designsystem-icons": "^0.0.6",
     "ai": "^2.2.12",
     "boring-avatars": "^1.10.1",
