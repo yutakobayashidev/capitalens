@@ -50,7 +50,18 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
+  const countryPromise = fetch(
+    "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/index.json"
+  );
+
+  const sessionPromise = auth();
+
+  const [session, country_flag] = await Promise.all([
+    sessionPromise,
+    countryPromise,
+  ]);
+
+  const countries = await country_flag.json();
 
   return (
     <html lang="ja" className={cn(inter.variable, notoSansJP.variable)}>
@@ -77,7 +88,7 @@ export default async function RootLayout({
         {children}
         <Footer />
         <BottomMenu />
-        <Chatbot user={session?.user} />
+        <Chatbot countries={countries} user={session?.user} />
         <GoogleAnalytics />
         <Toaster />
       </body>

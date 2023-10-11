@@ -1,6 +1,15 @@
 import { conn } from "@src/lib/planetscale";
 import { ChatCompletionCreateParams } from "openai/resources/chat";
 
+export type TransformedData = {
+  country_id: string;
+  country_value: string;
+  date: string;
+  indicator_id: string;
+  indicator_value: string;
+  value: number | null;
+};
+
 export const functions: ChatCompletionCreateParams.Function[] = [
   {
     name: "get_member_info",
@@ -89,10 +98,10 @@ async function get_population(countryCode: string) {
     const data = result[1];
 
     if (!data) {
-      return "Sorry, we could not retrieve population data because there was no data available for the country code.";
+      return "申し訳ありませんが、国番号に対応するデータがないため、人口データを取得できませんでした。";
     }
 
-    const transformedData = data.map((datum: any) => {
+    const transformedData: TransformedData[] = data.map((datum: any) => {
       return {
         country_id: datum.country.id,
         country_value: datum.country.value,
@@ -103,21 +112,21 @@ async function get_population(countryCode: string) {
       };
     });
 
+    transformedData.sort((a, b) => parseInt(a.date) - parseInt(b.date));
+
     return transformedData;
   } catch (e: any) {
-    return `Sorry, we could not retrieve population data due to an error: ${e.message}`;
+    return `申し訳ありませんが、エラーにより人口データを取得できませんでした`;
   }
 }
 
 async function get_member_info(name: string) {
-  if (!conn) return null;
-
   const query = "SELECT * FROM Member WHERE name = ? LIMIT 1";
   const params = [name];
   const data = await conn.execute(query, params);
 
   if (data.rows.length === 0) {
-    return "Sorry, the member information could not be found.";
+    return "申し訳ありませんが、議員情報が見つかりませんでした。";
   }
 
   return data.rows[0];
@@ -151,8 +160,6 @@ async function meeting_list(args: any) {
       speakers,
     };
   });
-
-  console.log(newArray);
 
   return newArray;
 }

@@ -36,27 +36,21 @@ export async function generateMetadata({
       title:
         (meeting.house === "COUNCILLORS" ? "参議院 " : "衆議院 ") +
         meeting.meeting_name,
-      images: `https://capitalens-og.onrender.com/video_frame/?time=${
-        searchParams.t
-          ? searchParams.t
-          : meeting.utterances[0]
-          ? meeting.utterances[0].start
-          : "1"
-      }&url=${meeting.m3u8_url}`,
       locale: "ja-JP",
       siteName: config.siteMeta.title,
       url: `${config.siteRoot}meetings/${meeting.id}`,
     },
     twitter: {
       title:
+        "Capitalensで" +
         (meeting.house === "COUNCILLORS" ? "参議院 " : "衆議院 ") +
-        meeting.meeting_name,
+        meeting.meeting_name +
+        "をチェックしよう",
       description:
         meeting.summary ??
         `${dayjs(meeting.date).format("YYYY年MM月DD日")}の${
           meeting.house === "COUNCILLORS" ? "参議院 " : "衆議院 "
         } ${meeting.meeting_name}の情報をチェックする`,
-      images: `https://capitalens-og.onrender.com/video_frame/?time=${meeting.utterances[0].start}&url=${meeting.m3u8_url}`,
     },
   };
 }

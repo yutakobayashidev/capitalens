@@ -1,24 +1,26 @@
 "use client";
 
 import { placeholderAtom } from "@src/store/placeholder";
-import {
-  ArrowDownIcon,
-  ArrowUpIcon,
-  MeOutlinedIcon,
-} from "@xpadev-net/designsystem-icons";
+import { Country } from "@src/types/country";
+import { ArrowDownIcon, ArrowUpIcon } from "@xpadev-net/designsystem-icons";
 import { useChat } from "ai/react";
-import cn from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAtom } from "jotai";
 import { type Session } from "next-auth";
 import { useState } from "react";
 import { FaMagic } from "react-icons/fa";
 import { IoMdSend } from "react-icons/io";
-import { SiOpenai } from "react-icons/si";
-import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
 
-export default function Chatbot({ user }: { user: Session["user"] }) {
+import MessageItem from "../chat/Message";
+
+export default function Chatbot({
+  countries,
+  user,
+}: {
+  countries: Country[];
+  user: Session["user"];
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
   const variants = {
@@ -33,6 +35,7 @@ export default function Chatbot({ user }: { user: Session["user"] }) {
   };
 
   const {
+    data,
     handleInputChange,
     handleSubmit,
     input,
@@ -87,38 +90,22 @@ export default function Chatbot({ user }: { user: Session["user"] }) {
           >
             <div className="grow overflow-y-auto">
               {messages.length ? (
-                messages.map((m, i) => (
-                  <div key={i} className="mb-4 flex items-start">
-                    {user && m.role === "user" ? (
-                      <img
-                        src={user.image ?? "/noimage.png"}
-                        alt={user.name ?? "不明"}
-                        className={cn("h-8 w-8 rounded-md border shadow")}
+                messages.map((message, i) => {
+                  const correspondingData = data
+                    ? data.find((d: any) => d.index === i)
+                    : null;
+
+                  return (
+                    <div key={i} className="mb-5">
+                      <MessageItem
+                        countries={countries}
+                        message={message}
+                        user={user}
+                        data={correspondingData}
                       />
-                    ) : (
-                      <div
-                        className={cn(
-                          "flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow",
-                          m.role === "user" ? "bg-gray-100" : "bg-black"
-                        )}
-                      >
-                        {m.role === "user" ? (
-                          <MeOutlinedIcon
-                            width="1em"
-                            height="1em"
-                            fill="currentColor"
-                            className="h-4 w-4"
-                          />
-                        ) : (
-                          <SiOpenai className="h-4 w-4 text-white" />
-                        )}
-                      </div>
-                    )}
-                    <ReactMarkdown className="prose prose-neutral prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-img:shadow ml-4 max-w-none flex-1 space-y-2 overflow-hidden px-1">
-                      {m.content}
-                    </ReactMarkdown>
-                  </div>
-                ))
+                    </div>
+                  );
+                })
               ) : (
                 <div className="rounded-lg border bg-gray-50 px-4 py-3 text-sm text-gray-500">
                   <p className="mb-2">

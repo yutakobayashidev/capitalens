@@ -14,8 +14,6 @@ import { notFound } from "next/navigation";
 import { AiOutlineLink } from "react-icons/ai";
 import { FaFacebook, FaTwitter, FaWikipediaW, FaYoutube } from "react-icons/fa";
 
-import Chat from "./Chat";
-
 dayjs.locale("ja");
 dayjs.extend(relativeTime);
 
@@ -102,7 +100,7 @@ export async function generateMetadata({
   if (!member) notFound();
 
   const ogImage = member.image ?? `${config.siteRoot}opengraph.jpg`;
-  const title = member.name;
+  const title = member.name + "議員のプロフィール";
   const description =
     member.abstract ??
     member.description ??
@@ -243,7 +241,6 @@ export default async function Page({ params }: { params: { id: string } }) {
         </section>
         <section>
           <h2 className="mb-3 text-3xl font-bold">詳細情報</h2>
-          <Chat user={session?.user} member={member} />
           {member.group && (
             <div className="mb-3 flex items-center">
               {member.group.image ? (
