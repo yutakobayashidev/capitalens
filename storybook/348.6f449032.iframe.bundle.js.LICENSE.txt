@@ -1,0 +1,20 @@
+/*!
+ * cookie
+ * Copyright(c) 2012-2014 Roman Shtylman
+ * Copyright(c) 2015 Douglas Christopher Wilson
+ * MIT Licensed
+ */
+
+/*! Bundled license information:
+
+decimal.js/decimal.mjs:
+  (*!
+   *  decimal.js v10.4.3
+   *  An arbitrary-precision Decimal type for JavaScript.
+   *  https://github.com/MikeMcl/decimal.js
+   *  Copyright (c) 2022 Michael Mclaughlin <M8ch88l@gmail.com>
+   *  MIT Licence
+   *)
+*/
+
+/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
