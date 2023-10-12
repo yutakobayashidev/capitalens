@@ -48,10 +48,21 @@ export default function CommandMenu({
   const [isAIMode, setIsAIMode] = useState(false);
   const [isComposing, setIsComposing] = useState(false);
 
+  const { append, data, input, isLoading, messages, setInput } = useChat({
+    api: "/api/chat",
+    onResponse: (response) => {
+      if (response.status === 429) {
+        toast.error("利用制限を超えました。時間を開けてお試しください。");
+        return;
+      }
+    },
+  });
+
   useEffect(() => {
     if (!open) {
       setIsMemberSearchMode(false);
       setIsAIMode(false);
+      setInput("");
     }
   }, [open]);
 
@@ -98,16 +109,6 @@ export default function CommandMenu({
       document.removeEventListener("compositionend", handleCompositionEnd);
     };
   }, []);
-
-  const { append, data, input, isLoading, messages, setInput } = useChat({
-    api: "/api/chat",
-    onResponse: (response) => {
-      if (response.status === 429) {
-        toast.error("利用制限を超えました。時間を開けてお試しください。");
-        return;
-      }
-    },
-  });
 
   const disabled = isLoading || input.length === 0;
 
