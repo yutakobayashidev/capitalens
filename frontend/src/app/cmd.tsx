@@ -128,6 +128,9 @@ export default function CommandMenu({
               content: input,
               role: "user",
             });
+          } else if (e.key === "Tab") {
+            e.preventDefault();
+            setInput(placeholder);
           }
         }}
         onValueChange={(value) => {
