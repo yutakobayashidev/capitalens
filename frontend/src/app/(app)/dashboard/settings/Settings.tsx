@@ -2,14 +2,13 @@
 
 import { Dialog, Switch } from "@headlessui/react";
 import GLogo from "@public/g-logo.svg";
+import { DeleteAccount, updatePrefecture, updateUser } from "@src/app/actions";
 import Modal from "@src/components/ui/dialog";
 import { ArrowDownIcon } from "@xpadev-net/designsystem-icons";
 import cn from "classnames";
 import { useRouter } from "next/navigation";
 import { type Session } from "next-auth";
 import { useEffect, useState, useTransition } from "react";
-
-import { DeleteAccount, updatePrefecture, updateUser } from "./actions";
 
 export default function Settings({
   prefectures,

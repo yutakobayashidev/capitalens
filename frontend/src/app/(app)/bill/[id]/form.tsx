@@ -2,14 +2,13 @@
 
 import "dayjs/locale/ja";
 
+import { addComment, Vote } from "@src/app/actions";
 import { LoginPrompt } from "@src/components/login/login";
 import dayjs from "dayjs";
 import { type Session } from "next-auth";
 import { useRef, useState, useTransition } from "react";
 import { experimental_useFormStatus as useFormStatus } from "react-dom";
 import { VscTriangleUp } from "react-icons/vsc";
-
-import { addComment, Vote } from "./actions";
 
 dayjs.locale("ja");
 

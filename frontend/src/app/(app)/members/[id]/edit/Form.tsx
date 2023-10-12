@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { updateMember } from "@src/app/actions";
 import Button from "@src/components/ui/button";
 import {
   InputField,
@@ -16,8 +17,6 @@ import { usePathname } from "next/navigation";
 import { Session } from "next-auth";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
-
-import { updateMember } from "./actions";
 
 export default function Form({
   groups,

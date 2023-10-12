@@ -12,7 +12,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AiOutlineLink } from "react-icons/ai";
-import { FaFacebook, FaTwitter, FaWikipediaW, FaYoutube } from "react-icons/fa";
+import { FaFacebook, FaWikipediaW, FaYoutube } from "react-icons/fa";
 
 dayjs.locale("ja");
 dayjs.extend(relativeTime);
@@ -169,7 +169,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 {session?.user && (
                   <Link
                     href={`/members/${member.id}/edit`}
-                    className="block text-primary"
+                    className="text-primary block"
                   >
                     更新
                   </Link>
@@ -194,9 +194,16 @@ export default async function Page({ params }: { params: { id: string } }) {
                 {member.twitter && (
                   <Link
                     className="m-2 inline-flex h-10 w-10 items-center justify-center rounded-md bg-[#F1F5F9]"
-                    href={`https://twitter.com/${member.twitter}`}
+                    href={`https://x.com/${member.twitter}`}
                   >
-                    <FaTwitter className="text-xl text-[#1da1f2]" />
+                    <svg
+                      aria-label="X formerly known as Twitter"
+                      fill="currentColor"
+                      className="h-5 w-5 text-xl"
+                      viewBox="0 0 22 20"
+                    >
+                      <path d="M16.99 0H20.298L13.071 8.26L21.573 19.5H14.916L9.702 12.683L3.736 19.5H0.426L8.156 10.665L0 0H6.826L11.539 6.231L16.99 0ZM15.829 17.52H17.662L5.83 1.876H3.863L15.829 17.52Z"></path>
+                    </svg>
                   </Link>
                 )}
                 {member.facebook && (

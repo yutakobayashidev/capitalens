@@ -36,7 +36,7 @@ export default function MemberCard({ member }: { member: Member }) {
             </Link>
             {member.twitter && (
               <a
-                href={"https://twitter.com/" + member.twitter}
+                href={"https://x.com/" + member.twitter}
                 className="mr-2 inline-flex items-center rounded-full bg-gray-900 px-3 py-2 text-sm font-semibold text-white"
               >
                 <svg

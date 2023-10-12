@@ -2,7 +2,7 @@ import { Member } from "@src/types/member";
 import { motion, transform, useMotionValue } from "framer-motion";
 import Link from "next/link";
 import { useRef } from "react";
-import { FaGlobe, FaTwitter } from "react-icons/fa";
+import { FaGlobe } from "react-icons/fa";
 
 interface PersonModalProps {
   member: Member;
@@ -81,7 +81,7 @@ const PersonModal: React.FC<PersonModalProps> = ({ member, onClose }) => {
         dragConstraints={{ top: 0 }}
         drag="y"
         style={{ x: "-50%" }}
-        className="xs:p-8 fixed bottom-0 left-[50%] z-50 flex w-full max-w-[480px] flex-col rounded-t-4xl bg-white px-5 py-7 before:absolute before:left-[50%] before:top-[10px] before:h-[4px] before:w-[60px] before:-translate-x-1/2 before:bg-gray-200"
+        className="xs:p-8 rounded-t-4xl fixed bottom-0 left-[50%] z-50 flex w-full max-w-[480px] flex-col bg-white px-5 py-7 before:absolute before:left-[50%] before:top-[10px] before:h-[4px] before:w-[60px] before:-translate-x-1/2 before:bg-gray-200"
       >
         <h2 className="mb-5 text-center text-2xl font-bold">
           <span className="mr-1">{member.name}</span>議員の情報
@@ -127,10 +127,18 @@ const PersonModal: React.FC<PersonModalProps> = ({ member, onClose }) => {
           </Link>
           {member.twitter && (
             <a
-              href={`https://twitter.com/${member.twitter}`}
-              className="mr-3 inline-flex items-center rounded-full bg-[#1da1f2] px-3 py-2 text-sm font-semibold text-white"
+              href={`https://x.com/${member.twitter}`}
+              className="mr-3 inline-flex items-center rounded-full bg-gray-900 px-3 py-2 text-sm font-semibold text-white"
             >
-              <FaTwitter className="mr-2 text-base" />@{member.twitter}
+              <svg
+                aria-label="X formerly known as Twitter"
+                fill="currentColor"
+                className="mx-auto mr-2 h-4 w-4"
+                viewBox="0 0 22 20"
+              >
+                <path d="M16.99 0H20.298L13.071 8.26L21.573 19.5H14.916L9.702 12.683L3.736 19.5H0.426L8.156 10.665L0 0H6.826L11.539 6.231L16.99 0ZM15.829 17.52H17.662L5.83 1.876H3.863L15.829 17.52Z"></path>
+              </svg>
+              @{member.twitter}
             </a>
           )}
         </div>
