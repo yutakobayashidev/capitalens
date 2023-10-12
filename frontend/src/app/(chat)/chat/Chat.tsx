@@ -1,7 +1,8 @@
 "use client";
 
 import { Dialog } from "@headlessui/react";
-import Modal from "@src/components/ui/dialog";
+import MessageItem from "@src/components/message-item/message-item";
+import Modal from "@src/components/ui/modal";
 import { Country } from "@src/types/country";
 import { useChat } from "ai/react";
 import cn from "classnames";
@@ -12,8 +13,6 @@ import { FaMagic } from "react-icons/fa";
 import { IoMdSend } from "react-icons/io";
 import TextareaAutosize from "react-textarea-autosize";
 import { toast } from "sonner";
-
-import MessageItem from "./Message";
 
 export function EmptyScreen({
   president,

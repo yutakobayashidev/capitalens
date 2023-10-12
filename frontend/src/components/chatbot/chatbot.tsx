@@ -1,15 +1,15 @@
 "use client";
 
-import MessageItem from "@src/app/(chat)/chat/Message";
+import MessageItem from "@src/components/message-item/message-item";
 import { placeholderAtom } from "@src/store/placeholder";
 import { Country } from "@src/types/country";
 import { ArrowDownIcon, ArrowUpIcon } from "@xpadev-net/designsystem-icons";
 import { useChat } from "ai/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAtom } from "jotai";
+import { Wand2 } from "lucide-react";
 import { type Session } from "next-auth";
 import { useState } from "react";
-import { FaMagic } from "react-icons/fa";
 import { IoMdSend } from "react-icons/io";
 import { toast } from "sonner";
 
@@ -55,7 +55,7 @@ export default function Chatbot({
     <div className="fixed bottom-[0] right-[30px] hidden w-[380px] rounded-t-2xl border border-gray-200 bg-white px-5 py-3 shadow-2xl md:block">
       <div className="flex items-center justify-between">
         <h2 className="flex items-center text-xl font-bold">
-          <FaMagic className="mr-2 text-[#9d34da]" />
+          <Wand2 className="mr-2 h-5 w-5 text-[#9d34da]" />
           AIに質問する
         </h2>
         <button onClick={handleClick}>
@@ -111,7 +111,7 @@ export default function Chatbot({
                     <span className="text-base">💡</span>{" "}
                     AIと対話し、様々な視点から効率的に情報を収集できます
                   </p>
-                  <span className="text-xs">
+                  <span className="hidden text-xs sm:inline-block">
                     Tip: Tabキーでプレスホルダーの内容が自動的に入力されます
                   </span>
                 </div>

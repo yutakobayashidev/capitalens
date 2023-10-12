@@ -1,6 +1,6 @@
 import { Dialog } from "@headlessui/react";
 import { config } from "@site.config";
-import Modal from "@src/components/ui/dialog";
+import Modal from "@src/components/ui/modal";
 import { Meeting } from "@src/types/meeting";
 import { FC, ReactNode, useState } from "react";
 import { BsLine } from "react-icons/bs";

@@ -127,6 +127,24 @@ export const updateMember = zact(MemberSchema)(async (data) => {
   return res;
 });
 
+export async function get_contains_members(query: string) {
+  if (!query.trim()) {
+    return null;
+  }
+
+  const members = await prisma.member.findMany({
+    include: {
+      group: true,
+    },
+    where: {
+      name: {
+        contains: query,
+      },
+    },
+  });
+  return members;
+}
+
 export const getMember = async (name: string) => {
   const foundMember = await prisma.member.findFirst({
     include: {

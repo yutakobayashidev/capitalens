@@ -1,6 +1,8 @@
 import "@src/app/globals.css";
 
+import { auth } from "@auth";
 import { config } from "@site.config";
+import CommandMenu from "@src/app/cmd";
 import GoogleAnalytics from "@src/app/google-analytics";
 import Footer from "@src/components/footer/footer";
 import Header from "@src/components/header/header";
@@ -47,6 +49,19 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const countryPromise = fetch(
+    "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/index.json"
+  );
+
+  const sessionPromise = auth();
+
+  const [session, country_flag] = await Promise.all([
+    sessionPromise,
+    countryPromise,
+  ]);
+
+  const countries = await country_flag.json();
+
   return (
     <html lang="ja" className={cn(inter.variable, notoSansJP.variable)}>
       <head>
@@ -71,6 +86,7 @@ export default async function RootLayout({
         <Header />
         {children}
         <Footer />
+        <CommandMenu countries={countries} user={session?.user} />
         <GoogleAnalytics />
         <Toaster />
       </body>

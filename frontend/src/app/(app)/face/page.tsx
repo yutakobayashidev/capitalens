@@ -14,7 +14,6 @@ const useMember = () => {
   const fetchMember = async (name: string) => {
     getMember(name)
       .then((res) => {
-        console.log(res);
         setMember(res);
 
         if (!res) {

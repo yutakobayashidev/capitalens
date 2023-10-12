@@ -2,7 +2,7 @@
 
 import { Dialog } from "@headlessui/react";
 import { createNote } from "@src/app/actions";
-import Modal from "@src/components/ui/dialog";
+import Modal from "@src/components/ui/modal";
 import { Meeting } from "@src/types/meeting";
 import { FocusEvent } from "react";
 import { experimental_useFormStatus as useFormStatus } from "react-dom";

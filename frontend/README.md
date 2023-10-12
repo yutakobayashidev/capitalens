@@ -22,6 +22,6 @@ docker compose up
 
 ## Storybook
 
-RSC には対応していませんが、簡単なコンポーネントカタログです。
+簡単な React コンポーネントカタログです。
 
 https://yutakobayashidev.github.io/capitalens/storybook/?path=/docs/example-introduction--docs

@@ -3,7 +3,7 @@
 import { Dialog } from "@headlessui/react";
 import GLogo from "@public/g-logo.svg";
 import { config } from "@site.config";
-import Modal from "@src/components/ui/dialog";
+import Modal from "@src/components/ui/modal";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useState } from "react";

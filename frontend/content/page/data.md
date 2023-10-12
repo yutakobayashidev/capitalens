@@ -29,4 +29,9 @@ title: 使用データ
 - URL: [ja.dbpedia.org](https://ja.dbpedia.org/)
 - 目的: 議員情報の取得
 
+## WORLD BANK API
+
+- URL: [worldbank.org](https://documents.worldbank.org/en/publication/documents-reports/api)
+- 目的: 各国の GDP や人口の取得
+
 その他、各議員のウェブサイトをクローリングし、SNS のハンドルや RSS フィードからブログ記事などを収集しています。

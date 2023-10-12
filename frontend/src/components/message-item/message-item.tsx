@@ -19,6 +19,7 @@ export default function MessageItem({
   message: Message;
   user: Session["user"];
 }) {
+  console.log(message);
   return (
     <>
       <div className="flex items-start">

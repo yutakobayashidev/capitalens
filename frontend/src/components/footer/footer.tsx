@@ -1,7 +1,13 @@
+"use client";
+
 import { config } from "@site.config";
+import { cmdAtom } from "@src/store/cmd";
+import { useAtom } from "jotai";
 import Link from "next/link";
 
 export default function Footer() {
+  const [open, setOpen] = useAtom(cmdAtom);
+
   return (
     <footer className="py-14">
       <div className="mx-auto max-w-[1200px] px-4 md:px-8">
@@ -41,6 +47,14 @@ export default function Footer() {
           <nav>
             <h4 className="font-bold">リンク & ソーシャル</h4>
             <ul>
+              <li className="my-3">
+                <button
+                  onClick={() => setOpen(true)}
+                  className="text-sm hover:underline"
+                >
+                  ⌘ + K
+                </button>
+              </li>
               <li className="my-3">
                 <a
                   className="text-sm hover:underline"

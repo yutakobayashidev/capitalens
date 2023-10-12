@@ -1,26 +1,15 @@
 import { auth } from "@auth";
 import { Member, Video } from "@prisma/client";
+import Search from "@src/app/(app)/search/Search";
+import { get_contains_members } from "@src/app/actions";
 import Meetings from "@src/components/meetings/meetings";
 import prisma from "@src/lib/prisma";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
-
-import Search from "./Search";
 
 export const metadata: Metadata = {
   title: "検索",
 };
-
-async function getMember(query: string): Promise<Member[]> {
-  const members = await prisma.member.findMany({
-    where: {
-      name: {
-        contains: query,
-      },
-    },
-  });
-  return members;
-}
 
 async function getMeeting(query: string): Promise<Video[]> {
   const meetings = await prisma.video.findMany({
@@ -48,7 +37,7 @@ export default async function Page({
   let meetingsData: Video[] | null = null;
 
   if (q && (source === undefined || source === "members")) {
-    membersData = await getMember(q as string);
+    membersData = await get_contains_members(q as string);
   } else if (q && source === "meetings") {
     meetingsData = await getMeeting(q as string);
   }

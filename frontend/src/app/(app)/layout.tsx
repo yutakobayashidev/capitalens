@@ -2,6 +2,7 @@ import "@src/app/globals.css";
 
 import { auth } from "@auth";
 import { config } from "@site.config";
+import CommandMenu from "@src/app/cmd";
 import GoogleAnalytics from "@src/app/google-analytics";
 import BottomMenu from "@src/components/bottom-menu/bottom-menu";
 import Chatbot from "@src/components/chatbot/chatbot";
@@ -88,6 +89,7 @@ export default async function RootLayout({
         {children}
         <Footer />
         <BottomMenu />
+        <CommandMenu countries={countries} user={session?.user} />
         <Chatbot countries={countries} user={session?.user} />
         <GoogleAnalytics />
         <Toaster />
