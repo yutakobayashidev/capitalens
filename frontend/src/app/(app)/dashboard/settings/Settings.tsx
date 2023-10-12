@@ -5,7 +5,7 @@ import GLogo from "@public/g-logo.svg";
 import { DeleteAccount, updatePrefecture, updateUser } from "@src/app/actions";
 import Modal from "@src/components/ui/modal";
 import { ArrowDownIcon } from "@xpadev-net/designsystem-icons";
-import cn from "classnames";
+import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { type Session } from "next-auth";
 import { useEffect, useState, useTransition } from "react";
@@ -112,7 +112,7 @@ export default function Settings({
                     if (result) setEnabled(checked);
                   });
                 }}
-                className={cn(
+                className={clsx(
                   kids ? "bg-primary" : "bg-gray-400",
                   "relative inline-flex h-[38px] w-[74px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75"
                 )}
@@ -120,9 +120,9 @@ export default function Settings({
                 <span className="sr-only">Use setting</span>
                 <span
                   aria-hidden="true"
-                  className={cn(
+                  className={clsx(
                     kids ? "translate-x-9" : "translate-x-0",
-                    "pointer-events-none inline-block h-[34px] w-[34px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out"
+                    "pointer-events-none inline-block h-[34px] w-[34px] rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out"
                   )}
                 />
               </Switch>

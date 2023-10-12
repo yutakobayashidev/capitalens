@@ -8,7 +8,7 @@ import {
 } from "@src/helper/utils";
 import { Meeting } from "@src/types/meeting";
 import { Member } from "@src/types/member";
-import cn from "classnames";
+import clsx from "clsx";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import utc from "dayjs/plugin/utc";
@@ -249,7 +249,7 @@ export default function Video({
           <div className="flex items-center justify-between overflow-x-auto">
             <h1 className="flex items-center text-2xl font-bold">
               <span
-                className={cn({
+                className={clsx({
                   "bg-[#EA5433]": meeting.house !== "COUNCILLORS",
                   "bg-indigo-400": meeting.house === "COUNCILLORS",
                   "mr-2 rounded px-2 py-1 text-base font-bold text-white": true,

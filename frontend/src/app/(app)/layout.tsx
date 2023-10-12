@@ -9,7 +9,7 @@ import Chatbot from "@src/components/chatbot/chatbot";
 import Footer from "@src/components/footer/footer";
 import Header from "@src/components/header/header";
 import Toaster from "@src/components/ui/toaster";
-import cn from "classnames";
+import clsx from "clsx";
 import type { Metadata } from "next";
 import { Inter, Noto_Sans_JP } from "next/font/google";
 
@@ -65,7 +65,7 @@ export default async function RootLayout({
   const countries = await country_flag.json();
 
   return (
-    <html lang="ja" className={cn(inter.variable, notoSansJP.variable)}>
+    <html lang="ja" className={clsx(inter.variable, notoSansJP.variable)}>
       <head>
         <link
           rel="icon"

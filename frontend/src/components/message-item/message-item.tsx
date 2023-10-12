@@ -3,7 +3,7 @@ import Population from "@src/components/population/population";
 import { Country } from "@src/types/country";
 import { MeOutlinedIcon } from "@xpadev-net/designsystem-icons";
 import type { Message } from "ai";
-import cn from "classnames";
+import clsx from "clsx";
 import type { Session } from "next-auth";
 import { SiOpenai } from "react-icons/si";
 import ReactMarkdown from "react-markdown";
@@ -31,7 +31,7 @@ export default function MessageItem({
           />
         ) : (
           <div
-            className={cn(
+            className={clsx(
               "flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow",
               message.role === "user" ? "bg-gray-100" : "bg-black"
             )}

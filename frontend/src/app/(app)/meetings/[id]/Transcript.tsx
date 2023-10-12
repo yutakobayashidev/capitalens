@@ -2,7 +2,7 @@ import { convertSecondsToTime } from "@src/helper/utils";
 import { Meeting, Word } from "@src/types/meeting";
 import { SearchIcon } from "@xpadev-net/designsystem-icons";
 import Avatar from "boring-avatars";
-import cn from "classnames";
+import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 import Player from "video.js/dist/types/player";
 
@@ -25,7 +25,7 @@ function Word({
 }) {
   return (
     <div
-      className={cn("p-4 flex flex-1 items-start", {
+      className={clsx("flex flex-1 items-start p-4", {
         "bg-gray-100": word.text === currentWord,
       })}
       ref={word.text === currentWord ? wordRef : null}
@@ -177,7 +177,7 @@ export default function Transcript({
           return (
             <button
               key={speaker.name}
-              className={cn(
+              className={clsx(
                 "relative flex items-center rounded-full px-2 py-1",
                 selectedSpeakerNames.includes(speaker.name)
                   ? "bg-blue-300 font-semibold text-white"

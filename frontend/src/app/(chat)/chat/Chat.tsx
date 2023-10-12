@@ -5,7 +5,7 @@ import MessageItem from "@src/components/message-item/message-item";
 import Modal from "@src/components/ui/modal";
 import { Country } from "@src/types/country";
 import { useChat } from "ai/react";
-import cn from "classnames";
+import clsx from "clsx";
 import { type Session } from "next-auth";
 import { useEffect, useRef, useState } from "react";
 import { AiOutlineArrowRight } from "react-icons/ai";
@@ -177,11 +177,11 @@ export default function Chat({
             className="w-full pr-10 focus:outline-none"
           />
           <button
-            className={cn(
+            className={clsx(
               "absolute inset-y-0 right-3 my-auto flex h-8 w-8 items-center justify-center rounded-md transition-all",
               disabled
                 ? "cursor-not-allowed bg-white"
-                : "bg-primary bg-opacity-80 hover:bg-primary"
+                : "bg-primary hover:bg-primary bg-opacity-80"
             )}
             disabled={disabled}
           >
@@ -189,7 +189,7 @@ export default function Chat({
               <LoadingCircle />
             ) : (
               <IoMdSend
-                className={cn(
+                className={clsx(
                   "h-4 w-4",
                   input.length === 0 ? "text-gray-300" : "text-white"
                 )}

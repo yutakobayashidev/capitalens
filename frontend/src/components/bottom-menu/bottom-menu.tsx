@@ -11,7 +11,7 @@ import {
   SealCertificateOutlinedIcon,
   SearchIcon,
 } from "@xpadev-net/designsystem-icons";
-import cn from "classnames";
+import clsx from "clsx";
 import type { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -41,8 +41,8 @@ const LinkIconItem: FC<LinkIconItemProps> = ({
     <li className="table-cell text-center">
       <Link
         href={path}
-        className={cn(
-          "flex pb-1.5 pt-2 flex-col font-bold overflow-hidden whitespace-nowrap",
+        className={clsx(
+          "flex flex-col overflow-hidden whitespace-nowrap pb-1.5 pt-2 font-bold",
           {
             "text-gray-400": pathname !== path,
             "text-primary": pathname === path,

@@ -5,7 +5,7 @@ import { isKanji, kanaToHira } from "@src/helper/utils";
 import { useKuromoji } from "@src/hooks/useKuromoji";
 import { Meeting } from "@src/types/meeting";
 import { ChildOutlinedIcon } from "@xpadev-net/designsystem-icons";
-import cn from "classnames";
+import clsx from "clsx";
 import { type Session } from "next-auth";
 import { useCallback, useEffect, useState } from "react";
 import { FiCopy } from "react-icons/fi";
@@ -227,7 +227,7 @@ export default function Summarize({
           <button
             onClick={handleCopy}
             disabled={copy}
-            className={cn(
+            className={clsx(
               "flex items-center rounded-full border-gray-200 px-3 py-2 text-sm font-medium text-gray-400 duration-100 ease-out",
               !copy && "hover:bg-gray-100"
             )}

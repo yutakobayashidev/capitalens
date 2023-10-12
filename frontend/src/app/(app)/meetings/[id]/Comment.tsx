@@ -2,7 +2,7 @@ import { Menu, Transition } from "@headlessui/react";
 import { DeleteComment } from "@src/app/actions";
 import { videoComment } from "@src/types/meeting";
 import { ArrowDownIcon } from "@xpadev-net/designsystem-icons";
-import cn from "classnames";
+import clsx from "clsx";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { type Session } from "next-auth";
@@ -67,9 +67,9 @@ export default function Comment({
                           DeleteComment({ id: comment.id });
                         });
                       }}
-                      className={cn(
+                      className={clsx(
                         active ? "bg-gray-100" : "",
-                        "w-full flex items-center px-4 py-2 text-gray-700"
+                        "flex w-full items-center px-4 py-2 text-gray-700"
                       )}
                     >
                       <span className="mr-1">

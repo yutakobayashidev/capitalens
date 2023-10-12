@@ -1,7 +1,7 @@
 "use client";
 
 import { Menu, Transition } from "@headlessui/react";
-import cn from "classnames";
+import clsx from "clsx";
 import type { Route } from "next";
 import Link from "next/link";
 import type { Session } from "next-auth";
@@ -61,7 +61,7 @@ export default function UserMenu({ user }: { user: Session["user"] }) {
                 item.elementType === "link" && item.href ? (
                   <Link
                     href={item.href}
-                    className={cn(
+                    className={clsx(
                       active ? "bg-gray-100" : "",
                       "flex items-center px-4 py-2 text-gray-700"
                     )}
@@ -72,9 +72,9 @@ export default function UserMenu({ user }: { user: Session["user"] }) {
                 ) : (
                   <button
                     onClick={item.onClick}
-                    className={cn(
+                    className={clsx(
                       active ? "bg-gray-100" : "",
-                      "w-full flex items-center px-4 py-2 text-gray-700"
+                      "flex w-full items-center px-4 py-2 text-gray-700"
                     )}
                   >
                     <span className="mr-1">{item.icon}</span>
