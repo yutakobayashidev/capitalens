@@ -1,5 +1,6 @@
 "use client";
 
+import { createComment } from "@src/app/actions";
 import { LoginPrompt } from "@src/components/login/login";
 import { Meeting } from "@src/types/meeting";
 import { type Session } from "next-auth";
@@ -7,7 +8,6 @@ import { useRef } from "react";
 import { experimental_useFormStatus as useFormStatus } from "react-dom";
 import TextareaAutosize from "react-textarea-autosize";
 
-import { createComment } from "./actions";
 import Comment from "./Comment";
 
 export default function Comments({

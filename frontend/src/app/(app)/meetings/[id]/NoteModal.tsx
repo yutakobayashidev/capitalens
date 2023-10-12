@@ -1,14 +1,13 @@
 "use client";
 
 import { Dialog } from "@headlessui/react";
+import { createNote } from "@src/app/actions";
 import Modal from "@src/components/ui/dialog";
 import { Meeting } from "@src/types/meeting";
 import { FocusEvent } from "react";
 import { experimental_useFormStatus as useFormStatus } from "react-dom";
 import TextareaAutosize from "react-textarea-autosize";
 import { toast } from "sonner";
-
-import { createNote } from "./actions";
 
 export default function NoteModal({
   endBluer,

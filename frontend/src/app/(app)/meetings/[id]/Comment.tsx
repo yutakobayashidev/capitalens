@@ -1,4 +1,5 @@
 import { Menu, Transition } from "@headlessui/react";
+import { DeleteComment } from "@src/app/actions";
 import { videoComment } from "@src/types/meeting";
 import { ArrowDownIcon } from "@xpadev-net/designsystem-icons";
 import cn from "classnames";
@@ -7,8 +8,6 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { type Session } from "next-auth";
 import { Fragment, useTransition } from "react";
 import { FiTrash2 } from "react-icons/fi";
-
-import { DeleteComment } from "./actions";
 
 dayjs.locale("ja");
 dayjs.extend(relativeTime);
