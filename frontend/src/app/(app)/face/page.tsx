@@ -18,7 +18,7 @@ const useMember = () => {
         setMember(res);
 
         if (!res) {
-          toast.error("人物が見つかりませんでした");
+          toast.error("人物がサーバーに見つかりませんでした");
         }
       })
       .catch((e) => {
@@ -35,8 +35,11 @@ export default function Page() {
   const { clearMember, fetchMember, member } = useMember();
 
   const handleFaceDetect = async (name: string) => {
-    console.log(name);
-    await fetchMember("岸田文雄");
+    if (name !== "unknown") {
+      await fetchMember(name);
+    } else {
+      toast.error("人物を検出できませんでした");
+    }
   };
 
   return (
