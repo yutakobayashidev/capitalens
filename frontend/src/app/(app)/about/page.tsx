@@ -63,66 +63,70 @@ export default async function Page() {
   const repoData = await repoRes.json();
 
   return (
-    <div className="mt-16">
-      <div className="mx-auto max-w-screen-lg px-4 md:px-8">
-        <div className="items-start justify-between md:flex">
-          <div className="h-auto overflow-hidden rounded-lg xl:w-5/12">
-            <h1 className="mb-7 text-center text-3xl font-bold md:text-left md:text-4xl">
-              国・行政データを整理する
-            </h1>
-            <div className="prose">
-              <p>
-                自分が住む国で、議会や議員がどのような問題について取り組んでいるのか・どのようなことが行われているかについての情報に詳しくアクセスできないのは問題ではないでしょうか？
-              </p>
-              <p>
-                本サイトは、散らばった日本のあらゆるオープンデータを1つにまとめて、視覚的な情報提供を目指します。
-              </p>
+    <div>
+      <section className="py-12">
+        <div className="mx-auto max-w-screen-lg px-4 md:px-8">
+          <div className="items-start justify-between md:flex">
+            <div className="h-auto overflow-hidden rounded-lg xl:w-5/12">
+              <h1 className="mb-7 text-center text-3xl font-bold md:text-left md:text-4xl">
+                国・行政データを整理する
+              </h1>
+              <div className="prose">
+                <p>
+                  自分が住む国で、議会や議員がどのような問題について取り組んでいるのか・どのようなことが行われているかについての情報に詳しくアクセスできないのは問題ではないでしょうか？
+                </p>
+                <p>
+                  本サイトは、散らばった日本のあらゆるオープンデータを1つにまとめて、視覚的な情報提供を目指します。
+                </p>
+              </div>
             </div>
-          </div>
-          <div className="h-auto overflow-hidden rounded-lg xl:w-5/12">
-            <img
-              src="/undraw_Brainstorming_re_1lmw.png"
-              alt="undraw_Brainstorming_re_1lmw"
-            />
+            <div className="h-auto overflow-hidden rounded-lg xl:w-5/12">
+              <img
+                src="/undraw_Brainstorming_re_1lmw.png"
+                alt="undraw_Brainstorming_re_1lmw"
+              />
+            </div>
           </div>
         </div>
-      </div>
-      <div className="mx-auto max-w-screen-lg px-4 md:px-8">
-        <div className="items-start justify-between border-b border-gray-100 md:flex">
-          <div className="hidden h-auto overflow-hidden rounded-lg md:block xl:w-5/12">
-            <img src="/undraw_chat_bot.png" alt="Robot" />
-          </div>
-          <div className="hidden h-auto overflow-hidden rounded-lg md:block xl:w-5/12">
-            <h1 className="mb-7 text-center text-5xl font-bold md:text-left md:text-4xl">
-              一次情報を元に情報を提供
-            </h1>
-            <div className="prose">
-              <p>
-                CapitaLensは、一次情報、行政オープンデータ、多くの人に変更されているドキュメントをベースに国や行政の情報を届けることを目指しています。
-              </p>
-              <p>
-                生成AIなどの技術の登場によって、より多角的な視点からアクセシビリティを考慮した情報が得られるようになりつつあります。
-              </p>
+      </section>
+      <section className="py-12">
+        <div className="mx-auto max-w-screen-lg px-4 md:px-8">
+          <div className="items-start justify-between border-b border-gray-100 md:flex">
+            <div className="hidden h-auto overflow-hidden rounded-lg md:block xl:w-5/12">
+              <img src="/undraw_chat_bot.png" alt="Robot" />
             </div>
-          </div>
-          <div className="block h-auto overflow-hidden rounded-lg md:hidden xl:w-5/12">
-            <h1 className="mb-7 text-center text-3xl font-bold md:text-left md:text-4xl">
-              一次情報を元に情報を提供
-            </h1>
-            <div className="prose">
-              <p>
-                CapitaLensは、一次情報、オープンデータ、コミュニティをベースに国や行政の情報を届けることを目指しています。
-              </p>
-              <p>
-                生成AIなどの技術の登場によって、より多角的な視点からアクセシビリティを考慮した情報が得られるようになりつつあります。
-              </p>
+            <div className="hidden h-auto overflow-hidden rounded-lg md:block xl:w-5/12">
+              <h1 className="mb-7 text-center text-5xl font-bold md:text-left md:text-4xl">
+                一次情報を元に情報を提供
+              </h1>
+              <div className="prose">
+                <p>
+                  CapitaLensは、一次情報、行政オープンデータ、多くの人に変更されているドキュメントをベースに国や行政の情報を届けることを目指しています。
+                </p>
+                <p>
+                  生成AIなどの技術の登場によって、より多角的な視点からアクセシビリティを考慮した情報が得られるようになりつつあります。
+                </p>
+              </div>
             </div>
-          </div>
-          <div className="block h-auto overflow-hidden rounded-lg md:hidden xl:w-5/12">
-            <img src="/undraw_AI.png" alt="Robot" />
+            <div className="block h-auto overflow-hidden rounded-lg md:hidden xl:w-5/12">
+              <h1 className="mb-7 text-center text-3xl font-bold md:text-left md:text-4xl">
+                一次情報を元に情報を提供
+              </h1>
+              <div className="prose">
+                <p>
+                  CapitaLensは、一次情報、オープンデータ、コミュニティをベースに国や行政の情報を届けることを目指しています。
+                </p>
+                <p>
+                  生成AIなどの技術の登場によって、より多角的な視点からアクセシビリティを考慮した情報が得られるようになりつつあります。
+                </p>
+              </div>
+            </div>
+            <div className="block h-auto overflow-hidden rounded-lg md:hidden xl:w-5/12">
+              <img src="/undraw_AI.png" alt="Robot" />
+            </div>
           </div>
         </div>
-      </div>
+      </section>
       <section className="mx-auto max-w-lg py-12 text-center">
         <h1 className="mb-8 text-3xl font-bold">
           自律的な無人AIメディアを目指して
