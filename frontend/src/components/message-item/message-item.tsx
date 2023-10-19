@@ -1,3 +1,4 @@
+import GDP from "@src/components/gdp/gdp";
 import MemberCard from "@src/components/member-card/member-card";
 import Population from "@src/components/population/population";
 import { Country } from "@src/types/country";
@@ -19,7 +20,6 @@ export default function MessageItem({
   message: Message;
   user: Session["user"];
 }) {
-  console.log(message);
   return (
     <>
       <div className="flex items-start">
@@ -57,6 +57,8 @@ export default function MessageItem({
           <MemberCard member={data.body} />
         ) : data?.type === "get_population" ? (
           <Population countries={countries} transformedData={data.body} />
+        ) : data?.type === "get_gdp" ? (
+          <GDP countries={countries} transformedData={data.body} />
         ) : (
           data?.type === "error" && (
             <span className="text-sm text-red-400">⚠ {data.body}</span>

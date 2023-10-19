@@ -68,6 +68,21 @@ export const functions: ChatCompletionCreateParams.Function[] = [
     },
   },
   {
+    name: "get_gdp",
+    description:
+      "Search the World Bank for the most current GDP data at this time by country.",
+    parameters: {
+      properties: {
+        country_code: {
+          description: "ISO 3166-1 alpha-3 format code for country name.",
+          type: "string",
+        },
+      },
+      required: ["country_code"],
+      type: "object",
+    },
+  },
+  {
     name: "speech_list",
     description:
       "Retrieved from the search API of the Japanese Diet Proceedings Retrieval System, in order of newest to oldest, based on statements.",
@@ -117,6 +132,37 @@ async function get_population(countryCode: string) {
     return transformedData;
   } catch (e: any) {
     return `申し訳ありませんが、エラーにより人口データを取得できませんでした`;
+  }
+}
+
+async function get_gdp(countryCode: string) {
+  try {
+    const response = await fetch(
+      `https://api.worldbank.org/v2/country/${countryCode}/indicator/NY.GDP.MKTP.CD?format=json`
+    );
+    const result = await response.json();
+    const data = result[1];
+
+    if (!data) {
+      return "申し訳ありませんが、国番号に対応するデータがないため、GDPデータを取得できませんでした。";
+    }
+
+    const transformedData: TransformedData[] = data.map((datum: any) => {
+      return {
+        country_id: datum.country.id,
+        country_value: datum.country.value,
+        date: datum.date,
+        indicator_id: datum.indicator.id,
+        indicator_value: datum.indicator.value,
+        value: datum.value,
+      };
+    });
+
+    transformedData.sort((a, b) => parseInt(a.date) - parseInt(b.date));
+
+    return transformedData;
+  } catch (e: any) {
+    return `申し訳ありませんが、エラーによりGDPデータを取得できませんでした`;
   }
 }
 
@@ -197,6 +243,8 @@ export async function runFunction(name: string, args: any) {
       return await get_member_info(args["name"]);
     case "get_population":
       return await get_population(args["country_code"]);
+    case "get_gdp":
+      return await get_gdp(args["country_code"]);
     case "meeting_list":
       return await meeting_list(args);
     case "speech_list":

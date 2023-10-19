@@ -22,12 +22,12 @@ function formatJapaneseNumber(num: number): string {
   return num.toString();
 }
 
-function CustomTooltip({ active, label, payload }: any) {
+function GDPTooltip({ active, label, payload }: any) {
   if (active && payload && payload.length) {
     return (
       <div className="custom-tooltip border bg-white p-3">
         <p className="label">{label}</p>
-        <p className="desc">人口: {formatJapaneseNumber(payload[0].value)}</p>
+        <p className="desc">GDP: {formatJapaneseNumber(payload[0].value)}円</p>
       </div>
     );
   }
@@ -35,7 +35,7 @@ function CustomTooltip({ active, label, payload }: any) {
   return null;
 }
 
-export default function Population({
+export default function GDP({
   countries,
   transformedData,
 }: {
@@ -46,11 +46,13 @@ export default function Population({
     return countries.find((country) => country.code === code);
   }
 
+  console.log(transformedData);
+
   return (
     <div className="w-full rounded border px-3 py-4">
       <h3 className="mb-5 text-lg font-medium text-gray-800">
         {findCountryByCode(transformedData[0].country_id)?.emoji}{" "}
-        {findCountryByCode(transformedData[0].country_id)?.name}の人口推移
+        {findCountryByCode(transformedData[0].country_id)?.name}のGDP推移
       </h3>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart
@@ -60,21 +62,18 @@ export default function Population({
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="date" />
           <YAxis tickFormatter={formatJapaneseNumber} />
-          <Tooltip content={<CustomTooltip />} />
+          <Tooltip content={<GDPTooltip />} />
           <Line
             type="monotone"
             dataKey="value"
-            stroke="#8884d8"
+            stroke="#82ca9d"
             activeDot={{ r: 8 }}
           />
         </LineChart>
       </ResponsiveContainer>
       <span className="text-sm text-gray-500">
         ソース:{" "}
-        <a
-          href="https://www.worldbank.org/ja/country/japan"
-          className="text-primary"
-        >
+        <a href="https://www.worldbank.org/en/home" className="text-primary">
           世界銀行
         </a>
       </span>
