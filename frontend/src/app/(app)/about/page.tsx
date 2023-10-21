@@ -169,7 +169,7 @@ export default async function Page() {
           <div className="grid grid-cols-5 md:grid-cols-12">
             {contributors.map((contributor) => (
               <a
-                href={contributor.url}
+                href={contributor.html_url}
                 key={contributor.id}
                 className="h-14 w-14"
               >

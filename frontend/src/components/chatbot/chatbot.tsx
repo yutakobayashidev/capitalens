@@ -5,6 +5,7 @@ import { placeholderAtom } from "@src/store/placeholder";
 import { Country } from "@src/types/country";
 import { ArrowDownIcon, ArrowUpIcon } from "@xpadev-net/designsystem-icons";
 import { useChat } from "ai/react";
+import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAtom } from "jotai";
 import { Wand2 } from "lucide-react";
@@ -50,6 +51,8 @@ export default function Chatbot({
       }
     },
   });
+
+  const disabled = isLoading || input.length === 0;
 
   return (
     <div className="fixed bottom-[0] right-[30px] hidden w-[380px] rounded-t-2xl border border-gray-200 bg-white px-5 py-3 shadow-2xl md:block">
@@ -136,8 +139,11 @@ export default function Chatbot({
               />
               <button
                 type="submit"
-                disabled={isLoading || input === ""}
-                className="absolute right-7 rounded-md bg-blue-400 p-1 text-white disabled:bg-opacity-0 disabled:text-gray-800"
+                disabled={disabled}
+                className={clsx(
+                  "absolute right-7 rounded-md p-1 text-white disabled:bg-opacity-0 disabled:text-gray-800",
+                  input.length === 0 ? "" : "bg-primary"
+                )}
               >
                 <span>
                   <IoMdSend />
