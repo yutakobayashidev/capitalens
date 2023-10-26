@@ -1,7 +1,6 @@
 {
-  "name": "politicians",
+  "name": "face_model",
   "version": "1.0.0",
-  "description": "顔認識用の画像データ",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
