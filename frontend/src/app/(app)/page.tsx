@@ -138,6 +138,12 @@ export default async function Page() {
           </div>
         </div>
       </section>
+      <section className="py-8">
+        <div className="mx-auto max-w-screen-xl px-4 md:px-8">
+          <h2 className="mb-5 text-2xl font-bold">最新の会議</h2>
+          <Meetings user={session?.user} meetings={meetings} />
+        </div>
+      </section>
       <section className="bg-gray-100 py-8">
         <div className="mx-auto max-w-screen-xl px-4 md:px-8">
           <h2 className="mb-5 text-2xl font-bold">政党から探す</h2>
@@ -239,12 +245,6 @@ export default async function Page() {
               </Link>
             ))}
           </div>
-        </div>
-      </section>
-      <section className="py-8">
-        <div className="mx-auto max-w-screen-xl px-4 md:px-8">
-          <h2 className="mb-5 text-2xl font-bold">最新の議会</h2>
-          <Meetings user={session?.user} meetings={meetings} />
         </div>
       </section>
     </>
